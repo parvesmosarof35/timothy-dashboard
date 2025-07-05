@@ -10,15 +10,17 @@ import {
   ChevronRight
 } from 'lucide-react';
 import AdminProfile from '../components/AdminProfile';
+import { useNavigate } from 'react-router-dom';
 
 const Contracts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 10;
+  const navigate = useNavigate();
 
   // Mock data for contracts
   const contracts = [
     {
-      id: '1981849262',
+      id: '1981812312',
       description: 'Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.',
       category: 'Sureman',
       user: 'John Doe',
@@ -30,7 +32,7 @@ const Contracts = () => {
       status: 'Active'
     },
     {
-      id: '1981849262',
+      id: '19814565787',
       description: 'Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.',
       category: 'Sureman',
       user: 'John Doe',
@@ -242,7 +244,11 @@ const Contracts = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {contracts.map((contract, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr
+                  onClick={()=>{
+                    navigate(`${contract.id}`);
+                  }}
+                  key={index} className="hover:bg-gray-50 cursor-pointer">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {contract.id}
                     </td>
