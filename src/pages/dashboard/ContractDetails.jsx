@@ -1,8 +1,12 @@
 import React from "react";
+import { useParams } from "react-router-dom";
+import AdminProfile from "./components/AdminProfile";
 
 const ContractDetails = () => {
+      const { id } = useParams();
+
   const contractData = {
-    id: "3253453465",
+    id: id,
     title: "This is the title of the contract",
     rate: "$5.00/h",
     orderId: "8498494494",
@@ -39,7 +43,7 @@ const ContractDetails = () => {
         amount: "$650",
         date: "20 Dec 2023",
         description: "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
-        status: "completed",
+        status: "pending",
       },
     ],
   };
@@ -58,7 +62,9 @@ const ContractDetails = () => {
     .lastIndexOf("completed");
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-white font-sans">
+<div className="px-6">
+    <AdminProfile headingText="Contract Details" ></AdminProfile>
+        <div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-lg font-semibold text-gray-800 mb-2">
@@ -175,6 +181,26 @@ const ContractDetails = () => {
         ))}
       </div>
     </div>
+
+<div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans flex justify-end gap-6">
+  <button
+    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-medium transition"
+  >
+    Terminate
+  </button>
+  <button
+    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium transition"
+  >
+    Edit
+  </button>
+  <button
+    className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-medium transition"
+  >
+    Suspend
+  </button>
+</div>
+
+</div>
   );
 };
 
