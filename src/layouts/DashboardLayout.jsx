@@ -94,6 +94,15 @@ export default function DashboardLayout() {
         Users
       </NavLink>
 
+
+      <NavLink
+        to="/dashboard/service-provider"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <TbUserHexagon className="text-lg" />
+        Service Providers
+      </NavLink>
+
       <NavLink
         to="/dashboard/financialpayments"
         className={({ isActive }) => linkClass(isActive)}

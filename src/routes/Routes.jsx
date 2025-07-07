@@ -17,6 +17,7 @@ import Contracts from "../pages/dashboard/Contracts/Contracts";
 import UserSupport from "../pages/dashboard/userSupport/userSupport";
 import ContractDetails from "../pages/dashboard/ContractDetails";
 import UserMessage from "../pages/dashboard/userSupport/UserMessage";
+import ServiceProvider from "../pages/dashboard/ServiceProviders/ServiceProvider";
 
 
 const router = createBrowserRouter([
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
   children: [
     { path: 'statistics', element: <DashboardHome /> },
     { path: 'user-info', element: <UserInformation /> },
+    { path: 'service-provider', element: <ServiceProvider></ServiceProvider> },
     { path: 'financialpayments', element: <FinancialPayments /> },
     { path: 'contracts', element: <Contracts /> },
     { path: `contracts/:id`, element: <ContractDetails /> },

@@ -23,8 +23,9 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-6">
         <div className="col-span-1 md:col-span-6 rounded-lg space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <OverviewCard title="Total Users" value="2,420" trend="↑ 20%" />
+            <OverviewCard title="Total Service Providers" value="2,420" trend="↑ 20%" />
             <OverviewCard title="Active Contracts" value="1,209" trend="↓ 5%" />
           </div>
 

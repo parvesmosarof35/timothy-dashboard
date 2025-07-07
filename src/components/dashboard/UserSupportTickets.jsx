@@ -30,11 +30,11 @@ const UserSupportTickets = ({
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-xl font-semibold  text-gray-900 mb-1">User Support</h2>
-          <h2 className="text-xl font-semibold text-gray-900">Tickets</h2>
+          <h2 className="text-xl font-semibold  text-gray-900 mb-1">Total Earnings</h2>
+          {/* <h2 className="text-xl font-semibold text-gray-900">Tickets</h2> */}
         </div>
         <div className="flex items-center text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border">
-          Today <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
+          This Month <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
         </div>
       </div>
 
@@ -43,7 +43,7 @@ const UserSupportTickets = ({
         {/* Total Tickets */}
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-sm text-gray-500 mb-2">Total</p>
+            <p className="text-sm text-gray-500 mb-2">Admins Earnings</p>
             <h3 className="text-3xl font-semibold text-gray-900">{totalTickets.toLocaleString()}</h3>
           </div>
           
@@ -66,7 +66,7 @@ const UserSupportTickets = ({
         {/* Pending Tickets */}
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-sm text-gray-500 mb-2">Pending</p>
+            <p className="text-sm text-gray-500 mb-2">Service Providers Earnings</p>
             <h3 className="text-3xl font-semibold text-gray-900">{pendingTickets.toLocaleString()}</h3>
           </div>
           

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
+import AdminProfile from "../components/AdminProfile";
 
 const users = [
   {
@@ -53,16 +54,6 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/72.jpg",
   },
   {
-    id: "1981849263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
     id: "1981849264",
     name: "Robert Johnson",
     joined: "12 Dec 2023",
@@ -91,56 +82,6 @@ const users = [
     role: "User",
     earnings: "$1981849262",
     image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "1981849263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "1981849264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "1981849265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "1981849266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "1981849263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
     id: "1981849264",
@@ -174,7 +115,7 @@ const users = [
   },
 ];
 
-const UsersTable = () => {
+const ServiceProvider = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -204,9 +145,11 @@ const UsersTable = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen font-sans">
+<div className="px-6">
+    <AdminProfile headingText="Service Providers"></AdminProfile>
+        <div className="p-6 bg-gray-50 min-h-screen font-sans">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Manage Users</h2>
+        <h2 className="text-2xl font-semibold">Manage Service Providers</h2>
         <input
           type="text"
           placeholder="Search"
@@ -295,7 +238,8 @@ const UsersTable = () => {
         </div>
       </div>
     </div>
+</div>
   );
 };
 
-export default UsersTable;
+export default ServiceProvider;
