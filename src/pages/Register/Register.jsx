@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Facebook, Apple } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../providers/AuthProvider';
+
+
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -8,6 +11,13 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+
+    const {
+    user,
+    signInGoogle,
+    signInFacebook
+  } = useContext(AuthContext);
+
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -23,10 +33,32 @@ const Register = () => {
     console.log('Registration attempt:', { name, email, password, rememberMe });
   };
 
-  const handleSocialLogin = (provider) => {
-    console.log(`Login with ${provider}`);
-  };
+const handleSocialLogin = (provider) => {
+  console.log(`Login with ${provider}`);
+  
+  if (provider === "Google") {
+    signInGoogle()
+      .then((result) => {
+        console.log("Google login successful:", result.user);
+      })
+      .catch((error) => {
+        console.error("Google login error:", error);
+      });
+  }
 
+  if (provider === "Facebook") {
+    signInFacebook()
+      .then((result) => {
+        console.log("Facebook login successful:", result.user);
+      })
+      .catch((error) => {
+        console.error("Facebook login error:", error);
+      });
+  }
+};
+
+
+  console.log(user);
   return (
     <div className="min-h-screen mb-32 bg-white relative">
       {/* Top Orange Section */}

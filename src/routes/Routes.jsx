@@ -16,6 +16,7 @@ import FinancialPayments from "../pages/dashboard/FinancialPayments/FinancialPay
 import Contracts from "../pages/dashboard/Contracts/Contracts";
 import UserSupport from "../pages/dashboard/userSupport/userSupport";
 import ContractDetails from "../pages/dashboard/ContractDetails";
+import UserMessage from "../pages/dashboard/userSupport/UserMessage";
 
 
 const router = createBrowserRouter([
@@ -43,8 +44,9 @@ const router = createBrowserRouter([
     { path: 'financialpayments', element: <FinancialPayments /> },
     { path: 'contracts', element: <Contracts /> },
     { path: `contracts/:id`, element: <ContractDetails /> },
-    { path: 'userroles', element: <div>user roles</div> },
+    // { path: 'userroles', element: <div>user roles</div> },
     { path: 'support', element: <UserSupport></UserSupport> },
+    { path: 'support/:id', element: <UserMessage></UserMessage> },
     { path: 'settings', element: <ProfileSettings /> },
   //   { path: 'settings/terms', element: <TermsPage /> },
   //   { path: 'settings/privacy', element: <Privacypage /> },

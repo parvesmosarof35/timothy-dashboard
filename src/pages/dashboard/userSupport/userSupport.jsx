@@ -9,8 +9,10 @@ import {
   AlertCircle,
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
+import { useNavigate } from "react-router-dom";
 
 const UserSupport = () => {
+  const navigate = useNavigate();
   const [tickets] = useState([
     {
       id: "Y9618A9Q2",
@@ -178,7 +180,11 @@ const UserSupport = () => {
             </thead>
             <tbody>
               {tickets.map((ticket, index) => (
-                <tr key={ticket.id} className="border-b hover:bg-gray-50">
+                <tr
+                onClick={()=>{
+                  navigate(`${ticket.id}`);
+                }}
+                key={ticket.id} className="border-b hover:bg-gray-50 cursor-pointer">
                   <td className="py-4 px-2 text-sm text-gray-900">
                     {ticket.id}
                   </td>
@@ -241,17 +247,18 @@ const UserSupport = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between mt-6">
-          <div className="text-sm text-gray-600">Page 1 of 10</div>
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900">
-              Previous
-            </button>
-            <button className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800">
-              Next
-            </button>
-          </div>
-        </div>
+<div className="flex items-center justify-between mt-6">
+  <button className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900">
+    Previous
+  </button>
+  <div className="text-sm text-gray-600">Page 1 of 10</div>
+  <button className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800">
+    Next
+  </button>
+</div>
+
+
+        
       </div>
     </div>
   );

@@ -280,50 +280,30 @@ const FinancialPayments = () => {
           </div>
 
           {/* Pagination */}
+
+          {/* Pagination */}
           <div className="px-6 py-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg">
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </button>
+              </div>
+
               <div className="text-sm text-gray-700">
                 Page {currentPage} of {totalPages}
               </div>
               
-              <div className="flex items-center gap-2">
-                {/* Previous Button */}
-                <button
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-
-                {/* Page Numbers */}
-                <div className="flex gap-1">
-                  {generatePageNumbers().map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium ${
-                        currentPage === page
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Next Button */}
-                <button
-                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+              <div className="flex items-center gap-4">
+                <button className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg">
+                  Next
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>

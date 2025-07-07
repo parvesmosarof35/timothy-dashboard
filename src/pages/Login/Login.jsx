@@ -1,15 +1,18 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../providers/AuthProvider";
+
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import signInIMG from "../../assets/sign-in-image.png"
+import { Facebook } from "lucide-react";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const Login = () => {
-  const { signIn, signInGoogle, ForgotPassword } = useContext(AuthContext);
+  const { signIn, signInGoogle,signInFacebook, user ,ForgotPassword } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const emailRef = useRef();
   const [error, setError] = useState("");
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -17,20 +20,40 @@ const Login = () => {
     const email = form.get("email");
     const password = form.get("password");
 
-    signIn(email, password)
-      .then(() => {
-        setError(""); 
-        navigate(location?.state ? location.state : "/");
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+   console.log(email, password)
   };
 
   const handleForgotPassword = () => {
     ForgotPassword(emailRef);
     navigate("/forgotpass");
   };
+
+
+
+  const handleSocialLogin = (provider) => {
+  console.log(`Login with ${provider}`);
+  
+  if (provider === "Google") {
+    signInGoogle()
+      .then((result) => {
+        console.log("Google login successful:", result.user);
+      })
+      .catch((error) => {
+        console.error("Google login error:", error);
+      });
+  }
+
+  if (provider === "Facebook") {
+    signInFacebook()
+      .then((result) => {
+        console.log("Facebook login successful:", result.user);
+      })
+      .catch((error) => {
+        console.error("Facebook login error:", error);
+      });
+  }
+};
+
 
   return (
 <div className="relative">
@@ -101,11 +124,33 @@ const Login = () => {
           </Link>
         </p>
 
-        <div className="mt-4 hidden">
-          <GoogleLoginButton signInGoogle={signInGoogle} />
+                  {/* Social Login Section */}
+        <div className="bg-white rounded-lg shadow-sm border p-4 mb-6 mt-6">
+          <p className="text-center text-sm text-gray-600 mb-4">Login with</p>
+          <div className="flex justify-center gap-4">
+            <button 
+              onClick={() => handleSocialLogin('Facebook')}
+              className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+            >
+              <Facebook size={18} className="text-white" />
+            </button>
+          
+            <button 
+              onClick={() => handleSocialLogin('Google')}
+              className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            >
+              <span className="text-white font-bold text-sm">G</span>
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
+
+
+
+
+
 
 </div>
   );
