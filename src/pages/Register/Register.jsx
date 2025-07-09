@@ -75,9 +75,9 @@ const handleSocialLogin = (provider) => {
       </div>
 
       {/* Registration Form */}
-      <div className="px-12 py-8 w-[29rem] border rounded-2xl absolute top-72 left-1/2 -translate-x-1/2 bg-white">
+      <div className="px-12 py-12 w-[29rem] border rounded-2xl absolute top-72 left-1/2 -translate-x-1/2 bg-white">
         {/* Social Login Section */}
-        <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
+        <div className="bg-white hidden rounded-lg shadow-sm border p-4 mb-6">
           <p className="text-center text-sm text-gray-600 mb-4">Register with</p>
           <div className="flex justify-center gap-4">
             <button 
@@ -97,9 +97,9 @@ const handleSocialLogin = (provider) => {
         </div>
 
         {/* OR Divider */}
-        <div className="text-center mb-6">
+        {/* <div className="text-center mb-6">
           <span className="text-gray-400 text-sm">or</span>
-        </div>
+        </div> */}
 
         {/* Form Fields */}
         <div className="space-y-4">
@@ -161,8 +161,8 @@ const handleSocialLogin = (provider) => {
                 <div className={`w-[2.6rem] h-5 rounded-full transition-colors ${
                   rememberMe ? 'bg-orange-500' : 'bg-gray-300'
                 }`}>
-                  <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
-                    rememberMe ? 'translate-x-5' : 'translate-x-1'
+                  <div className={`size-5 bg-white rounded-full shadow-inner transform transition-transform ${
+                    rememberMe ? 'translate-x-6' : 'translate-x-0'
                   } mt-1`}></div>
                 </div>
               </div>
@@ -172,7 +172,7 @@ const handleSocialLogin = (provider) => {
 
           <button
             onClick={handleRegister}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+            className="w-full bg-[#ff9000] hover:bg-orange-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
           >
             Register
           </button>

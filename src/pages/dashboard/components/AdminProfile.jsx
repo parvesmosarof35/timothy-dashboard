@@ -5,6 +5,7 @@ import { PiBell } from "react-icons/pi";
 import { CiSearch } from "react-icons/ci";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../providers/AuthProvider";
+import { DollarSign } from "lucide-react";
 
 const AdminProfile = ({ headingText = "Users Management" }) => {
   const { user, logOut } = useContext(AuthContext);
@@ -31,7 +32,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
     });
   };
 
-  console.log(user);
+  // console.log(user);
   return (
     <div className="flex items-center justify-between w-full px-6 py-8 bg-white rounded-md">
       {/* Left dynamic text */}
@@ -47,6 +48,17 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
             className="outline-none text-sm text-[#88755A] bg-transparent placeholder:text-[#88755A] w-full"
           />
           <CiSearch className="text-[#88755A]  text-3xl" />
+        </div>
+
+        {/* Total Issues */}
+        <div className="flex items-center space-x-2">
+          <div className="w-12 h-12 bg-[#FFD69B] rounded-md flex items-center justify-center">
+            <DollarSign className="w-4 h-4 text-gray-600" />
+          </div>
+          <div>
+            <p className="text-md text-gray-500 ">Admin Earnings</p>
+            <p className="text-lg font-bold text-gray-900">120</p>
+          </div>
         </div>
 
         {/* Bell Icon with notification */}

@@ -9,6 +9,7 @@ import { LiaFileContractSolid } from "react-icons/lia";
 import { IoLogOut, IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { AuthContext } from "../providers/AuthProvider";
+import { LuUsers } from "react-icons/lu";
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -18,25 +19,29 @@ export default function DashboardLayout() {
   const submenuRef = useRef(null);
   const isSettingsActive = location.pathname.startsWith("/dashboard/settings");
 
-    const { user, logOut } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
 
   const logOutUser = () => {
-  Swal.fire({
-    title: 'Are you sure you want to log out?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, log out',
-    cancelButtonText: 'Cancel',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      logOut().then(() => {
-        Swal.fire('Logged out!', 'You have been logged out successfully.', 'success');
-      });
-    }
-  });
-};
+    Swal.fire({
+      title: "Are you sure you want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logOut().then(() => {
+          Swal.fire(
+            "Logged out!",
+            "You have been logged out successfully.",
+            "success"
+          );
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     if (!isSettingsActive) setShowSettingsSubmenu(false);
@@ -94,7 +99,6 @@ export default function DashboardLayout() {
         Users
       </NavLink>
 
-
       <NavLink
         to="/dashboard/service-provider"
         className={({ isActive }) => linkClass(isActive)}
@@ -128,6 +132,14 @@ export default function DashboardLayout() {
       </NavLink>
 
       <NavLink
+        to="/dashboard/role"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <LuUsers className="text-lg" />
+        Role
+      </NavLink>
+
+      <NavLink
         to="/dashboard/settings"
         className={({ isActive }) => linkClass(isActive)}
       >
@@ -136,10 +148,10 @@ export default function DashboardLayout() {
       </NavLink>
 
       <div
-      className="px-4 py-2 rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
-       onClick={logOutUser}
+        className="px-4 py-2 rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
+        onClick={logOutUser}
       >
-        <IoLogOutOutline  className="text-xl" />
+        <IoLogOutOutline className="text-xl" />
         Log Out
       </div>
       {/* <NavLink to="/dashboard/userroles" className={({ isActive }) => linkClass(isActive)}>
@@ -194,7 +206,7 @@ export default function DashboardLayout() {
           <nav className="flex flex-col gap-2">{renderNavLinks()}</nav>
         </div>
 
-        <div className="p-4 relative">
+        <div className="p-4 relative hidden">
           {" "}
           {/* Added relative positioning here */}
           {/* Question mark circle - now outside the main container */}
@@ -206,7 +218,7 @@ export default function DashboardLayout() {
             ?
           </div>
           {/* Main container with overflow-hidden */}
-          <div className="bg-[#1E1A14] h-[268px] text-white rounded-[20px] py-6 shadow-xl text-center flex flex-col items-center justify-center overflow-hidden relative">
+          <div className="bg-[#1E1A14]  h-[268px] text-white rounded-[20px] py-6 shadow-xl text-center flex flex-col items-center justify-center overflow-hidden relative">
             {/* Decorative circles - will be clipped by overflow-hidden */}
             <div className="absolute top-0 left-0 w-32 h-32 bg-[#BCA88F] rounded-full opacity-20 transform -translate-x-1/2 -translate-y-1/2"></div>
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#BCA88F] rounded-full opacity-20 transform translate-x-1/2 translate-y-1/2"></div>

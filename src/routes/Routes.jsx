@@ -18,6 +18,7 @@ import UserSupport from "../pages/dashboard/userSupport/userSupport";
 import ContractDetails from "../pages/dashboard/ContractDetails";
 import UserMessage from "../pages/dashboard/userSupport/UserMessage";
 import ServiceProvider from "../pages/dashboard/ServiceProviders/ServiceProvider";
+import Role from "../pages/dashboard/Role/Role";
 
 
 const router = createBrowserRouter([
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
     // { path: 'userroles', element: <div>user roles</div> },
     { path: 'support', element: <UserSupport></UserSupport> },
     { path: 'support/:id', element: <UserMessage></UserMessage> },
+    { path: 'role', element: <Role></Role> },
     { path: 'settings', element: <ProfileSettings /> },
   //   { path: 'settings/terms', element: <TermsPage /> },
   //   { path: 'settings/privacy', element: <Privacypage /> },
