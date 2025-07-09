@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import Logo from "../assets/logo.png";
 import { FiLogOut, FiMenu, FiUsers, FiX } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
-import { TbUserHexagon } from "react-icons/tb";
+import { TbUserCog, TbUserHexagon } from "react-icons/tb";
 import { MdOutlinePayments, MdOutlineSupportAgent } from "react-icons/md";
 import { LiaFileContractSolid } from "react-icons/lia";
 import { IoLogOut, IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
@@ -99,7 +99,7 @@ export default function DashboardLayout() {
         to="/dashboard/service-provider"
         className={({ isActive }) => linkClass(isActive)}
       >
-        <TbUserHexagon className="text-lg" />
+        <TbUserCog className="text-lg" />
         Service Providers
       </NavLink>
 
