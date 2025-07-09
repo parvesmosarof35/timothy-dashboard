@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
+import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const users = [
   {
@@ -13,7 +14,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    id: "1981849263",
+    id: "19818492345235235263",
     name: "Jane Smith",
     joined: "12 Dec 2023",
     status: "Active",
@@ -23,7 +24,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    id: "1981849264",
+    id: "198184924534364",
     name: "Robert Johnson",
     joined: "12 Dec 2023",
     status: "Active",
@@ -53,7 +54,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/72.jpg",
   },
   {
-    id: "1981849263",
+    id: "19812352345243849263",
     name: "Jane Smith",
     joined: "12 Dec 2023",
     status: "Active",
@@ -63,7 +64,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    id: "1981849264",
+    id: "1981345345849264",
     name: "Robert Johnson",
     joined: "12 Dec 2023",
     status: "Active",
@@ -73,7 +74,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/65.jpg",
   },
   {
-    id: "1981849265",
+    id: "19818492345634565",
     name: "Alice Brown",
     joined: "12 Dec 2023",
     status: "Active",
@@ -83,7 +84,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/55.jpg",
   },
   {
-    id: "1981849266",
+    id: "198184932456346345266",
     name: "Michael Lee",
     joined: "12 Dec 2023",
     status: "Active",
@@ -93,7 +94,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/72.jpg",
   },
   {
-    id: "1981849263",
+    id: "198184233456345642349263",
     name: "Jane Smith",
     joined: "12 Dec 2023",
     status: "Active",
@@ -103,7 +104,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    id: "1981849264",
+    id: "19818493463465345264",
     name: "Robert Johnson",
     joined: "12 Dec 2023",
     status: "Active",
@@ -113,7 +114,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/65.jpg",
   },
   {
-    id: "1981849265",
+    id: "193635634681849265",
     name: "Alice Brown",
     joined: "12 Dec 2023",
     status: "Active",
@@ -123,7 +124,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/55.jpg",
   },
   {
-    id: "1981849266",
+    id: "19818767849266",
     name: "Michael Lee",
     joined: "12 Dec 2023",
     status: "Active",
@@ -133,7 +134,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/72.jpg",
   },
   {
-    id: "1981849263",
+    id: "1981823423449263",
     name: "Jane Smith",
     joined: "12 Dec 2023",
     status: "Active",
@@ -143,7 +144,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    id: "1981849264",
+    id: "19818494678467264",
     name: "Robert Johnson",
     joined: "12 Dec 2023",
     status: "Active",
@@ -153,7 +154,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/65.jpg",
   },
   {
-    id: "1981849265",
+    id: "198184947467265",
     name: "Alice Brown",
     joined: "12 Dec 2023",
     status: "Active",
@@ -163,7 +164,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/women/55.jpg",
   },
   {
-    id: "1981849266",
+    id: "1981844574579266",
     name: "Michael Lee",
     joined: "12 Dec 2023",
     status: "Active",
@@ -202,6 +203,8 @@ const UsersTable = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen font-sans">
@@ -254,8 +257,14 @@ const UsersTable = () => {
                   {user.earnings}
                 </td>
                 <td className="px-4 py-4 text-center">
-                  <button className="text-gray-500 hover:text-gray-700">
-                    <MoreVertical size={16} />
+                  <button
+                  onClick={
+                    ()=>{
+                      navigate(`/dashboard/user-info/details/${user.id}`)
+                    }
+                  }
+                  className="text-gray-500 hover:text-gray-700">
+                    <Info size={16} />
                   </button>
                 </td>
               </tr>

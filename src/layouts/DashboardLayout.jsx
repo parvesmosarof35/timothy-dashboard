@@ -104,7 +104,7 @@ export default function DashboardLayout() {
         className={({ isActive }) => linkClass(isActive)}
       >
         <TbUserCog className="text-lg" />
-        Service Providers
+        Partners
       </NavLink>
 
       <NavLink
@@ -206,7 +206,7 @@ export default function DashboardLayout() {
           <nav className="flex flex-col gap-2">{renderNavLinks()}</nav>
         </div>
 
-        <div className="p-4 relative hidden">
+        <div className="p-4 relative">
           {" "}
           {/* Added relative positioning here */}
           {/* Question mark circle - now outside the main container */}

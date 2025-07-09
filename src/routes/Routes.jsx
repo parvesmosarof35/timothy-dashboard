@@ -19,6 +19,8 @@ import ContractDetails from "../pages/dashboard/ContractDetails";
 import UserMessage from "../pages/dashboard/userSupport/UserMessage";
 import ServiceProvider from "../pages/dashboard/ServiceProviders/ServiceProvider";
 import Role from "../pages/dashboard/Role/Role";
+import UserDetails from "../pages/dashboard/UserDetails";
+import SettingsTab from "../pages/dashboard/SettingsTab/SettingsTabs";
 
 
 const router = createBrowserRouter([
@@ -43,7 +45,9 @@ const router = createBrowserRouter([
   children: [
     { path: 'statistics', element: <DashboardHome /> },
     { path: 'user-info', element: <UserInformation /> },
+    { path: 'user-info/details/:id', element: <UserDetails></UserDetails> },
     { path: 'service-provider', element: <ServiceProvider></ServiceProvider> },
+    { path: 'service-provider/details/:id', element: <UserDetails></UserDetails> },
     { path: 'financialpayments', element: <FinancialPayments /> },
     { path: 'contracts', element: <Contracts /> },
     { path: `contracts/:id`, element: <ContractDetails /> },
@@ -51,7 +55,7 @@ const router = createBrowserRouter([
     { path: 'support', element: <UserSupport></UserSupport> },
     { path: 'support/:id', element: <UserMessage></UserMessage> },
     { path: 'role', element: <Role></Role> },
-    { path: 'settings', element: <ProfileSettings /> },
+    { path: 'settings', element: <SettingsTab></SettingsTab> },
   //   { path: 'settings/terms', element: <TermsPage /> },
   //   { path: 'settings/privacy', element: <Privacypage /> },
    ]

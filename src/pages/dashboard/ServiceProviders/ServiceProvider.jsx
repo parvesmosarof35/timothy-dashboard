@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
+import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
+import { useNavigate } from "react-router-dom";
 
 const users = [
   {
@@ -14,7 +15,7 @@ const users = [
     image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    id: "1981849263",
+    id: "1981849234263",
     name: "Jane Smith",
     joined: "12 Dec 2023",
     status: "Active",
@@ -116,6 +117,7 @@ const users = [
 ];
 
 const ServiceProvider = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -146,10 +148,10 @@ const ServiceProvider = () => {
 
   return (
 <div className="px-6">
-    <AdminProfile headingText="Service Providers"></AdminProfile>
+    <AdminProfile headingText="Manage Partners"></AdminProfile>
         <div className="p-6 bg-gray-50 min-h-screen font-sans">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Manage Service Providers</h2>
+        <h2 className="text-2xl font-semibold">Our Partners</h2>
         <input
           type="text"
           placeholder="Search"
@@ -197,8 +199,15 @@ const ServiceProvider = () => {
                   {user.earnings}
                 </td>
                 <td className="px-4 py-4 text-center">
-                  <button className="text-gray-500 hover:text-gray-700">
-                    <MoreVertical size={16} />
+                  <button
+                  onClick={
+                    ()=>{
+                      navigate(`/dashboard/service-provider/details/${user.id}`)
+                    }
+                  }
+
+                  className="text-gray-500 hover:text-gray-700">
+                    <Info size={16} />
                   </button>
                 </td>
               </tr>

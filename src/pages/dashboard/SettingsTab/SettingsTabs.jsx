@@ -1,0 +1,320 @@
+import React, { useState } from "react";
+import { FiSettings, FiBell } from "react-icons/fi";
+import Swal from "sweetalert2";
+import AdminProfile from "../components/AdminProfile";
+
+const SettingsTab = () => {
+  const [activeTab, setActiveTab] = useState("general");
+
+  // General settings state
+  const [generalSettings, setGeneralSettings] = useState({
+    currency: "English (Default)",
+    language: "English (Default)",
+    timezone: "English (Default)",
+    timeFormat: "24 Hours",
+  });
+
+  // Notification settings state
+  const [notificationSettings, setNotificationSettings] = useState({
+    messageNotifications: false,
+    transactionNotifications: false,
+    emailNotifications: false,
+  });
+
+  const handleGeneralSettingsChange = (e) => {
+    const { name, value } = e.target;
+    setGeneralSettings((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNotificationToggle = (settingName) => {
+    setNotificationSettings((prev) => ({
+      ...prev,
+      [settingName]: !prev[settingName],
+    }));
+
+    // Console log when message notifications are toggled
+    if (settingName === "messageNotifications") {
+      console.log(
+        `Message notifications: ${
+          !notificationSettings.messageNotifications ? "ON" : "OFF"
+        }`
+      );
+    }
+
+    // Console log when transaction notifications are toggled
+    if (settingName === "transactionNotifications") {
+      console.log(
+        `Transaction notifications: ${
+          !notificationSettings.transactionNotifications ? "ON" : "OFF"
+        }`
+      );
+    }
+
+    // Console log when email notifications are toggled
+    if (settingName === "emailNotifications") {
+      console.log(
+        `Email notifications: ${
+          !notificationSettings.emailNotifications ? "ON" : "OFF"
+        }`
+      );
+    }
+  };
+
+  const handleSaveGeneralSettings = () => {
+    Swal.fire({
+      title: "Settings Updated!",
+      text: "Your general settings have been saved.",
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  };
+
+  const ToggleSwitch = ({ isOn, onToggle, label }) => (
+    <div className="flex items-center justify-between py-3">
+      <span className="text-sm font-medium text-gray-700">{label}</span>
+      <button
+        type="button"
+        onClick={onToggle}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+          isOn ? "bg-yellow-500" : "bg-gray-200"
+        }`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+            isOn ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </button>
+    </div>
+  );
+
+  return (
+    <>
+      <div className="space-y-6 bg-gray-50 min-h-screen px-6">
+        <AdminProfile headingText="User Settings" />
+        <div className="bg-white rounded p-6">
+          <div className="max-w-md   ">
+            {/* Tabs */}
+            <div className="flex justify-start border-b border-gray-200 mb-8 font-poppins">
+              <button
+                className={`flex items-center gap-2 px-6 py-3 font-medium ${
+                  activeTab === "general"
+                    ? "text-gray-800 border-b-2 border-yellow-500"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveTab("general")}
+              >
+                <FiSettings />
+                General
+              </button>
+              <button
+                className={`flex items-center gap-2 px-6 py-3 font-medium ${
+                  activeTab === "notification"
+                    ? "text-gray-800 border-b-2 border-yellow-500"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveTab("notification")}
+              >
+                <FiBell />
+                Notification
+              </button>
+            </div>
+
+            {/* General Tab */}
+            {activeTab === "general" && (
+              <div className="space-y-6">
+                {/* <h2 className="text-2xl font-semibold text-center mb-6">General Settings</h2> */}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Currency
+                    </label>
+                    <input
+                      type="text"
+                      value="English (Default)"
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Language
+                    </label>
+                    <input
+                      type="text"
+                      value="English (Default)"
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
+                    />
+                  </div>
+
+                  {/* currency select  */}
+                  {/* <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Currencies</label>
+                  <select
+                    name="currency"
+                    value={generalSettings.currency}
+                    onChange={handleGeneralSettingsChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  >
+                    <option value="English (Default)">English (Default)</option>
+                     <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="AUD">AUD</option> 
+                  </select>
+                </div> */}
+
+                  {/* language select  */}
+                  {/* <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                  <select
+                    name="language"
+                    value={generalSettings.language}
+                    onChange={handleGeneralSettingsChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  >
+                    <option value="English (Default)">English (Default)</option>
+                     <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                    <option value="German">German</option>
+                    <option value="Chinese">Chinese</option>
+                  </select>
+                </div> */}
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Timezone
+                    </label>
+                    <select
+                      name="timezone"
+                      value={generalSettings.timezone}
+                      onChange={handleGeneralSettingsChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    >
+                      <option value="English (Default)">
+                        English (Default)
+                      </option>
+                      <option value="UTC-12">UTC-12</option>
+                      <option value="UTC-11">UTC-11</option>
+                      <option value="UTC-10">UTC-10</option>
+                      <option value="UTC-9">UTC-9</option>
+                      <option value="UTC-8">UTC-8</option>
+                      <option value="UTC-7">UTC-7</option>
+                      <option value="UTC-6">UTC-6</option>
+                      <option value="UTC-5">UTC-5</option>
+                      <option value="UTC-4">UTC-4</option>
+                      <option value="UTC-3">UTC-3</option>
+                      <option value="UTC-2">UTC-2</option>
+                      <option value="UTC-1">UTC-1</option>
+                      <option value="UTC+0">UTC+0</option>
+                      <option value="UTC+1">UTC+1</option>
+                      <option value="UTC+2">UTC+2</option>
+                      <option value="UTC+3">UTC+3</option>
+                      <option value="UTC+4">UTC+4</option>
+                      <option value="UTC+5">UTC+5</option>
+                      <option value="UTC+6">UTC+6</option>
+                      <option value="UTC+7">UTC+7</option>
+                      <option value="UTC+8">UTC+8</option>
+                      <option value="UTC+9">UTC+9</option>
+                      <option value="UTC+10">UTC+10</option>
+                      <option value="UTC+11">UTC+11</option>
+                      <option value="UTC+12">UTC+12</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Time Format
+                    </label>
+                    <div className="flex gap-4 mt-2">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="timeFormat"
+                          value="24 Hours"
+                          checked={generalSettings.timeFormat === "24 Hours"}
+                          onChange={handleGeneralSettingsChange}
+                          className="mr-2"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          24 Hours
+                        </span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="timeFormat"
+                          value="12 Hours"
+                          checked={generalSettings.timeFormat === "12 Hours"}
+                          onChange={handleGeneralSettingsChange}
+                          className="mr-2"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          12 Hours
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={handleSaveGeneralSettings}
+                    className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-400 transition-colors"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Notification Tab */}
+            {activeTab === "notification" && (
+              <div className="space-y-6">
+                {/* <h2 className="text-2xl font-semibold text-center mb-6">Notification Settings</h2> */}
+
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <ToggleSwitch
+                    isOn={notificationSettings.messageNotifications}
+                    onToggle={() =>
+                      handleNotificationToggle("messageNotifications")
+                    }
+                    label="Message Notifications"
+                  />
+                  <div className="border-t border-gray-200 my-1"></div>
+
+                  <ToggleSwitch
+                    isOn={notificationSettings.transactionNotifications}
+                    onToggle={() =>
+                      handleNotificationToggle("transactionNotifications")
+                    }
+                    label="Transaction Info Notifications"
+                  />
+                  <div className="border-t border-gray-200 my-1"></div>
+
+                  <ToggleSwitch
+                    isOn={notificationSettings.emailNotifications}
+                    onToggle={() =>
+                      handleNotificationToggle("emailNotifications")
+                    }
+                    label="Email Notifications"
+                  />
+                </div>
+
+                {/* <div className="text-center text-sm text-gray-600 mt-4">
+                Toggle switches to enable or disable specific notification types
+              </div> */}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SettingsTab;
