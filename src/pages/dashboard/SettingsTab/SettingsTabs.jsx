@@ -91,7 +91,7 @@ const SettingsTab = () => {
 
   return (
     <>
-      <div className="space-y-6 bg-gray-50 min-h-screen px-6">
+      <div className="space-y-6 bg-gray-50 min-h-screen px-6 font-sans">
         <AdminProfile headingText="User Settings" />
         <div className="bg-white rounded p-6">
           <div className="max-w-md   ">
