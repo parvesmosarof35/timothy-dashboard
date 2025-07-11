@@ -7,7 +7,7 @@ const MetricCard = ({ title, value, percentage, dropdown = true }) => (
       <h3 className="text-brandGray text-sm font-medium">{title}</h3>
       {dropdown && (
         <div className="flex items-center gap-1 text-brandGray cursor-pointer hover:text-brandGray transition-colors">
-          <span className="text-xs">Today</span>
+          <span className="text-xs">This Month</span>
           <ChevronDown className="w-3 h-3" />
         </div>
       )}

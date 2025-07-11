@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Facebook, Apple } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 
 const Register = () => {
@@ -11,6 +11,7 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const { user, signInGoogle, signInFacebook } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -26,6 +27,7 @@ const Register = () => {
       return;
     } else {
       setPasswordError("");
+      navigate("/login")
     }
 
     // Add your registration logic here
@@ -67,16 +69,17 @@ const Register = () => {
           className="absolute h-full top-0 w-full px-6 py-6"
         />
 
-        <div className="text-center relative z-10">
-          <h1 className="text-3xl font-bold text-darkGray mb-2 font-sans">
-            Welcome!
-          </h1>
-          <p className="text-brandGray text-lg font-semibold">
-            Lorem ipsum dolor sit amet consectetur
-            <br />
-            adipiscing elit sed do eiusmod tempor
-          </p>
-        </div>
+<div className="text-center relative z-10">
+  <h1 className="text-3xl font-bold text-darkGray mb-2 font-sans">
+    Welcome!
+  </h1>
+  <p className="text-brandGray text-lg font-semibold">
+    Create your account to get started
+    <br />
+    and explore all the features we offer.
+  </p>
+</div>
+
       </div>
 
       {/* Registration Form */}
@@ -189,7 +192,7 @@ const Register = () => {
           </button>
         </div>
 
-        <p className="text-center text-sm text-brandGray mt-6">
+        <p className=" mt-6 text-lg font-semibold text-brandGray text-center">
           Already have an account?{" "}
           <Link to={`/login`}>
             <span className="text-orange-500 font-medium hover:underline cursor-pointer">

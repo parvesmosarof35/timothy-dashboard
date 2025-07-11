@@ -76,7 +76,7 @@ const FinancialDashboard = () => {
               <LegendItem color="#FFC983" label="Users" />
             </div>
             <div className="flex items-center gap-2 bg-grayLightBg px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-              <span className="text-brandGray text-sm font-medium">Today</span>
+              <span className="text-brandGray text-sm font-medium">This year</span>
               <ChevronDown className="w-4 h-4 text-brandGray" />
             </div>
           </div>
@@ -92,7 +92,7 @@ const FinancialDashboard = () => {
             trendColor="green"
           />
           <MetricCard
-            title="Contracts"
+            title="Partners"
             value={1009123}
             trend="up"
             icon={TrendingUp}

@@ -7,6 +7,7 @@ import { Facebook } from "lucide-react";
 import { AuthContext } from "../../providers/AuthProvider";
 import FBLogo from "../../assets/facebook-logo.png";
 import GoogleLogo from "../../assets/Google-logo.png";
+import ContinueGoogle from "../../assets/ContinueGoogle.png";
 
 const Login = () => {
   const { signIn, signInGoogle, signInFacebook, user, ForgotPassword } =
@@ -22,6 +23,7 @@ const Login = () => {
     const email = form.get("email");
     const password = form.get("password");
     console.log(email, password);
+    navigate("/")
   };
 
   const handleForgotPassword = () => {
@@ -36,6 +38,7 @@ const Login = () => {
       signInGoogle()
         .then((result) => {
           console.log("Google login successful:", result.user);
+          navigate("/")
         })
         .catch((error) => {
           console.error("Google login error:", error);
@@ -46,6 +49,7 @@ const Login = () => {
       signInFacebook()
         .then((result) => {
           console.log("Facebook login successful:", result.user);
+          navigate("/")
         })
         .catch((error) => {
           console.error("Facebook login error:", error);
@@ -132,31 +136,35 @@ const Login = () => {
             </Link>
           </p>
 
-          {/* OR Divider */}
-          <div className="text-center">
-            <span className="text-brandGray text-sm mt-2 font-bold">or</span>
-          </div>
+          
+{/* OR Divider */}
+<div className="flex items-center my-4">
+  <div className="flex-grow h-px bg-gray-200" />
+  <span className="px-4 text-sm text-brandGray font-semibold">or, login with</span>
+  <div className="flex-grow h-px bg-gray-200" />
+</div>
+
 
           {/* Social Login Section */}
           <div className="bg-white rounded-lg   mb-6 ">
-            <p className="text-center text-sm text-brandGray mb-4">
-              Login with
-            </p>
+            
+
+
             <div className="flex justify-center gap-4">
-              <div className="border p-7 rounded-2xl cursor-pointer hover:bg-grayLightBg">
+              {/* <div className="border p-7 rounded-2xl cursor-pointer hover:bg-grayLightBg">
                 <img
                   className="w-10 h-10 flex items-center justify-center  transition-colors"
                   onClick={() => handleSocialLogin("Facebook")}
                   src={FBLogo}
                   alt="FBLogo"
                 />
-              </div>
+              </div> */}
 
-              <div className="border p-7 rounded-2xl cursor-pointer hover:bg-grayLightBg">
+              <div className="border  rounded-2xl cursor-pointer hover:bg-grayLightBg">
                 <img
-                  className="w-10 h-10 flex items-center justify-center  transition-colors"
+                  className="w-full  flex items-center justify-center  transition-colors "
                   onClick={() => handleSocialLogin("Google")}
-                  src={GoogleLogo}
+                  src={ContinueGoogle}
                   alt="GoogleLogo"
                 />
               </div>

@@ -190,13 +190,13 @@ const ContractDetails = () => {
       </div>
 
       <div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans flex justify-end gap-6">
-        <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-medium transition">
+        <button className="px-4 py-2 bg-brandRed hover:bg-red-600 text-white rounded-md font-medium transition">
           Terminate
         </button>
-        <button className="px-4 py-2 bg-blueLightBg0 hover:bg-blue-600 text-white rounded-md font-medium transition">
+        <button className="px-4 py-2 bg-brandBlue hover:bg-blue-600 text-white rounded-md font-medium transition">
           Edit
         </button>
-        <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-medium transition">
+        <button className="px-4 py-2 bg-orangeAction hover:bg-yellow-600 text-white rounded-md font-medium transition">
           Suspend
         </button>
       </div>

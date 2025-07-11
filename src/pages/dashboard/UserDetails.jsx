@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MoreHorizontal, User, DollarSign, MessageCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
+import UserMessage from "./userSupport/UserMessage";
 
 const UserDetails = () => {
   // Mock id for demonstration - in your actual app, use useParams()
@@ -281,7 +282,7 @@ const UserDetails = () => {
   const renderMessagesTab = () => (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h2 className="text-2xl font-bold text-darkGray mb-6">Messages</h2>
-      <div className="text-center py-12">
+      {/* <div className="text-center py-12">
         <MessageCircle className="w-16 h-16 text-brandGray mx-auto mb-4" />
         <h3 className="text-lg font-medium text-darkGray mb-2">
           User ID: {userData.id}
@@ -289,7 +290,11 @@ const UserDetails = () => {
         <p className="text-brandGray">
           Message functionality for user {userData.id}
         </p>
-      </div>
+      </div> */}
+
+      <UserMessage></UserMessage>
+
+      
     </div>
   );
 

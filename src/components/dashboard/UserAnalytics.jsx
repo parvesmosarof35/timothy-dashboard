@@ -1,6 +1,5 @@
 import React from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { HiArrowTrendingDown } from "react-icons/hi2";
 import { TrendingUp } from "lucide-react";
 import {
   AreaChart,
@@ -12,6 +11,7 @@ import {
 } from "recharts";
 import { LuUsers } from "react-icons/lu";
 
+
 const UserAnalytics = ({
   chartData = [],
   peakValue = 200.3,
@@ -21,18 +21,18 @@ const UserAnalytics = ({
   subtitle = "User Growth",
 }) => {
   const defaultData = [
-    { name: "Jan", value: 10 },
-    { name: "Feb", value: 20 },
-    { name: "Mar", value: 35 },
-    { name: "Apr", value: 45 },
-    { name: "May", value: 180 },
-    { name: "Jun", value: 200 },
-    { name: "Jul", value: 190 },
-    { name: "Aug", value: 160 },
-    { name: "Sep", value: 140 },
-    { name: "Oct", value: 120 },
-    { name: "Nov", value: 100 },
-    { name: "Dec", value: 85 },
+    { name: "Jan", users: 10, partners: 8 },
+    { name: "Feb", users: 20, partners: 15 },
+    { name: "Mar", users: 35, partners: 25 },
+    { name: "Apr", users: 45, partners: 35 },
+    { name: "May", users: 180, partners: 140 },
+    { name: "Jun", users: 200, partners: 160 },
+    { name: "Jul", users: 190, partners: 150 },
+    { name: "Aug", users: 160, partners: 130 },
+    { name: "Sep", users: 140, partners: 110 },
+    { name: "Oct", users: 120, partners: 95 },
+    { name: "Nov", users: 100, partners: 80 },
+    { name: "Dec", users: 85, partners: 70 },
   ];
 
   const data = chartData.length > 0 ? chartData : defaultData;
@@ -50,88 +50,160 @@ const UserAnalytics = ({
 
   return (
     <div>
-      <h3 className="text-2xl mb-6 font-semibold text-darkGray">{title}</h3>
+      <h3 className="text-2xl mb-6 font-semibold text-gray-800">{title}</h3>
 
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 w-full mx-auto overflow-hidden">
-        {/* Header */}
-        <div className="flex justify-between items-center px-6 pt-6">
-          <h3 className="text-lg font-semibold text-brandGray">{subtitle}</h3>
-          <div className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border">
-            Today <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Users Box */}
+        <div className="flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+          {/* Header */}
+          <div className="flex justify-between items-center px-6 pt-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+                <LuUsers className="w-5 h-5 text-[#ffc983]" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700">Users</h3>
+                <p className="text-sm text-gray-500">Growth Analytics</p>
+              </div>
+            </div>
+            <div className="flex items-center text-xs text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border">
+              This Year <IoIosArrowDown className="ml-1 text-gray-600" size={12} />
+            </div>
           </div>
-        </div>
 
-        {/* Main Section Divided */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center px-6 py-6 gap-8">
-          {/* Chart Section - 86% */}
-          <div className="flex-[0.86] h-56 md:h-60">
+          {/* Stats */}
+          <div className="px-6 py-4">
+            <div className="flex items-center space-x-2">
+              <p className="text-2xl font-bold text-gray-800">
+                {usersCount.toLocaleString()}
+              </p>
+              <div className="flex items-center text-green-600 text-sm">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                <span>12.5%</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Total active users</p>
+          </div>
+
+          {/* Chart */}
+          <div className="h-48 px-6 pb-6">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data}
-                margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
               >
                 <defs>
                   <linearGradient
-                    id="colorGradient"
+                    id="userGradient"
                     x1="0"
                     y1="0"
                     x2="0"
                     y2="1"
                   >
-                    <stop offset="5%" stopColor="#FFA500" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#FFA500" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#ffc983" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#ffc983" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                  tick={{ fontSize: 11, fill: "#9CA3AF" }}
                 />
-                <YAxis hide />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fill: "#9CA3AF" }}
+                  width={40}
+                />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
-                  dataKey="value"
-                  stroke="#FFA500"
+                  dataKey="users"
+                  stroke="#ffc983"
                   strokeWidth={2}
                   fillOpacity={1}
-                  fill="url(#colorGradient)"
+                  fill="url(#userGradient)"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
+        </div>
 
-          {/* Gray Divider */}
-          <div className="hidden md:block w-px h-60 bg-gray-300" />
-
-          {/* Stats Section - 14% */}
-          <div className="flex-[0.14] flex flex-col justify-center space-y-6">
-            {/* Partners */}
+        {/* Partners Box */}
+        <div className="flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+          {/* Header */}
+          <div className="flex justify-between items-center px-6 pt-6">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
-                <LuUsers  className="w-6 h-6 text-[#c3720b] " />
+              <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+                <LuUsers className="w-5 h-5 text-[#c3720b]" />
               </div>
               <div>
-                <p className="text-xs text-brandGray">Partners</p>
-                <p className="text-sm font-bold text-darkGray">
-                  {partnersCount.toLocaleString()}
-                </p>
+                <h3 className="text-lg font-semibold text-gray-700">Partners</h3>
+                <p className="text-sm text-gray-500">Growth Analytics</p>
               </div>
             </div>
+            <div className="flex items-center text-xs text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border">
+              This Year <IoIosArrowDown className="ml-1 text-gray-600" size={12} />
+            </div>
+          </div>
 
-            {/* Users */}
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
-                <LuUsers className="w-6 h-6 text-orangePrimary" />
-              </div>
-              <div>
-                <p className="text-xs text-brandGray">Users</p>
-                <p className="text-sm font-bold text-darkGray">
-                  {usersCount.toLocaleString()}
-                </p>
+          {/* Stats */}
+          <div className="px-6 py-4">
+            <div className="flex items-center space-x-2">
+              <p className="text-2xl font-bold text-gray-800">
+                {partnersCount.toLocaleString()}
+              </p>
+              <div className="flex items-center text-green-600 text-sm">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                <span>8.2%</span>
               </div>
             </div>
+            <p className="text-xs text-gray-500 mt-1">Total active partners</p>
+          </div>
+
+          {/* Chart */}
+          <div className="h-48 px-6 pb-6">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={data}
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient
+                    id="partnerGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#c3720b" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#c3720b" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fill: "#9CA3AF" }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fill: "#9CA3AF" }}
+                  width={40}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="partners"
+                  stroke="#c3720b"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#partnerGradient)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
