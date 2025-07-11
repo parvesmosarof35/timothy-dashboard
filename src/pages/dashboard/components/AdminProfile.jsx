@@ -36,7 +36,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
   return (
     <div className="flex items-center justify-between w-full px-6 py-8 bg-white rounded-md">
       {/* Left dynamic text */}
-      <h1 className="text-2xl font-bold text-[#1E1A14]">{headingText}</h1>
+      <h1 className="text-2xl font-bold text-darkGray">{headingText}</h1>
 
       {/* Right-side controls */}
       <div className="flex items-center gap-4">
@@ -52,12 +52,12 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
 
         {/* Total Issues */}
         <div className="flex items-center space-x-2">
-          <div className="w-12 h-12 bg-[#FFD69B] rounded-md flex items-center justify-center">
-            <DollarSign className="w-4 h-4 text-gray-600" />
+          <div className="w-12 h-12 bg-orangePrimary rounded-md flex items-center justify-center">
+            <DollarSign className="w-4 h-4 text-brandGray" />
           </div>
           <div>
-            <p className="text-md text-gray-500 ">Admin Earnings</p>
-            <p className="text-lg font-bold text-gray-900">120</p>
+            <p className="text-md text-brandGray ">Admin Earnings</p>
+            <p className="text-lg font-bold text-brandGray">120</p>
           </div>
         </div>
 
@@ -89,7 +89,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
         py-1
         text-xs
         bg-white
-        text-gray-600
+        text-brandGray
         border
         rounded
         opacity-0
@@ -113,16 +113,16 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
       mt-0
       left-1/2
       -translate-x-1/2
-      bg-[#ffd69b]
+      bg-orangePrimary
       border
-      border-gray-300
+      text-brandGray
       shadow
       px-5
       py-2
       text-sm
       rounded
       font-semibold
-      text-gray-700
+      text-darkGray
       opacity-0
       group-hover:opacity-100
       transition

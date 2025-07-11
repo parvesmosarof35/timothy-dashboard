@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import Swal from 'sweetalert2';
-import { useMutation } from '@tanstack/react-query';
+import Swal from "sweetalert2";
+import { useMutation } from "@tanstack/react-query";
 
 // Mock API function (replace with real API call later)
 const mockResetPassword = async (password) => {
@@ -50,49 +50,49 @@ export default function ResetPassword() {
 
     if (!newPassword || !confirmPassword) {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please fill in both fields.',
-        confirmButtonColor: '#3085d6',
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in both fields.",
+        confirmButtonColor: "#3085d6",
       });
       return;
     }
 
     if (newPassword !== confirmPassword) {
       Swal.fire({
-        icon: 'error',
-        title: 'Password Mismatch',
-        text: 'Passwords do not match. Please try again.',
-        confirmButtonColor: '#3085d6',
+        icon: "error",
+        title: "Password Mismatch",
+        text: "Passwords do not match. Please try again.",
+        confirmButtonColor: "#3085d6",
       });
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call with setTimeout
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // When ready to use React Query, replace with:
       // resetPassword(newPassword);
-      
+
       // Temporary success handling
       Swal.fire({
-        icon: 'success',
-        title: 'Password Reset Successful!',
-        text: 'Your password has been updated successfully.',
-        confirmButtonColor: '#3085d6',
+        icon: "success",
+        title: "Password Reset Successful!",
+        text: "Your password has been updated successfully.",
+        confirmButtonColor: "#3085d6",
       }).then(() => {
         setNewPassword("");
         setConfirmPassword("");
       });
     } catch (error) {
       Swal.fire({
-        icon: 'error',
-        title: 'Reset Failed',
-        text: error.message || 'Failed to reset password. Please try again.',
-        confirmButtonColor: '#3085d6',
+        icon: "error",
+        title: "Reset Failed",
+        text: error.message || "Failed to reset password. Please try again.",
+        confirmButtonColor: "#3085d6",
       });
     } finally {
       setIsSubmitting(false);
@@ -103,18 +103,22 @@ export default function ResetPassword() {
     <div className="min-h-screen bg-[#d0d9d0] flex items-center justify-center p-4">
       <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8 min-h-[40rem] flex flex-col justify-center">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-4">
+          <h1 className="text-2xl font-semibold text-darkGray mb-4">
             Set a new password
           </h1>
-          <p className="text-sm text-gray-600">
-            Create a new password. Ensure it differs from previous ones for security
+          <p className="text-sm text-brandGray">
+            Create a new password. Ensure it differs from previous ones for
+            security
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* New Password */}
           <div>
-            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="new-password"
+              className="block text-sm font-medium text-darkGray mb-2"
+            >
               New Password
             </label>
             <div className="relative">
@@ -128,7 +132,7 @@ export default function ResetPassword() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-700"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-brandBlue"
                 onClick={() => setShowNew((prev) => !prev)}
                 disabled={isSubmitting}
               >
@@ -139,7 +143,10 @@ export default function ResetPassword() {
 
           {/* Confirm Password */}
           <div>
-            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="confirm-password"
+              className="block text-sm font-medium text-darkGray mb-2"
+            >
               Confirm Password
             </label>
             <div className="relative">
@@ -153,7 +160,7 @@ export default function ResetPassword() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-700"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-brandBlue"
                 onClick={() => setShowConfirm((prev) => !prev)}
                 disabled={isSubmitting}
               >

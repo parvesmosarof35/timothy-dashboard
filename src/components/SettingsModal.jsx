@@ -18,13 +18,22 @@ export default function SettingsModal({ onClose }) {
       <div className="bg-white p-6 rounded-lg w-96">
         <h2 className="text-lg font-semibold mb-4">Settings</h2>
         <div className="flex flex-col gap-2">
-          <NavLink to="/dashboard/settings" className="px-4 py-2 bg-green-700 text-white rounded">
+          <NavLink
+            to="/dashboard/settings"
+            className="px-4 py-2 bg-green-700 text-white rounded"
+          >
             Profile
           </NavLink>
-          <NavLink to="/dashboard/settings/terms" className="px-4 py-2 hover:bg-green-100 rounded">
+          <NavLink
+            to="/dashboard/settings/terms"
+            className="px-4 py-2 hover:bg-greenMutedBg rounded"
+          >
             Terms & Condition
           </NavLink>
-          <NavLink to="/dashboard/settings/privacy" className="px-4 py-2 hover:bg-green-100 rounded">
+          <NavLink
+            to="/dashboard/settings/privacy"
+            className="px-4 py-2 hover:bg-greenMutedBg rounded"
+          >
             Privacy Policy
           </NavLink>
         </div>

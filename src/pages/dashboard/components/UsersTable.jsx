@@ -178,14 +178,15 @@ const users = [
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   const usersPerPage = 10;
   const totalPages = Math.ceil(users.length / usersPerPage);
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.id.includes(searchTerm) ||
-    user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.id.includes(searchTerm) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastUser = currentPage * usersPerPage;
@@ -207,7 +208,7 @@ const UsersTable = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen font-sans">
+    <div className="p-6 bg-grayLightBg min-h-screen font-sans">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage Users</h2>
         <input
@@ -218,52 +219,75 @@ const UsersTable = () => {
           className="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      
+
       <div className="overflow-x-auto border rounded-lg bg-white">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">ID</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Name</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Joined</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Level</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Role</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Earnings</th>
-              <th className="px-4 py-3 text-center text-sm font-medium text-gray-700">Actions</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                ID
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                Name
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                Joined
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                Status
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                Level
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                Role
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
+                Earnings
+              </th>
+              <th className="px-4 py-3 text-center text-sm font-medium text-darkGray">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {currentUsers.map((user, index) => (
-              <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{user.id}</td>
+              <tr key={user.id} className="hover:bg-grayLightBg">
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-darkGray">
+                  {user.id}
+                </td>
                 <td className="px-4 py-4 flex items-center gap-3">
                   <img
                     src={user.image}
                     alt={user.name}
                     className="w-9 h-9 rounded-full object-cover"
                   />
-                  <span className="text-sm font-medium">{user.name}</span>
+                  <span className="text-sm font-medium text-darkGray">
+                    {user.name}
+                  </span>
                 </td>
-                <td className="px-4 py-4 text-sm text-gray-700">{user.joined}</td>
+                <td className="px-4 py-4 text-sm text-darkGray">
+                  {user.joined}
+                </td>
                 <td className="px-4 py-4">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-greenMutedBg text-brandGreen">
                     ↑ {user.status}
                   </span>
                 </td>
-                <td className="px-4 py-4 text-sm text-gray-700">{user.level}</td>
-                <td className="px-4 py-4 text-sm text-gray-700">{user.role}</td>
-                <td className="px-4 py-4 text-sm font-semibold text-gray-800">
+                <td className="px-4 py-4 text-sm text-darkGray">
+                  {user.level}
+                </td>
+                <td className="px-4 py-4 text-sm text-darkGray">{user.role}</td>
+                <td className="px-4 py-4 text-sm font-semibold text-darkGray">
                   {user.earnings}
                 </td>
                 <td className="px-4 py-4 text-center">
                   <button
-                  onClick={
-                    ()=>{
-                      navigate(`/dashboard/user-info/details/${user.id}`)
-                    }
-                  }
-                  className="text-gray-500 hover:text-gray-700">
+                    onClick={() => {
+                      navigate(`/dashboard/user-info/details/${user.id}`);
+                    }}
+                    className="text-brandGray hover:text-darkGray"
+                  >
                     <Info size={16} />
                   </button>
                 </td>
@@ -276,25 +300,25 @@ const UsersTable = () => {
         <div className="px-6 py-4 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <button 
+              <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
               </button>
             </div>
 
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-darkGray">
               Page {currentPage} of {totalPages}
             </div>
-            
+
             <div className="flex items-center gap-4">
-              <button 
+              <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
                 <ChevronRight className="w-4 h-4" />

@@ -79,13 +79,13 @@ const CustomTooltip = ({ active, payload, coordinate }) => {
 // Chart component
 const PaymentChart = () => {
 return (
-  <div className=" col-span-4">
-    <h1 className="text-2xl font-semibold mb-6">Payment</h1>
+  <div className=" col-span-6">
+    <h1 className="text-2xl font-semibold mb-6 text-darkGray">Payment</h1>
 
 
-  <div className="rounded-lg col-span-4 p-4 bg-white shadow">
+  <div className="rounded-lg col-span-4 p-12 bg-white shadow">
 
-    <div className="h-64">
+    <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
           {/* Gradient definition */}

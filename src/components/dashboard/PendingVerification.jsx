@@ -17,12 +17,14 @@ const PendingVerification = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Pending Verification</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-darkGray">
+        Pending Verification
+      </h1>
       <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow w-full max-w-md">
         <div className="flex flex-col items-center">
           <div className="flex justify-around w-full mb-2">
             <div className="text-3xl font-normal">{total.toLocaleString()}</div>
-            <div className="text-2xl font-normal text-gray-400">
+            <div className="text-2xl font-normal text-brandGray">
               <HiDotsVertical className="mt-1" />
             </div>
           </div>
@@ -42,7 +44,10 @@ const PendingVerification = () => {
                     stroke="none"
                   >
                     {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                 </PieChart>

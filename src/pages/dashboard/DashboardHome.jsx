@@ -1,38 +1,30 @@
-import { Line, Bar } from 'react-chartjs-2';
+import { Line, Bar } from "react-chartjs-2";
 
-import AdminProfile from './components/AdminProfile';
-import StatsCards from './components/StatsCards';
-import UsersTable from './components/UsersTable';
-import { Graphs } from './components/Graphs';
-import Dashboard from '../../components/Dashboard';
-
-
-
+import AdminProfile from "./components/AdminProfile";
+import StatsCards from "./components/StatsCards";
+import UsersTable from "./components/UsersTable";
+import { Graphs } from "./components/Graphs";
+import Dashboard from "../../components/Dashboard";
 
 export default function DashboardHome() {
   return (
-    <div className="space-y-6 bg-gray-50 min-h-screen px-6 ">
+    <div className="space-y-6 bg-grayLightBg min-h-screen px-6 ">
       <AdminProfile headingText="Dashboard" />
 
       <Dashboard></Dashboard>
-
-      </div>
+    </div>
   );
 }
 
+// {/* Admin Profile */}
+// {/* <AdminProfile />
 
+// {/* StatsCards */}
+// <StatsCards />
 
+// {/* Charts Section */}
+// <Graphs />
 
-      // {/* Admin Profile */}
-      // {/* <AdminProfile />
-
-      // {/* StatsCards */}
-      // <StatsCards />
-
-
-      // {/* Charts Section */}
-      // <Graphs />
-
-      // {/* Recent Users Table */}
-      // <div className='overflow-x-auto overflow-auto' >
-      //   <UsersTable /> 
+// {/* Recent Users Table */}
+// <div className='overflow-x-auto overflow-auto' >
+//   <UsersTable />

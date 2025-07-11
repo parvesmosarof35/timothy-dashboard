@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import AdminProfile from "./components/AdminProfile";
 
 const ContractDetails = () => {
-      const { id } = useParams();
+  const { id } = useParams();
 
   const contractData = {
     id: id,
@@ -18,7 +18,8 @@ const ContractDetails = () => {
         title: "Project Awarded",
         amount: "$200",
         date: "12 Dec 2023",
-        description: "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
+        description:
+          "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
         status: "completed",
       },
       {
@@ -26,7 +27,8 @@ const ContractDetails = () => {
         title: "First Milestone",
         amount: "$650",
         date: "12 Dec 2023",
-        description: "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
+        description:
+          "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
         status: "completed",
       },
       {
@@ -34,7 +36,8 @@ const ContractDetails = () => {
         title: "Second Milestone",
         amount: "$200",
         date: "18 Dec 2023",
-        description: "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
+        description:
+          "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
         status: "completed",
       },
       {
@@ -42,7 +45,8 @@ const ContractDetails = () => {
         title: "Third Milestone",
         amount: "$650",
         date: "20 Dec 2023",
-        description: "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
+        description:
+          "Lorem ipsum dolor sit amet consectetur. Vestibulum id nulla sit in commodo. Lorem ipsum dolor sit amet consectetur.",
         status: "pending",
       },
     ],
@@ -53,7 +57,7 @@ const ContractDetails = () => {
   };
 
   const getAmountColor = (status) => {
-    return status === "completed" ? "text-black" : "text-gray-400";
+    return status === "completed" ? "text-darkGray" : "text-brandGray";
   };
 
   // Determine index of last completed milestone
@@ -62,145 +66,141 @@ const ContractDetails = () => {
     .lastIndexOf("completed");
 
   return (
-<div className="px-6">
-    <AdminProfile headingText="Contract Details" ></AdminProfile>
-        <div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-lg font-semibold text-gray-800 mb-2">
-          Contract ID: {contractData.id}
-        </h1>
-      </div>
-
-      {/* Contract Info */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-base font-medium text-gray-800">
-            {contractData.title}
-          </h2>
-          <span className="text-base font-semibold text-gray-600">
-            {contractData.rate}
-          </span>
+    <div className="px-6">
+      <AdminProfile headingText="Contract Details"></AdminProfile>
+      <div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-lg font-semibold text-darkGray mb-2">
+            Contract ID: {contractData.id}
+          </h1>
         </div>
 
-        <div className="flex items-center mb-4">
-          <span className="text-sm text-orange-500 font-medium">Order ID:</span>
-          <span className="text-sm text-gray-600 ml-2">
-            {contractData.orderId}
-          </span>
+        {/* Contract Info */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-base font-medium text-darkGray">
+              {contractData.title}
+            </h2>
+            <span className="text-base font-semibold text-brandGray">
+              {contractData.rate}
+            </span>
+          </div>
+
+          <div className="flex items-center mb-4">
+            <span className="text-sm text-orange-500 font-medium">
+              Order ID:
+            </span>
+            <span className="text-sm text-brandGray ml-2">
+              {contractData.orderId}
+            </span>
+          </div>
+
+          <p className="text-sm text-brandGray leading-relaxed">
+            {contractData.description}
+          </p>
         </div>
 
-        <p className="text-sm text-gray-600 leading-relaxed">
-          {contractData.description}
-        </p>
-      </div>
+        {/* Timeline */}
+        <div className="relative">
+          {/* Grey line */}
+          <div className="absolute left-[111px] top-2 bottom-0 w-0.5 bg-gray-200"></div>
 
-      {/* Timeline */}
-      <div className="relative">
-        {/* Grey line */}
-        <div className="absolute left-[111px] top-2 bottom-0 w-0.5 bg-gray-200"></div>
-
-        {/* Colored line */}
-{lastCompletedIndex >= 0 && (
-  <div
-    className="absolute left-[111px] w-0.5 bg-orange-500"
-    style={{
-      top: "0",
-      height: `${(lastCompletedIndex ) * 9.5}rem`,
-    }}
-  />
-)}
-
-
-        {contractData.milestones.map((milestone, index) => (
-          <div
-            key={milestone.id}
-            className="relative flex items-start mb-24 last:mb-0"
-          >
-            {/* Amount */}
+          {/* Colored line */}
+          {lastCompletedIndex >= 0 && (
             <div
-              className={`w-16 text-right mr-10 ${getAmountColor(
-                milestone.status
-              )}`}
+              className="absolute left-[111px] w-0.5 bg-orange-500"
+              style={{
+                top: "0",
+                height: `${lastCompletedIndex * 9.5}rem`,
+              }}
+            />
+          )}
+
+          {contractData.milestones.map((milestone, index) => (
+            <div
+              key={milestone.id}
+              className="relative flex items-start mb-24 last:mb-0"
             >
-              <span className="text-lg font-semibold">
-                {milestone.amount}
-              </span>
-            </div>
+              {/* Amount */}
+              <div
+                className={`w-16 text-right mr-10 ${getAmountColor(
+                  milestone.status
+                )}`}
+              >
+                <span className="text-lg font-semibold">
+                  {milestone.amount}
+                </span>
+              </div>
 
-            {/* Indicator */}
-            <div
-              className={`w-4 h-4 relative z-10
+              {/* Indicator */}
+              <div
+                className={`w-4 h-4 relative z-10
                 ${
                   index === 0
                     ? `${getStatusColor(milestone.status)} rounded-full `
-                    : `${getStatusColor(milestone.status)} rotate-45 -translate-y-1`
+                    : `${getStatusColor(
+                        milestone.status
+                      )} rotate-45 -translate-y-1`
                 }
               `}
-            ></div>
+              ></div>
 
-            {/* Content */}
-            <div className="ml-6 flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <h3
-                  className={`text-base font-medium ${
-                    milestone.status === "completed"
-                      ? "text-gray-800"
-                      : "text-gray-400"
-                  }`}
-                >
-                  {milestone.title}
-                </h3>
-                <div className="text-right">
-                  <span className="text-sm text-orange-500 font-medium">
-                    Date:
-                  </span>
-                  <span
-                    className={`text-sm ml-2 ${
+              {/* Content */}
+              <div className="ml-6 flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <h3
+                    className={`text-base font-medium ${
                       milestone.status === "completed"
-                        ? "text-gray-800"
-                        : "text-gray-400"
+                        ? "text-darkGray"
+                        : "text-brandGray"
                     }`}
                   >
-                    {milestone.date}
-                  </span>
+                    {milestone.title}
+                  </h3>
+                  <div className="text-right">
+                    <span className="text-sm text-orange-500 font-medium">
+                      Date:
+                    </span>
+                    <span
+                      className={`text-sm ml-2 ${
+                        milestone.status === "completed"
+                          ? "text-darkGray"
+                          : "text-brandGray"
+                      }`}
+                    >
+                      {milestone.date}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <p
-                className={`text-sm leading-relaxed ${
-                  milestone.status === "completed"
-                    ? "text-gray-600"
-                    : "text-gray-400"
-                }`}
-              >
-                {milestone.description}
-              </p>
+                <p
+                  className={`text-sm leading-relaxed ${
+                    milestone.status === "completed"
+                      ? "text-brandGray"
+                      : "text-brandGray"
+                  }`}
+                >
+                  {milestone.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans flex justify-end gap-6">
+        <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-medium transition">
+          Terminate
+        </button>
+        <button className="px-4 py-2 bg-blueLightBg0 hover:bg-blue-600 text-white rounded-md font-medium transition">
+          Edit
+        </button>
+        <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-medium transition">
+          Suspend
+        </button>
       </div>
     </div>
-
-<div className="max-w-7xl mx-auto p-6 mt-6 bg-white font-sans flex justify-end gap-6">
-  <button
-    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-medium transition"
-  >
-    Terminate
-  </button>
-  <button
-    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium transition"
-  >
-    Edit
-  </button>
-  <button
-    className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-medium transition"
-  >
-    Suspend
-  </button>
-</div>
-
-</div>
   );
 };
 

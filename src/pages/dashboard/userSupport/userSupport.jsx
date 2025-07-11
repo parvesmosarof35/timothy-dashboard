@@ -138,24 +138,24 @@ const UserSupport = () => {
   };
 
   return (
-    <div className="px-6 bg-gray-50 min-h-screen font-sans space-y-6">
+    <div className="px-6 bg-grayLightBg min-h-screen font-sans space-y-6">
       <AdminProfile headingText={`User Support`}></AdminProfile>
       <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h1 className="text-2xl font-semibold mb-6">Tickets</h1>
+        <h1 className="text-2xl font-semibold mb-6 text-darkGray">Tickets</h1>
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1 bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm">
+            <div className="flex items-center gap-1 bg-orangeLightBg text-orange-700 px-3 py-1 rounded-full text-sm">
               <span>All time</span>
               <X className="w-4 h-4 ml-1 cursor-pointer" />
             </div>
           </div>
           <div className="relative">
-            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-brandGray" />
             <input
               type="text"
               placeholder="Search"
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="pl-10 pr-4 py-2 border text-brandGray rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -164,7 +164,7 @@ const UserSupport = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-gray-600 text-sm font-medium border-b">
+              <tr className="text-left text-brandGray text-sm font-medium border-b">
                 <th className="pb-3 px-2">ID</th>
                 <th className="pb-3 px-2">Description</th>
                 <th className="pb-3 px-2">Subject</th>
@@ -181,62 +181,64 @@ const UserSupport = () => {
             <tbody>
               {tickets.map((ticket, index) => (
                 <tr
-                onClick={()=>{
-                  navigate(`${ticket.id}`);
-                }}
-                key={ticket.id} className="border-b hover:bg-gray-50 cursor-pointer">
-                  <td className="py-4 px-2 text-sm text-gray-900">
+                  onClick={() => {
+                    navigate(`${ticket.id}`);
+                  }}
+                  key={ticket.id}
+                  className="border-b hover:bg-grayLightBg cursor-pointer"
+                >
+                  <td className="py-4 px-2 text-sm text-darkGray">
                     {ticket.id}
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-600 max-w-xs">
+                  <td className="py-4 px-2 text-sm text-brandGray max-w-xs">
                     <div className="truncate">{ticket.description}</div>
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-900">
+                  <td className="py-4 px-2 text-sm text-darkGray">
                     {ticket.subject}
                   </td>
                   <td className="py-4 px-2 text-sm">
                     <button
                       onClick={() => handleUserClick(ticket.id)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+                      className="flex items-center gap-2 text-darkGray transition-colors"
                     >
                       <User className="w-4 h-4" />
                       {ticket.user}
                     </button>
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-600">
+                  <td className="py-4 px-2 text-sm text-brandGray">
                     <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <Calendar className="w-4 h-4 text-brandGray" />
                       {ticket.startingDate}
                     </div>
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-600">
+                  <td className="py-4 px-2 text-sm text-brandGray">
                     <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <Calendar className="w-4 h-4 text-brandGray" />
                       {ticket.closingDate}
                     </div>
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-900">
+                  <td className="py-4 px-2 text-sm text-darkGray">
                     {ticket.milestone}
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-900">
+                  <td className="py-4 px-2 text-sm text-darkGray">
                     <div className="flex items-center gap-1">
-                      <DollarSign className="w-4 h-4 text-gray-400" />
+                      <DollarSign className="w-4 h-4 text-brandGray" />
                       {ticket.amount}
                     </div>
                   </td>
-                  <td className="py-4 px-2 text-sm text-gray-900">
+                  <td className="py-4 px-2 text-sm text-darkGray">
                     <div className="flex items-center gap-1">
-                      <DollarSign className="w-4 h-4 text-gray-400" />
+                      <DollarSign className="w-4 h-4 text-brandGray" />
                       {ticket.current}
                     </div>
                   </td>
                   <td className="py-4 px-2 text-sm">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-greenMutedBg text-brandGreen">
                       {ticket.status}
                     </span>
                   </td>
                   <td className="py-4 px-2 text-sm">
-                    <button className="text-gray-400 hover:text-gray-600">
+                    <button className="text-brandGray hover:text-brandGray">
                       <MoreHorizontal className="w-5 h-5" />
                     </button>
                   </td>
@@ -247,18 +249,15 @@ const UserSupport = () => {
         </div>
 
         {/* Pagination */}
-<div className="flex items-center justify-between mt-6">
-  <button className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900">
-    Previous
-  </button>
-  <div className="text-sm text-gray-600">Page 1 of 10</div>
-  <button className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800">
-    Next
-  </button>
-</div>
-
-
-        
+        <div className="flex items-center justify-between mt-6">
+          <button className="px-3 py-1 text-sm text-brandGray hover:text-darkGray">
+            Previous
+          </button>
+          <div className="text-sm text-brandGray">Page 1 of 10</div>
+          <button className="px-3 py-1 text-sm text-brandBlue hover:text-blue-800">
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -18,15 +18,15 @@ const CommunicationSupport = () => {
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-1">
+          <h2 className="text-xl font-bold text-darkGray mb-1">
             Communication & Support
           </h2>
-          <p className="text-xl text-gray-500">Reported Issues</p>
+          <p className="text-xl text-brandGray">Reported Issues</p>
         </div>
 
         {/* Date Selector */}
-        <div className="flex items-center text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border">
-          Today <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
+        <div className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border">
+          Today <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
         </div>
       </div>
 
@@ -62,72 +62,73 @@ const CommunicationSupport = () => {
             <div className="flex flex-col space-y-6">
               {/* Total Issues */}
               <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-green-100 rounded-md flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 text-green-600" />
+                <div className="w-12 h-12 bg-greenMutedBg rounded-md flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-brandGreen" />
                 </div>
                 <div>
-                  <p className="text-md text-gray-500 ">Total Issues</p>
-                  <p className="text-lg font-bold text-gray-900">120</p>
+                  <p className="text-md text-brandGray ">Total Issues</p>
+                  <p className="text-lg font-bold text-darkGray">120</p>
                 </div>
               </div>
 
               {/* Pending Issues */}
               <div className="flex items-center space-x-2">
-                <div className="w-12 h-12 bg-orange-100 rounded-md flex items-center justify-center">
+                <div className="w-12 h-12 bg-orangeLightBg rounded-md flex items-center justify-center">
                   <HiArrowTrendingDown className="w-4 h-4 text-orange-600" />
                 </div>
                 <div>
-                  <p className="text-md text-gray-500">Pending Issues</p>
-                  <p className="text-lg font-bold text-gray-900">1,009,123</p>
+                  <p className="text-md text-brandGray">Pending Issues</p>
+                  <p className="text-lg font-bold text-darkGray">1,009,123</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Severity Legend */}
+        <div className="space-y-4">
+          {/* Row 1 */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-between">
+            <div className="flex justify-between items-center flex-1">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full bg-[#8B4513]"></div>
+                <span className="text-sm font-medium text-darkGray">
+                  Critical
+                </span>
+              </div>
+              <span className="text-sm font-bold text-darkGray">410</span>
+            </div>
 
+            <div className="flex justify-between items-center flex-1">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full bg-[#FF8C00]"></div>
+                <span className="text-sm font-medium text-darkGray">High</span>
+              </div>
+              <span className="text-sm font-bold text-darkGray">142</span>
+            </div>
+          </div>
 
-{/* Severity Legend */}
-<div className="space-y-4">
-  {/* Row 1 */}
-  <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-between">
-    <div className="flex justify-between items-center flex-1">
-      <div className="flex items-center space-x-3">
-        <div className="w-3 h-3 rounded-full bg-[#8B4513]"></div>
-        <span className="text-sm font-medium text-gray-700">Critical</span>
-      </div>
-      <span className="text-sm font-bold text-gray-900">410</span>
-    </div>
+          {/* Row 2 */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-between">
+            <div className="flex justify-between items-center flex-1">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full bg-[#FFD700]"></div>
+                <span className="text-sm font-medium text-darkGray">
+                  Medium
+                </span>
+              </div>
+              <span className="text-sm font-bold text-darkGray">340</span>
+            </div>
 
-    <div className="flex justify-between items-center flex-1">
-      <div className="flex items-center space-x-3">
-        <div className="w-3 h-3 rounded-full bg-[#FF8C00]"></div>
-        <span className="text-sm font-medium text-gray-700">High</span>
-      </div>
-      <span className="text-sm font-bold text-gray-900">142</span>
-    </div>
-  </div>
-
-  {/* Row 2 */}
-  <div className="flex flex-col md:flex-row gap-4 md:gap-8 justify-between">
-    <div className="flex justify-between items-center flex-1">
-      <div className="flex items-center space-x-3">
-        <div className="w-3 h-3 rounded-full bg-[#FFD700]"></div>
-        <span className="text-sm font-medium text-gray-700">Medium</span>
-      </div>
-      <span className="text-sm font-bold text-gray-900">340</span>
-    </div>
-
-    <div className="flex justify-between items-center flex-1">
-      <div className="flex items-center space-x-3">
-        <div className="w-3 h-3 rounded-full bg-[#FFA500]"></div>
-        <span className="text-sm font-medium text-gray-700">Low</span>
-      </div>
-      <span className="text-sm font-bold text-gray-900">590</span>
-    </div>
-  </div>
-</div>
-
+            <div className="flex justify-between items-center flex-1">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full bg-[#FFA500]"></div>
+                <span className="text-sm font-medium text-darkGray">Low</span>
+              </div>
+              <span className="text-sm font-bold text-darkGray">590</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

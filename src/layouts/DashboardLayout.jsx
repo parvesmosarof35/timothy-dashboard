@@ -26,10 +26,13 @@ export default function DashboardLayout() {
       title: "Are you sure you want to log out?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, log out",
-      cancelButtonText: "Cancel",
+      confirmButtonColor: "#ff9000", // "Yes" button
+      cancelButtonColor: "red", // Background for "No"
+      confirmButtonText: "Yes        ",
+      cancelButtonText: "No      ",
+      customClass: {
+        cancelButton: "custom-cancel-btn",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         logOut().then(() => {
@@ -62,13 +65,15 @@ export default function DashboardLayout() {
 
   const linkClass = (isActive) =>
     `${navLinkBase} ${
-      isActive ? "bg-orange-200 text-black" : "text-[#BCA88F] hover:bg-gray-100"
+      isActive
+        ? "bg-orangePrimary text-darkGray"
+        : "text-[#BCA88F] hover:bg-gray-100"
     }`;
 
   const submenuLinkClass = (isActive) =>
     `px-3 py-1 rounded transition ${
       isActive
-        ? "bg-orange-100 text-black font-medium"
+        ? "bg-orangeLightBg text-darkGray font-medium"
         : "hover:bg-orange-50 text-[#BCA88F]"
     }`;
 
@@ -161,7 +166,7 @@ export default function DashboardLayout() {
 
       {/* <button
         onClick={handleSettingsClick}
-        className={`${navLinkBase} ${isSettingsActive ? "bg-orange-200 text-black" : "text-[#BCA88F] hover:bg-gray-100"}`}
+        className={`${navLinkBase} ${isSettingsActive ? "bg-orangePrimary text-darkGray" : "text-[#BCA88F] hover:bg-gray-100"}`}
       >
         <IoSettingsOutline className="text-lg" />
         Settings
@@ -169,7 +174,7 @@ export default function DashboardLayout() {
 
       <button
         onClick={handleSettingsClick}
-        className={`${navLinkBase} ${isSettingsActive ? "bg-orange-200 text-black" : "text-[#BCA88F] hover:bg-gray-100"}`}
+        className={`${navLinkBase} ${isSettingsActive ? "bg-orangePrimary text-darkGray" : "text-[#BCA88F] hover:bg-gray-100"}`}
       >
         <IoSettingsOutline className="text-lg" />
         Settings
@@ -238,7 +243,7 @@ export default function DashboardLayout() {
 
             {/* Button fixed at the bottom of the card */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4">
-              <button className="bg-white text-black text-sm font-medium px-10 py-3 rounded-xl hover:bg-gray-200 transition w-full mx-auto">
+              <button className="bg-white text-darkGray text-sm font-medium px-10 py-3 rounded-xl hover:bg-gray-200 transition w-full mx-auto">
                 Send
               </button>
             </div>
@@ -259,7 +264,7 @@ export default function DashboardLayout() {
 
             <div className="mt-auto border-t border-gray-200">
               <button
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md text-black hover:bg-red-100 hover:text-red-600 transition-all"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md text-darkGray hover:bg-redMutedBg hover:text-red-600 transition-all"
                 onClick={() => console.log("Logout clicked")}
               >
                 <FiLogOut className="text-xl" />

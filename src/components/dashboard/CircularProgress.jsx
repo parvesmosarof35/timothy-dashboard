@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronDown, TrendingUp } from 'lucide-react';
+import React from "react";
+import { ChevronDown, TrendingUp } from "lucide-react";
 
 const CircularProgress = ({ percentage, size = 80 }) => {
   const radius = (size - 8) / 2;
@@ -34,7 +34,9 @@ const CircularProgress = ({ percentage, size = 80 }) => {
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-semibold text-gray-400">{percentage}%</span>
+        <span className="text-2xl font-semibold text-brandGray">
+          {percentage}%
+        </span>
       </div>
     </div>
   );
@@ -44,23 +46,23 @@ const ContractCard = ({ title, subtitle, percentage, value, growth }) => (
   <div className="bg-white p-6 rounded-2xl border border-gray-200">
     <div className="flex items-center justify-between mb-4">
       <div>
-        <h3 className="text-gray-900 font-medium text-sm">{title}</h3>
-        <div className="flex items-center gap-1 text-gray-400 text-xs mt-1">
+        <h3 className="text-darkGray font-medium text-sm">{title}</h3>
+        <div className="flex items-center gap-1 text-brandGray text-xs mt-1">
           <span>{subtitle}</span>
           <ChevronDown className="w-3 h-3" />
         </div>
       </div>
     </div>
-    
+
     <div className="flex flex-col items-center mb-6">
       <CircularProgress percentage={percentage} />
     </div>
-    
+
     <div className="flex items-center justify-between">
-      <div className="text-2xl font-bold text-gray-900">
+      <div className="text-2xl font-bold text-darkGray">
         {value.toLocaleString()}
       </div>
-      <div className="flex items-center gap-1 text-green-600">
+      <div className="flex items-center gap-1 text-brandGreen">
         <TrendingUp className="w-4 h-4" />
         <span className="text-sm font-medium">{growth}</span>
       </div>
@@ -70,33 +72,35 @@ const ContractCard = ({ title, subtitle, percentage, value, growth }) => (
 
 const ContractManagement = () => {
   return (
-    <div className=" bg-gray-50">
-      <h1 className="text-2xl font-semibold text-gray-900 mb-6">Contract Management</h1>
-      
+    <div className=" bg-grayLightBg">
+      <h1 className="text-2xl font-semibold text-darkGray mb-6">
+        Contract Management
+      </h1>
+
       <div className="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 className="text-gray-500 font-medium mb-6">Contract Status</h2>
-        
+        <h2 className="text-brandGray font-medium mb-6">Contract Status</h2>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ContractCard 
-            title="Active Contracts" 
-            subtitle="All" 
-            percentage={81} 
-            value={2420} 
-            growth="20%" 
+          <ContractCard
+            title="Active Contracts"
+            subtitle="All"
+            percentage={81}
+            value={2420}
+            growth="20%"
           />
-          <ContractCard 
-            title="Completed" 
-            subtitle="this month" 
-            percentage={81} 
-            value={2420} 
-            growth="20%" 
+          <ContractCard
+            title="Completed"
+            subtitle="this month"
+            percentage={81}
+            value={2420}
+            growth="20%"
           />
-          <ContractCard 
-            title="Pending" 
-            subtitle="year" 
-            percentage={81} 
-            value={2420} 
-            growth="20%" 
+          <ContractCard
+            title="Pending"
+            subtitle="year"
+            percentage={81}
+            value={2420}
+            growth="20%"
           />
         </div>
       </div>

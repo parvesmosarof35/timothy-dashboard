@@ -1,4 +1,3 @@
-
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
@@ -20,7 +19,7 @@ const MyProfile = () => {
             className="w-32 h-32 rounded-full mb-4 ring ring-green-300 text-center"
           />
           <h2 className="text-2xl font-semibold">{user?.displayName}</h2>
-          <p className="text-gray-600">{user?.email}</p>
+          <p className="text-brandGray">{user?.email}</p>
         </div>
         <button
           onClick={() => navigate("/update-profile")}

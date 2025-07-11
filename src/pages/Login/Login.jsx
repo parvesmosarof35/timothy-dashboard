@@ -62,14 +62,14 @@ const Login = () => {
       />
       <div className="absolute left-0 min-h-screen flex items-center container mx-auto">
         <div className="bg-white mt-[1rem] ml-[15rem] p-8 py-20 rounded-2xl  w-full max-w-md min-h-[40rem] flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-[#ff9000]">Welcome Back</h2>
-          <p className="text-lg font-semibold mb-8 text-gray-600 mt-2">
+          <h2 className="text-3xl font-bold text-orangeAction">Welcome Back</h2>
+          <p className="text-lg font-semibold mb-8 text-brandGray mt-2">
             Enter your email and password to sign in
           </p>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-900">
+              <label className="block text-sm font-medium text-darkGray">
                 Email
               </label>
               <input
@@ -78,11 +78,11 @@ const Login = () => {
                 required
                 ref={emailRef}
                 placeholder="Your email address"
-                className="mt-1 w-full px-4 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="mt-1 w-full px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-darkGray">
                 Password
               </label>
               <input
@@ -90,7 +90,7 @@ const Login = () => {
                 name="password"
                 required
                 placeholder="Your password"
-                className="mt-1 w-full px-4 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="mt-1 w-full px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
               <div className="flex justify-between items-center my-5 mt-8 text-sm">
                 <label className="flex items-center cursor-pointer">
@@ -112,7 +112,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-[#ff9000] hover:bg-orange-500 text-white font-semibold py-4 rounded-2xl transition"
+              className="w-full bg-orangeAction hover:bg-orange-500 text-white font-semibold py-4 rounded-2xl transition"
             >
               Sign In
             </button>
@@ -122,11 +122,11 @@ const Login = () => {
             <p className="text-red-600 text-center text-sm mt-3">{error}</p>
           )}
 
-          <p className="text-lg font-semibold text-gray-400 text-center mt-4 mb-3 ">
+          <p className="text-lg font-semibold text-brandGray text-center mt-4 mb-3 ">
             Do not have an account?{" "}
             <Link
               to="/register"
-              className="text-[#ff9000] font-semibold hover:underline"
+              className="text-orangeAction font-semibold hover:underline"
             >
               Sign up
             </Link>
@@ -134,14 +134,16 @@ const Login = () => {
 
           {/* OR Divider */}
           <div className="text-center">
-            <span className="text-gray-400 text-sm mt-2 font-bold">or</span>
+            <span className="text-brandGray text-sm mt-2 font-bold">or</span>
           </div>
 
           {/* Social Login Section */}
           <div className="bg-white rounded-lg   mb-6 ">
-            <p className="text-center text-sm text-gray-600 mb-4">Login with</p>
+            <p className="text-center text-sm text-brandGray mb-4">
+              Login with
+            </p>
             <div className="flex justify-center gap-4">
-              <div className="border p-7 rounded-2xl cursor-pointer hover:bg-gray-50">
+              <div className="border p-7 rounded-2xl cursor-pointer hover:bg-grayLightBg">
                 <img
                   className="w-10 h-10 flex items-center justify-center  transition-colors"
                   onClick={() => handleSocialLogin("Facebook")}
@@ -150,7 +152,7 @@ const Login = () => {
                 />
               </div>
 
-              <div className="border p-7 rounded-2xl cursor-pointer hover:bg-gray-50">
+              <div className="border p-7 rounded-2xl cursor-pointer hover:bg-grayLightBg">
                 <img
                   className="w-10 h-10 flex items-center justify-center  transition-colors"
                   onClick={() => handleSocialLogin("Google")}

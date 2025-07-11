@@ -72,7 +72,7 @@ const SettingsTab = () => {
 
   const ToggleSwitch = ({ isOn, onToggle, label }) => (
     <div className="flex items-center justify-between py-3">
-      <span className="text-sm font-medium text-gray-700">{label}</span>
+      <span className="text-sm font-medium text-darkGray">{label}</span>
       <button
         type="button"
         onClick={onToggle}
@@ -91,7 +91,7 @@ const SettingsTab = () => {
 
   return (
     <>
-      <div className="space-y-6 bg-gray-50 min-h-screen px-6 font-sans">
+      <div className="space-y-6 bg-grayLightBg min-h-screen px-6 font-sans">
         <AdminProfile headingText="User Settings" />
         <div className="bg-white rounded p-6">
           <div className="max-w-md   ">
@@ -100,8 +100,8 @@ const SettingsTab = () => {
               <button
                 className={`flex items-center gap-2 px-6 py-3 font-medium ${
                   activeTab === "general"
-                    ? "text-gray-800 border-b-2 border-yellow-500"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "text-darkGray border-b-2 border-orangePrimary"
+                    : "text-brandGray hover:text-darkGray"
                 }`}
                 onClick={() => setActiveTab("general")}
               >
@@ -111,8 +111,8 @@ const SettingsTab = () => {
               <button
                 className={`flex items-center gap-2 px-6 py-3 font-medium ${
                   activeTab === "notification"
-                    ? "text-gray-800 border-b-2 border-yellow-500"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "text-darkGray border-b-2 border-orangePrimary"
+                    : "text-brandGray hover:text-darkGray"
                 }`}
                 onClick={() => setActiveTab("notification")}
               >
@@ -128,37 +128,37 @@ const SettingsTab = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-darkGray mb-1">
                       Currency
                     </label>
                     <input
                       type="text"
                       value="English (Default)"
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
+                      className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100 text-darkGray cursor-not-allowed"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-darkGray mb-1">
                       Language
                     </label>
                     <input
                       type="text"
                       value="English (Default)"
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
+                      className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100 text-darkGray cursor-not-allowed"
                     />
                   </div>
 
                   {/* currency select  */}
                   {/* <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Currencies</label>
+                  <label className="block text-sm font-medium text-darkGray mb-1">Currencies</label>
                   <select
                     name="currency"
                     value={generalSettings.currency}
                     onChange={handleGeneralSettingsChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   >
                     <option value="English (Default)">English (Default)</option>
                      <option value="USD">USD</option>
@@ -170,12 +170,12 @@ const SettingsTab = () => {
 
                   {/* language select  */}
                   {/* <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                  <label className="block text-sm font-medium text-darkGray mb-1">Language</label>
                   <select
                     name="language"
                     value={generalSettings.language}
                     onChange={handleGeneralSettingsChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
                   >
                     <option value="English (Default)">English (Default)</option>
                      <option value="Spanish">Spanish</option>
@@ -186,14 +186,14 @@ const SettingsTab = () => {
                 </div> */}
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-darkGray mb-1">
                       Timezone
                     </label>
                     <select
                       name="timezone"
                       value={generalSettings.timezone}
                       onChange={handleGeneralSettingsChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     >
                       <option value="English (Default)">
                         English (Default)
@@ -227,7 +227,7 @@ const SettingsTab = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-darkGray mb-1">
                       Time Format
                     </label>
                     <div className="flex gap-4 mt-2">
@@ -240,7 +240,7 @@ const SettingsTab = () => {
                           onChange={handleGeneralSettingsChange}
                           className="mr-2"
                         />
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-darkGray">
                           24 Hours
                         </span>
                       </label>
@@ -253,7 +253,7 @@ const SettingsTab = () => {
                           onChange={handleGeneralSettingsChange}
                           className="mr-2"
                         />
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-darkGray">
                           12 Hours
                         </span>
                       </label>
@@ -264,7 +264,7 @@ const SettingsTab = () => {
                 <div className="flex justify-center mt-8">
                   <button
                     onClick={handleSaveGeneralSettings}
-                    className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-400 transition-colors"
+                    className="px-6 py-2 bg-orangeAction text-white  rounded-md hover:bg-yellow-600 font-semibold transition-colors"
                   >
                     Save Changes
                   </button>
@@ -305,7 +305,7 @@ const SettingsTab = () => {
                   />
                 </div>
 
-                {/* <div className="text-center text-sm text-gray-600 mt-4">
+                {/* <div className="text-center text-sm text-brandGray mt-4">
                 Toggle switches to enable or disable specific notification types
               </div> */}
               </div>
