@@ -5,7 +5,8 @@ import React from "react";
 // import CommunicationSupport from "@/components/dashboard/CommunicationSupport";
 // import UserSupportTickets from "@/components/dashboard/UserSupportTickets";
 
-import OverviewCard from "./Dashboard/OverviewCard";
+// import OverviewCard from "./Dashboard/OverviewCard";
+import OverviewCard from "./dashboard/OverviewCard"
 import PaymentChart from "./Dashboard/PaymentChart";
 import PendingVerification from "./Dashboard/PendingVerification";
 import CommunicationSupport from "./dashboard/CommunicationSupport";
