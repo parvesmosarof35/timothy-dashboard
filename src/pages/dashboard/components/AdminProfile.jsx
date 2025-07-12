@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import profile from "../../../assets/profile.png";
 import { FaSearch } from "react-icons/fa";
 import { PiBell } from "react-icons/pi";
@@ -32,6 +32,30 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
     });
   };
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleNotification = () => {
+    setModalOpen(!modalOpen);
+    console.log(modalOpen);
+  };
+
+  const notifications = [
+  { id: 1, text: "You have a new message from John." },
+  { id: 2, text: "Your book has been borrowed successfully." },
+  { id: 3, text: "Admin approved your request." },
+  { id: 4, text: "Admin approved your request." },
+  { id: 5, text: "Admin approved your request." },
+  { id: 6, text: "Admin approved your request." },
+  { id: 7, text: "Admin approved your request." },
+  { id: 8, text: "Admin approved your request." },
+  { id: 9, text: "Admin approved your request." },
+  { id: 10, text: "Admin approved your request." },
+  { id: 11, text: "Admin approved your request." },
+  { id: 12, text: "Admin approved your request." },
+  { id: 13, text: "Admin approved your request." },
+  { id: 14, text: "Admin approved your request." },
+];
+
   // console.log(user);
   return (
     <div className="flex items-center justify-between w-full px-6 py-8 bg-white rounded-md">
@@ -62,10 +86,40 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
         </div>
 
         {/* Bell Icon with notification */}
-        <div className="relative w-[50px] h-[50px] rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-200">
-          <PiBell className="text-[#88755A] text-xl" /> {/* Made bigger */}
-          <span className="absolute top-[8px] right-[8px] w-[10px] h-[10px] bg-red-500 rounded-full" />
+  <div className="relative">
+      {/* Bell Icon */}
+      <div
+        onClick={handleNotification}
+        className="relative cursor-pointer w-[50px] h-[50px] rounded-full bg-white flex items-center justify-center shadow-sm border border-lightGrayBorders"
+      >
+        <PiBell className="text-[#88755A] text-2xl" />
+        <span className="absolute top-[8px] right-[8px] w-[10px] h-[10px] bg-brandRed rounded-full" />
+      </div>
+
+      {/* Notification Modal */}
+      {modalOpen && (
+        <div className="absolute right-0 mt-2 w-[400px]  bg-white rounded-xl shadow-lg border border-lightGrayBorders z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-lightGrayBorders bg-orangeLightBg text-darkGray font-semibold">
+            Notifications
+          </div>
+          <ul className="max-h-[32rem] overflow-y-auto divide-y divide-lightGrayBorders">
+            {notifications.map((notif) => (
+              <li
+                key={notif.id}
+                className="px-4 py-3 hover:bg-grayLightBg text-sm text-brandGray cursor-pointer transition"
+              >
+                {notif.text}
+              </li>
+            ))}
+          </ul>
+          {notifications.length === 0 && (
+            <div className="text-center py-6 text-brandGray text-sm">No new notifications</div>
+          )}
         </div>
+      )}
+    </div>
+
+
 
         <div className="relative group flex items-center">
           {/* Profile Image */}
@@ -122,7 +176,6 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
       text-sm
       rounded
       font-semibold
-      text-darkGray
       opacity-0
       group-hover:opacity-100
       transition
