@@ -113,6 +113,14 @@ export default function DashboardLayout() {
       </NavLink>
 
       <NavLink
+        to="/dashboard/approve-partners"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <LuUsers className="text-lg" />
+        Approve Partners
+      </NavLink>
+
+      <NavLink
         to="/dashboard/financialpayments"
         className={({ isActive }) => linkClass(isActive)}
       >
@@ -242,7 +250,11 @@ export default function DashboardLayout() {
             </div>
 
             {/* Button fixed at the bottom of the card */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4">
+            <div
+            onClick={()=>{
+              navigate("send-report")
+            }}
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4">
               <button className="bg-white text-darkGray text-sm font-medium px-10 py-3 rounded-xl hover:bg-gray-200 transition w-full mx-auto">
                 Send
               </button>

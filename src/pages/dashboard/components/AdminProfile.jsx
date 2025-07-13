@@ -6,9 +6,12 @@ import { CiSearch } from "react-icons/ci";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AdminProfile = ({ headingText = "Users Management" }) => {
   const { user, logOut } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const logOutUser = () => {
     Swal.fire({
@@ -35,7 +38,8 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleNotification = () => {
-    setModalOpen(!modalOpen);
+    // setModalOpen(!modalOpen);
+    navigate("/dashboard/notification")
     console.log(modalOpen);
   };
 

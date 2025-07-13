@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FiSettings, FiBell } from "react-icons/fi";
 import Swal from "sweetalert2";
 import AdminProfile from "../components/AdminProfile";
+import LanguageSelect from "../../../components/dashboard/LanguageSelect";
 
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("general");
@@ -135,21 +136,11 @@ const SettingsTab = () => {
                       type="text"
                       value="English (Default)"
                       disabled
-                      className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100 text-darkGray cursor-not-allowed"
+                      className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100  cursor-not-allowed"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-darkGray mb-1">
-                      Language
-                    </label>
-                    <input
-                      type="text"
-                      value="English (Default)"
-                      disabled
-                      className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100 text-darkGray cursor-not-allowed"
-                    />
-                  </div>
+ <LanguageSelect />
 
                   {/* currency select  */}
                   {/* <div>

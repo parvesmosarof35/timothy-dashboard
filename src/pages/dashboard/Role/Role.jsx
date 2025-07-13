@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import Swal from "sweetalert2";
+// import { Tabs } from 'antd';
+// import { AndroidOutlined, AppleOutlined } from '@ant-design/icons';
+
 
 const Role = () => {
   const [showModal, setShowModal] = useState(false);
@@ -138,6 +141,22 @@ const Role = () => {
         {/* Header */}
         <div className="bg-white pt-6 rounded-lg shadow-sm px-6 mb-6">
           <h1 className="text-2xl font-bold text-darkGray mb-6">All Admin</h1>
+
+
+          
+{/* <Tabs
+    defaultActiveKey="2"
+    items={[AppleOutlined, AndroidOutlined].map((Icon, i) => {
+      const id = String(i + 1);
+      return {
+        key: id,
+        label: `Tab ${id}`,
+        children: <div>asdf {id}</div>,
+        icon: <Icon />,
+      };
+    })}
+  /> */}
+
 
           {/* Search and Add Button */}
           <div className="flex justify-between items-center mb-6">

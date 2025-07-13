@@ -7,15 +7,12 @@ import React from "react";
 
 // import OverviewCard from "./Dashboard/OverviewCard";
 import OverviewCard from "./dashboard/OverviewCard"
-import PaymentChart from "./Dashboard/PaymentChart";
-import PendingVerification from "./Dashboard/PendingVerification";
-import CommunicationSupport from "./dashboard/CommunicationSupport";
-import UserSupportTickets from "./dashboard/UserSupportTickets";
+import PaymentChart from "./dashboard/PaymentChart";
 import UserAnalytics from "./dashboard/UserAnalytics";
-import RevenueChart from "./dashboard/RevinueChart";
 import FinancialDashboard from "./dashboard/RevinueChart";
 import CancellationRefunds from "./dashboard/CancellationRefunds";
 import ContractManagement from "./dashboard/CircularProgress";
+import CommAndverification from "../pages/dashboard/CommunicationAndVerify/CommAndverification";
 
 const Dashboard = () => {
   return (
@@ -35,6 +32,9 @@ const Dashboard = () => {
             <OverviewCard title="Admin Earnings" value="1,209" trend="↑ 5%" />
           </div>
 
+          
+            <CommAndverification></CommAndverification>
+
           {/* payment and verification section */}
           <div className="w-full grid grid-cols-6 gap-6">
             <PaymentChart />
@@ -42,6 +42,7 @@ const Dashboard = () => {
               <PendingVerification />
             </div> */}
           </div>
+
 
           <UserAnalytics></UserAnalytics>
 

@@ -70,6 +70,13 @@ body {
   color: #757575;
 }
 
+
+
+.goog-te-gadget-simple {
+  padding: 15px;
+    border-radius: 10px;
+}
+
 /* navbar design */
 
 .menu li {
