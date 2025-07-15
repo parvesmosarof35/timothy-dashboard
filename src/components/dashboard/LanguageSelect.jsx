@@ -35,6 +35,7 @@ const LanguageSelect = () => {
         <option value="es">Español</option>
         <option value="ar">العربية</option>
         <option value="pt">Português</option>
+        <option value="pt">French</option>
       </select>
     </div>
   );

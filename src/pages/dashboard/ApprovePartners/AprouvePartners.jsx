@@ -18,6 +18,7 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import AdminProfile from "../components/AdminProfile";
+import { useEffect } from "react";
 
 const { Search } = Input;
 
@@ -161,6 +162,54 @@ const ApprovePartners = () => {
       partner.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
+
+
+
+
+
+
+
+
+
+
+
+   /* Centralised confirm dialogs */
+  const confirmApprove = (id, name) =>
+    Modal.confirm({
+      title: "Approve Partner",
+      content: `Are you sure you want to approve ${name} as a business partner?`,
+      centered: true,
+      icon: <CheckOutlined style={{ color: "#52c41a" }} />,
+      okText: "Yes, Approve",
+      cancelText: "Cancel",
+      okButtonProps: {
+        style: { backgroundColor: "#ffc983", borderColor: "#ffc983" },
+      },
+      onOk: () => updateStatus(id, "approved"),
+    });
+
+  const confirmReject = (id, name) =>
+    Modal.confirm({
+      title: "Reject Partner",
+      content: `Are you sure you want to reject ${name}'s partnership application?`,
+      centered: true,
+      icon: <ExclamationCircleOutlined style={{ color: "#ff4d4f" }} />,
+      okText: "Yes, Reject",
+      cancelText: "Cancel",
+      okButtonProps: {
+        style: { backgroundColor: "#ff4d4f", borderColor: "#ff4d4f" },
+      },
+      onOk: () => updateStatus(id, "rejected"),
+    });
+
+
+
+
+
+
+
+
   const columns = [
     {
       title: "Partner ID",
@@ -224,6 +273,9 @@ const ApprovePartners = () => {
         );
       },
     },
+
+
+    
     {
       title: "Actions",
       key: "actions",
@@ -238,6 +290,7 @@ const ApprovePartners = () => {
                 onConfirm={() => handleApprove(record.id, record.name)}
                 okText="Yes, Approve"
                 cancelText="Cancel"
+                
                 okButtonProps={{
                   style: { backgroundColor: "#ffc983", borderColor: "#ffc983" },
                 }}
@@ -292,19 +345,79 @@ const ApprovePartners = () => {
     },
   ];
 
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+
+  // Auto filter trigger
+  useEffect(() => {
+    handleSelect();
+  }, [selectedTime, selectedCountry, searchTerms]);
+
+  const handleSelect = () => {
+    console.log("Filter Applied:", {
+      time: selectedTime,
+      country: selectedCountry,
+      search: searchTerms,
+    });
+  };
+
   return (
     <div className="px-6 bg-gray-50 min-h-screen">
-
-        <AdminProfile headingText="Approve Partners" ></AdminProfile>
-      <div className="my-6">
+      <AdminProfile headingText="Approve Partners"></AdminProfile>
+      <div className="my-6 flex justify-between">
         <h2 className="text-2xl font-semibold text-gray-800 mb-2">
           Review and approve partner applications
         </h2>
+
+        {/* search filter  */}
+
+        <div className="flex gap-3 items-center flex-wrap">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
+
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="" disabled>
+              Select Country
+            </option>
+            <option value="us">United States </option>
+            <option value="uk">United Kingdom</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">France</option>
+            <option value="bd">Bangladesh</option>
+            <option value="es">Spain</option>
+          </select>
+
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
         {/* <p className="text-gray-600">Review and approve partner applications</p> */}
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
+        {/* <div className="p-6 border-b border-gray-200 ">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-medium text-gray-800">
               Partner Applications
@@ -317,7 +430,7 @@ const ApprovePartners = () => {
               prefix={<SearchOutlined />}
             />
           </div>
-        </div>
+        </div> */}
 
         <Table
           columns={columns}
@@ -326,7 +439,7 @@ const ApprovePartners = () => {
           pagination={{
             pageSize: 10,
             showSizeChanger: false,
-            showQuickJumper: true,
+            showQuickJumper: false,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} partners`,
             className: "px-6",

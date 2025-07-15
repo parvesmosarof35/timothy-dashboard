@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Contracts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -156,23 +157,83 @@ const Contracts = () => {
     return pages;
   };
 
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+
+  // Auto filter trigger
+  useEffect(() => {
+    handleSelect();
+  }, [selectedTime, selectedCountry, searchTerms]);
+
+  const handleSelect = () => {
+    console.log("Filter Applied:", {
+      time: selectedTime,
+      country: selectedCountry,
+      search: searchTerms,
+    });
+  };
+
   return (
     <div className="px-6 bg-grayLightBg min-h-screen font-sans">
       <AdminProfile headingText={`Contracts`}></AdminProfile>
       <div className="min-h-screen bg-grayLightBg p-6 font-sans">
         <div className=" mx-auto">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-8 flex justify-between">
             <h1 className="text-2xl font-semibold mb-6 text-darkGray">
               Contracts
             </h1>
+
+            {/* search filter  */}
+
+            <div className="flex gap-3 items-center flex-wrap">
+              {/* Time Filter */}
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+              </select>
+
+              {/* Country Filter */}
+              <select
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+                className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" disabled>
+                  Select Country
+                </option>
+                <option value="us">United States </option>
+                <option value="uk">United Kingdom</option>
+                <option value="ae">United Arab Emirates</option>
+                <option value="pt">Portugal</option>
+                <option value="fr">France</option>
+                <option value="bd">Bangladesh</option>
+                <option value="es">Spain</option>
+              </select>
+
+              {/* Search Input */}
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchTerms}
+                onChange={(e) => setSearchTerms(e.target.value)}
+                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
           {/* Filters and Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <div className="p-4 border-b border-gray-200">
+            {/* <div className="p-4 border-b border-gray-200">
               <div className="flex flex-wrap items-center gap-4">
-                {/* Filter Tags */}
+              
                 <div className="flex items-center gap-2">
                   <div className="flex items-center bg-orangeLightBg text-orange-800 px-3 py-1 rounded-full text-sm">
                     <span>All time</span>
@@ -184,7 +245,7 @@ const Contracts = () => {
                   </div>
                 </div>
 
-                {/* More Filters Button */}
+               
                 <button className="flex items-center gap-2 px-3 py-2 border text-brandGray rounded-lg text-sm text-darkGray hover:bg-grayLightBg">
                   <Filter className="w-4 h-4" />
                   More filters
@@ -193,7 +254,7 @@ const Contracts = () => {
                   </span>
                 </button>
 
-                {/* Sort By */}
+              
                 <div className="flex items-center gap-2 ml-auto">
                   <span className="text-sm text-brandGray">Sort By :</span>
                   <button className="flex items-center gap-1 text-sm text-darkGray">
@@ -202,7 +263,7 @@ const Contracts = () => {
                   </button>
                 </div>
 
-                {/* Search */}
+               
                 <div className="relative">
                   <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-brandGray" />
                   <input
@@ -212,7 +273,7 @@ const Contracts = () => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Table */}
             <div className="overflow-x-auto">

@@ -85,7 +85,7 @@ const FinancialDashboard = () => {
         {/* Metric Cards */}
         <div className="flex mb-8 justify-start">
           <MetricCard
-            title="All"
+            title="Admin"
             value={1009123}
             trend="up"
             icon={TrendingUp}
@@ -98,13 +98,13 @@ const FinancialDashboard = () => {
             icon={TrendingUp}
             trendColor="green"
           />
-          <MetricCard
+          {/* <MetricCard
             title="Users"
             value={1009123}
             trend="down"
             icon={TrendingDown}
             trendColor="red"
-          />
+          /> */}
         </div>
 
         {/* Chart */}

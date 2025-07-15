@@ -7,15 +7,10 @@ import ResetPassword from "../components/ResetPassword";
 import DashboardHome from "../pages/dashboard/DashboardHome";
 import DashboardLayout from "../layouts/DashboardLayout";
 import UserInformation from "../pages/dashboard/UserInformation";
-import Subscription from "../pages/dashboard/Subscription";
-import ProfileSettings from "../components/ProfileSetting";
-import TermsPage from "../pages/dashboard/TermsPage";
-import Privacypage from "../pages/dashboard/Privacypage";
 import Register from "../pages/Register/Register"
 import FinancialPayments from "../pages/dashboard/FinancialPayments/FinancialPayments";
 import Contracts from "../pages/dashboard/Contracts/Contracts";
 import UserSupport from "../pages/dashboard/userSupport/userSupport";
-import ContractDetails from "../pages/dashboard/ContractDetails";
 import UserMessage from "../pages/dashboard/userSupport/UserMessage";
 import ServiceProvider from "../pages/dashboard/ServiceProviders/ServiceProvider";
 import Role from "../pages/dashboard/Role/Role";
@@ -25,6 +20,7 @@ import AprouvePartners from "../pages/dashboard/ApprovePartners/AprouvePartners"
 import SendReport from "../pages/SendReport/SendReport";
 import Notification from "../pages/dashboard/Notification/notification";
 import NewContractDetails from "../pages/dashboard/NewcontractDetails/NewContractDetails";
+import ProfileSettings from "../components/ProfileSetting";
 
 
 const router = createBrowserRouter([
@@ -61,6 +57,7 @@ const router = createBrowserRouter([
     { path: 'support/:id', element: <UserMessage></UserMessage> },
     { path: 'role', element: <Role></Role> },
     { path: 'settings', element: <SettingsTab></SettingsTab> },
+    { path: 'update-profile', element: <ProfileSettings></ProfileSettings> },
     { path: 'send-report', element: <SendReport></SendReport> },
     { path: 'notification', element: <Notification></Notification> },
   //   { path: 'settings/terms', element: <TermsPage /> },

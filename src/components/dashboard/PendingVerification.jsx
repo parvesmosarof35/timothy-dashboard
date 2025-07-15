@@ -24,7 +24,7 @@ const PendingVerification = () => {
           <h2 className="!text-2xl sm:text-xl font-semibold text-darkGray mb-1">
             Pending Verification
           </h2>
-          <p className="text-xl semibold  text-darkGray mb-4">
+          <p className="text-xl semibold  text-darkGray mb-1">
             Total
           </p>
           <p className="text-3xl font-bold text-darkGray mb-4">
@@ -68,11 +68,11 @@ const PendingVerification = () => {
   <div className="flex gap-4 text-sm">
     <div className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full bg-[#FF9900]" />
-      <span>Completed</span>
+      <span>Completed {completed}</span>
     </div>
     <div className="flex items-center gap-2">
       <div className="w-3 h-3 rounded-full bg-[#FFCC66]" />
-      <span>Pending</span>
+      <span>Pending {pending}</span>
     </div>
   </div>
 </div>

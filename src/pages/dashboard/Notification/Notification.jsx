@@ -136,7 +136,7 @@ const Notification = () => {
   <AdminProfile headingText='Notification'></AdminProfile>
       <div className="min-h-screen bg-gray-50 my-6">
       {/* Ant Design Header */}
-      <div className="bg-white shadow-sm">
+      {/* <div className="bg-white shadow-sm">
         <div className=" px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
@@ -165,12 +165,12 @@ const Notification = () => {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Stats Cards - Hidden on mobile */}
-        <div className="hidden md:grid grid-cols-3 gap-4 mb-6">
+        {/* <div className="hidden md:grid grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-lg border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -212,7 +212,7 @@ const Notification = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Notifications List */}
         <div className="bg-white rounded-lg border">
@@ -282,7 +282,7 @@ const Notification = () => {
         </div>
         
         {/* Footer */}
-        {notifications.length > 0 && (
+        {/* {notifications.length > 0 && (
           <div className="mt-6 text-center">
             <div className="inline-flex items-center gap-4 text-sm text-gray-500">
               <span>{notifications.length} total notifications</span>
@@ -290,7 +290,7 @@ const Notification = () => {
               <span>{unreadCount} unread</span>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
 </div>

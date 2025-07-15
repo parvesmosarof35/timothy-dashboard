@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const users = [
   {
@@ -207,17 +208,70 @@ const UsersTable = () => {
 
   const navigate = useNavigate();
 
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+
+  // Auto filter trigger
+  useEffect(() => {
+    handleSelect();
+  }, [selectedTime, selectedCountry, searchTerms]);
+
+  const handleSelect = () => {
+    console.log("Filter Applied:", {
+      time: selectedTime,
+      country: selectedCountry,
+      search: searchTerms,
+    });
+  };
+
   return (
     <div className="p-6 bg-grayLightBg min-h-screen font-sans">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage Users</h2>
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+
+        {/* search filter  */}
+
+        <div className="flex gap-3 items-center flex-wrap">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
+
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="" disabled>
+              Select Country
+            </option>
+            <option value="us">United States </option>
+            <option value="uk">United Kingdom</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">France</option>
+            <option value="bd">Bangladesh</option>
+            <option value="es">Spain</option>
+          </select>
+
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto border rounded-lg bg-white">

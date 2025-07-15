@@ -113,14 +113,14 @@ const ProfileSettings = () => {
 
   return (
     <>
-      <div className="space-y-6 bg-grayLightBg min-h-screen px-6">
+      <div className="space-y-6 bg-grayLightBg min-h-screen px-6 mb-10 font-sans">
         <AdminProfile headingText="User Settings" />
         <div className="max-w-2xl mx-auto ">
           {/* Profile Header with Image */}
           <ProfileImgandName />
 
           {/* Tabs */}
-          <div className="flex justify-center border-b border-gray-200 mb-8 font-poppins">
+          <div className="flex justify-center border-b border-gray-200 mb-8 ">
             <button
               className={`flex items-center gap-2 px-6 py-3 font-medium ${
                 activeTab === "profile"
@@ -224,10 +224,10 @@ const ProfileSettings = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center mt-8">
+                <div className="flex justify-center my-8">
                   <button
                     type="submit"
-                    className="px-6 py-2 bg- text-white rounded-md hover:bg-yellow-400 transition-colors"
+                    className="px-6 py-2 bg-orangeAction text-white rounded-md hover:bg-yellow-500 transition-colors"
                   >
                     Save Changes
                   </button>
@@ -319,7 +319,7 @@ const ProfileSettings = () => {
                 <div className="flex justify-center mt-8">
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-400 transition-colors"
+                    className="px-6 py-2 bg-orangeAction text-white rounded-md hover:bg-yellow-500 transition-colors"
                   >
                     Update Password
                   </button>

@@ -37,8 +37,10 @@ const NewContractDetails = () => {
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#f9fafb' }}>
       {/* Header */}
-      <div className="bg-white shadow-sm" style={{ borderBottom: '1px solid #d1d5db' }}>
+      {/* <div className="bg-white shadow-sm" style={{ borderBottom: '1px solid #d1d5db' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
               <button
@@ -73,8 +75,10 @@ const NewContractDetails = () => {
               </span>
             </div>
           </div>
+
+
         </div>
-      </div>
+      </div> */}
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

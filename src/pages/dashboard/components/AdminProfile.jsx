@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 const AdminProfile = ({ headingText = "Users Management" }) => {
   const { user, logOut } = useContext(AuthContext);
 
+  const role = "Admin";
+
   const navigate = useNavigate();
 
   const logOutUser = () => {
@@ -72,7 +74,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
         <div className="flex items-center min-w-[20rem] justify-between min-h-12 gap-2 bg-white rounded-md px-4 py-2 border border-gray-200 shadow-sm">
           <input
             type="text"
-            placeholder="Search Task"
+            placeholder="Search"
             className="outline-none text-sm text-[#88755A] bg-transparent placeholder:text-[#88755A] w-full"
           />
           <CiSearch className="text-[#88755A]  text-3xl" />
@@ -84,7 +86,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
             <DollarSign className="w-4 h-4 text-brandGray" />
           </div>
           <div>
-            <p className="text-md text-brandGray ">Admin Earnings</p>
+            <p className="text-md text-brandGray ">Earnings</p>
             <p className="text-lg font-bold text-brandGray">120</p>
           </div>
         </div>
@@ -127,16 +129,26 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
 
         <div className="relative group flex items-center">
           {/* Profile Image */}
-          <div className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer">
+          <div className="flex gap-2">
+            <div
+            onClick={()=>{
+              navigate("/dashboard/update-profile")
+            }}
+            className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer">
             <img
               src={profile}
               alt="Admin"
               className="w-full h-full object-cover"
             />
           </div>
+          <div className="text-brandGray font-semibold">
+            <p>{user?.displayName}</p>
+            <p> {role}</p>
+          </div>
+          </div>
 
           {/* Name Popup */}
-          {user?.displayName && (
+          {/* {user?.displayName && (
             <div
               className="
         absolute
@@ -160,10 +172,10 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
             >
               {user.displayName}
             </div>
-          )}
+          )} */}
 
           {/* Logout Button */}
-          <button
+          {/* <button
             onClick={logOutUser}
             className="
       absolute
@@ -188,7 +200,9 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
     "
           >
             Logout
-          </button>
+          </button> */}
+
+
         </div>
       </div>
     </div>
