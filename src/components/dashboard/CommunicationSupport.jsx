@@ -3,6 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { TrendingUp } from "lucide-react";
 import { HiArrowTrendingDown } from "react-icons/hi2";
+import { useState } from "react";
 
 const CommunicationSupport = () => {
   // Pie chart data with updated colors to match the image
@@ -12,6 +13,22 @@ const CommunicationSupport = () => {
     { name: "Medium", value: 340, color: "#FFD700" }, // Light orange/yellow
     { name: "Low", value: 590, color: "#FFA500" }, // Orange
   ];
+
+
+
+
+   const options = ["Today", "This Week", "This Month", "This Year"];
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState("Today");
+
+    const handleSelect = (option) => {
+    setSelected(option);
+    console.log("Selected:", option);
+    setIsOpen(false);
+  };
+
+
+
 
   return (
     <div className="bg-white rounded-2xl w-full p-6 shadow-lg border border-gray-100  mx-auto  h-[22rem] flex items-center justify-center">
@@ -27,9 +44,33 @@ const CommunicationSupport = () => {
           </div>
 
           {/* Date Selector */}
-          <div className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border">
-            Today <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
-          </div>
+          <div className="relative inline-block text-left">
+      {/* Trigger */}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+      >
+        {selected}
+        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+      </div>
+
+      {/* Dropdown Options */}
+      {isOpen && (
+        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+          {options.map((option) => (
+            <div
+              key={option}
+              onClick={() => handleSelect(option)}
+              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              {option}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+
         </div>
 
         <div className="divider-vertical border-b"></div>

@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { LuUsers } from "react-icons/lu";
+import { useState } from "react";
 
 
 const UserAnalytics = ({
@@ -48,6 +49,31 @@ const UserAnalytics = ({
     return null;
   };
 
+
+
+  const [selectedPartner, setSelectedPartner] = useState("Today");
+  const [isOpenPartner, setIsOpenPartner] = useState(false);
+
+  // dropdown 
+  const options = ["Today", "This Week", "This Month", "This Year"];
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState("Today");
+  
+  const handleSelectPartner = (option) => {
+    setSelectedPartner(option);
+    console.log("Selected:", option);
+    setIsOpenPartner(false);
+  }; 
+
+
+    const handleSelect = (option) => {
+    setSelected(option);
+    console.log("Selected:", option);
+    setIsOpen(false);
+  }; 
+
+
+
   return (
     <div>
       <h3 className="text-2xl mb-6 font-semibold text-gray-800">{title}</h3>
@@ -66,9 +92,35 @@ const UserAnalytics = ({
                 <p className="text-sm text-gray-500">Growth Analytics</p>
               </div>
             </div>
-            <div className="flex items-center text-xs text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border">
-              This Year <IoIosArrowDown className="ml-1 text-gray-600" size={12} />
+
+
+            {/* dropdown  */}
+
+            <div className="relative inline-block text-left">
+      {/* Trigger */}
+      <div
+        onClick={() => setIsOpenPartner(!isOpenPartner)}
+        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+      >
+        {selectedPartner}
+        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+      </div>
+
+      {/* Dropdown Options */}
+      {isOpenPartner && (
+        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+          {options.map((option) => (
+            <div
+              key={option}
+              onClick={() => handleSelectPartner(option)}
+              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              {option}
             </div>
+          ))}
+        </div>
+      )}
+    </div>
           </div>
 
           {/* Stats */}
@@ -143,9 +195,37 @@ const UserAnalytics = ({
                 <p className="text-sm text-gray-500">Growth Analytics</p>
               </div>
             </div>
-            <div className="flex items-center text-xs text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border">
-              This Year <IoIosArrowDown className="ml-1 text-gray-600" size={12} />
+
+
+            {/* Dropdown  */}
+
+<div className="relative inline-block text-left">
+      {/* Trigger */}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+      >
+        {selected}
+        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+      </div>
+
+      {/* Dropdown Options */}
+      {isOpen && (
+        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+          {options.map((option) => (
+            <div
+              key={option}
+              onClick={() => handleSelect(option)}
+              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              {option}
             </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+
           </div>
 
           {/* Stats */}

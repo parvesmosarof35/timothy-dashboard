@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useEffect } from "react";
+import { Pagination, Table } from "antd";
 
 const FinancialPayments = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +20,7 @@ const FinancialPayments = () => {
   // Mock data for payments
   const payments = [
     {
-      id: "1981849262",
+      id: "198184926223",
       description:
         "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
       paymentType: "Incoming",
@@ -150,6 +151,8 @@ const FinancialPayments = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
+  const [pageSize] = useState(5);
+
 
   // Auto filter trigger
   useEffect(() => {
@@ -163,6 +166,85 @@ const FinancialPayments = () => {
       search: searchTerms,
     });
   };
+
+
+
+
+
+
+
+
+
+
+
+  const columns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    render: (text) => <span className="text-brandGray">{text}</span>,
+  },
+  {
+    title: "Payment Type",
+    dataIndex: "paymentType",
+    key: "paymentType",
+    render: (type) => (
+      <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
+        <span className="w-2 h-2 bg-brandGreen rounded-full"></span>
+        {type}
+      </span>
+    ),
+  },
+  { title: "Date", dataIndex: "date", key: "date" },
+  { title: "User", dataIndex: "user", key: "user" },
+  { title: "Partner", dataIndex: "partner", key: "partner" },
+  { title: "Order ID", dataIndex: "orderId", key: "orderId" },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (status) => (
+      <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
+        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+        {status}
+      </span>
+    ),
+  },
+  {
+    title: "Amount",
+    dataIndex: "amount",
+    key: "amount",
+    render: (amount) => (
+      <span className="text-sm font-medium text-darkGray">{amount}</span>
+    ),
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: () => (
+      <button className="text-brandGray hover:text-brandGray">
+        <MoreHorizontal className="w-5 h-5" />
+      </button>
+    ),
+  },
+];
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="px-6 bg-grayLightBg min-h-screen font-sans">
@@ -222,7 +304,7 @@ const FinancialPayments = () => {
           </div>
 
           {/* Filters and Actions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 pb-6">
             {/* <div className="p-4 border-b border-gray-200">
          
                 <div className="flex items-center gap-2">
@@ -267,8 +349,29 @@ const FinancialPayments = () => {
             </div> */}
 
             {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
+<div className="overflow-x-auto">
+  <Table
+    columns={columns}
+    dataSource={payments.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+    pagination={false}
+    rowKey="id"
+  />
+
+  <div className="mt-4 text-center">
+    <Pagination
+      current={currentPage}
+      total={payments.length}
+      pageSize={pageSize}
+      onChange={(page) => setCurrentPage(page)}
+      showSizeChanger={false}
+      align="center"
+    />
+  </div>
+
+
+
+
+              {/* <table className="w-full">
                 <thead className="bg-grayLightBg border-b border-gray-200">
                   <tr>
                     <th className="text-left px-6 py-3 text-xs font-medium text-brandGray uppercase tracking-wider">
@@ -349,13 +452,16 @@ const FinancialPayments = () => {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table> */}
+
+
+
             </div>
 
             {/* Pagination */}
 
             {/* Pagination */}
-            <div className="px-6 py-4 border-t border-gray-200">
+            {/* <div className="px-6 py-4 border-t border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg">
@@ -375,7 +481,9 @@ const FinancialPayments = () => {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
+
+
           </div>
         </div>
       </div>

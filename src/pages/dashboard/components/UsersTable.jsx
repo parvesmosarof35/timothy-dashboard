@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Table } from "antd";
+import { useMemo } from "react";
 
 const users = [
   {
@@ -225,6 +227,59 @@ const UsersTable = () => {
     });
   };
 
+
+
+
+
+
+
+
+
+
+  const columns = [
+    { title: "ID", dataIndex: "id", key: "id" },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) => (
+        <div className="flex items-center gap-2">
+          <img
+            src={record.image}
+            alt={text}
+            className="w-6 h-6 rounded-full object-cover"
+          />
+          {text}
+        </div>
+      ),
+    },
+    { title: "Joined", dataIndex: "joined", key: "joined" },
+    { title: "Status", dataIndex: "status", key: "status" },
+    { title: "Level", dataIndex: "level", key: "level" },
+    { title: "Role", dataIndex: "role", key: "role" },
+    { title: "Earnings", dataIndex: "earnings", key: "earnings" },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <button
+          onClick={() =>
+            navigate(`/dashboard/user-info/details/${record.id}`)
+          }
+          className="text-brandGray hover:text-darkGray"
+        >
+          <Info size={16} />
+        </button>
+      ),
+    },
+     ];
+
+
+
+
+
+
+
   return (
     <div className="p-6 bg-grayLightBg min-h-screen font-sans">
       <div className="flex justify-between items-center mb-6">
@@ -275,7 +330,40 @@ const UsersTable = () => {
       </div>
 
       <div className="overflow-x-auto border rounded-lg bg-white">
-        <table className="min-w-full divide-y divide-gray-200">
+
+
+
+
+
+
+
+<div className="overflow-x-auto">
+  <Table
+    columns={columns}
+    dataSource={filteredUsers}
+    rowKey="id"
+    scroll={{ x: 800 }}
+    pagination={{
+      current: currentPage,
+      pageSize: usersPerPage,
+      total: filteredUsers.length,
+      onChange: setCurrentPage,
+      showSizeChanger: false,
+    }}
+  />
+</div>
+
+<style jsx>{`
+  .ant-table-pagination {
+    display: flex;
+    justify-content: center !important; /* center align */
+    padding: 16px;
+  }
+`}</style>
+
+
+
+        {/* <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
@@ -348,10 +436,10 @@ const UsersTable = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
 
         {/* Pagination */}
-        <div className="px-6 py-4 border-t border-gray-200">
+        {/* <div className="px-6 py-4 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
@@ -379,7 +467,10 @@ const UsersTable = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
+
+
+
       </div>
     </div>
   );

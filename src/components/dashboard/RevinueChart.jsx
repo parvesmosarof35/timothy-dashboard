@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { TrendingUp, TrendingDown, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
 
 const data = [
   { name: "Jan", partners: 28, users: 10 },
@@ -56,7 +58,26 @@ const LegendItem = ({ color, label }) => (
   </div>
 );
 
+
+
+
+
 const FinancialDashboard = () => {
+
+
+  
+// dropdown 
+  const options = ["Today", "This Week", "This Month", "This Year"];
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState("Today");
+
+  const handleSelect = (option) => {
+    setSelected(option);
+    console.log("Selected:", option);
+    setIsOpen(false);
+  };
+
+
   return (
     <div className=" bg-grayLightBg">
       <h1 className="text-3xl font-semibold text-darkGray mb-6">
@@ -75,10 +96,35 @@ const FinancialDashboard = () => {
               <LegendItem color="#c3720b" label="Partners" />
               <LegendItem color="#FFC983" label="Users" />
             </div>
-            <div className="flex items-center gap-2 bg-grayLightBg px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-              <span className="text-brandGray text-sm font-medium">This year</span>
-              <ChevronDown className="w-4 h-4 text-brandGray" />
+
+
+            {/* dropdown  */}
+
+            <div className="relative inline-block text-left">
+      {/* Trigger */}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+      >
+        {selected}
+        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+      </div>
+
+      {/* Dropdown Options */}
+      {isOpen && (
+        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+          {options.map((option) => (
+            <div
+              key={option}
+              onClick={() => handleSelect(option)}
+              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              {option}
             </div>
+          ))}
+        </div>
+      )}
+    </div>
           </div>
         </div>
 

@@ -12,6 +12,7 @@ import {
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Table } from "antd";
 
 const Contracts = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -174,6 +175,53 @@ const Contracts = () => {
     });
   };
 
+
+
+
+
+   const columns = [
+    { title: "ID", dataIndex: "id", key: "id" },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => <span className="text-brandGray">{text}</span>,
+    },
+    { title: "Category", dataIndex: "category", key: "category" },
+    { title: "User", dataIndex: "user", key: "user" },
+    { title: "Starting Date", dataIndex: "startingDate", key: "startingDate" },
+    { title: "Finishing Date", dataIndex: "finishingDate", key: "finishingDate" },
+    { title: "Milestones", dataIndex: "milestones", key: "milestones" },
+    { title: "All Amount", dataIndex: "allAmount", key: "allAmount" },
+    { title: "Current", dataIndex: "current", key: "current" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <button className="text-brandGray hover:text-brandGray">
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
+      ),
+    },
+  ];
+
+
+  const pageSize = 5;
+    const filteredContracts = contracts.filter((item) =>
+    item.description.toLowerCase().includes(searchTerms.toLowerCase())
+  );
+
   return (
     <div className="px-6 bg-grayLightBg min-h-screen font-sans">
       <AdminProfile headingText={`Contracts`}></AdminProfile>
@@ -277,7 +325,27 @@ const Contracts = () => {
 
             {/* Table */}
             <div className="overflow-x-auto">
-              <table className="w-full">
+
+
+ <Table
+          columns={columns}
+          dataSource={filteredContracts}
+          rowKey="id"
+          pagination={{
+            current: currentPage,
+            pageSize,
+            total: filteredContracts.length,
+            onChange: (page) => setCurrentPage(page),
+            showSizeChanger: false,
+            position: ["bottomCenter"], // center align pagination
+          }}
+          onRow={(record) => ({
+            onClick: () => navigate(`${record.id}`),
+          })}
+          scroll={{ x: "max-content" }}
+        />
+
+              {/* <table className="w-full">
                 <thead className="bg-grayLightBg border-b border-gray-200">
                   <tr>
                     <th className="text-left px-6 py-3 text-xs font-medium text-brandGray uppercase tracking-wider">
@@ -367,11 +435,14 @@ const Contracts = () => {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table> */}
+
+
+
             </div>
 
             {/* Pagination */}
-            <div className="px-6 py-4 border-t border-gray-200">
+            {/* <div className="px-6 py-4 border-t border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg">
@@ -391,7 +462,9 @@ const Contracts = () => {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
+
+
           </div>
         </div>
       </div>

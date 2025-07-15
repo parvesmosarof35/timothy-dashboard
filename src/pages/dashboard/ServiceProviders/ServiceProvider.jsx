@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Table } from "antd";
 
 const users = [
   {
@@ -75,46 +76,6 @@ const users = [
     earnings: "$1981849262",
     image: "https://randomuser.me/api/portraits/women/55.jpg",
   },
-  {
-    id: "1981849266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "1981849264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "1981849265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "1981849266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
 ];
 
 const ServiceProvider = () => {
@@ -164,6 +125,58 @@ const ServiceProvider = () => {
       search: searchTerms,
     });
   };
+
+
+
+
+
+
+
+  const columns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    render: (text, record) => (
+      <div className="flex items-center gap-2">
+        <img
+          src={record.image}
+          alt={text}
+          className="w-7 h-7 rounded-full object-cover"
+        />
+        <span>{text}</span>
+      </div>
+    ),
+  },
+  { title: "Joined", dataIndex: "joined", key: "joined" },
+  { title: "Status", dataIndex: "status", key: "status" },
+  { title: "Level", dataIndex: "level", key: "level" },
+  { title: "Role", dataIndex: "role", key: "role" },
+  { title: "Earnings", dataIndex: "earnings", key: "earnings" },
+  {
+    title: "Actions",
+    key: "actions",
+    render: (_, record) => (
+      <button
+        onClick={() =>
+          navigate(`/dashboard/service-provider/details/${record.id}`)
+        }
+        className="text-brandGray hover:text-darkGray"
+      >
+        <Info size={16} />
+      </button>
+    ),
+  },
+];
+
+
+
+
 
   return (
     <div className="px-6">
@@ -217,7 +230,32 @@ const ServiceProvider = () => {
         </div>
 
         <div className="overflow-x-auto border rounded-lg bg-white">
-          <table className="min-w-full divide-y divide-gray-200">
+
+
+          <Table
+  columns={columns}
+  dataSource={filteredUsers}
+  rowKey="id"
+  pagination={{
+    current: currentPage,
+    pageSize: usersPerPage,
+    total: filteredUsers.length,
+    onChange: setCurrentPage,
+    showSizeChanger: false,
+  }}
+  scroll={{ x: 900 }}
+/>
+
+
+<style jsx>{`
+  .ant-table-pagination {
+    display: flex;
+    justify-content: center !important; /* center align */
+    padding: 16px;
+  }
+`}</style>
+
+          {/* <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
@@ -292,10 +330,10 @@ const ServiceProvider = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
 
           {/* Pagination */}
-          <div className="px-6 py-4 border-t border-gray-200">
+          {/* <div className="px-6 py-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <button
@@ -323,7 +361,9 @@ const ServiceProvider = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
+
+
         </div>
       </div>
     </div>

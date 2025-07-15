@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Table,
   Button,
-  Modal,
   Input,
   Space,
   Avatar,
@@ -13,7 +12,6 @@ import {
 import {
   CheckOutlined,
   CloseOutlined,
-  SearchOutlined,
   UserOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
@@ -162,54 +160,6 @@ const ApprovePartners = () => {
       partner.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-
-
-
-
-
-
-
-
-
-
-
-   /* Centralised confirm dialogs */
-  const confirmApprove = (id, name) =>
-    Modal.confirm({
-      title: "Approve Partner",
-      content: `Are you sure you want to approve ${name} as a business partner?`,
-      centered: true,
-      icon: <CheckOutlined style={{ color: "#52c41a" }} />,
-      okText: "Yes, Approve",
-      cancelText: "Cancel",
-      okButtonProps: {
-        style: { backgroundColor: "#ffc983", borderColor: "#ffc983" },
-      },
-      onOk: () => updateStatus(id, "approved"),
-    });
-
-  const confirmReject = (id, name) =>
-    Modal.confirm({
-      title: "Reject Partner",
-      content: `Are you sure you want to reject ${name}'s partnership application?`,
-      centered: true,
-      icon: <ExclamationCircleOutlined style={{ color: "#ff4d4f" }} />,
-      okText: "Yes, Reject",
-      cancelText: "Cancel",
-      okButtonProps: {
-        style: { backgroundColor: "#ff4d4f", borderColor: "#ff4d4f" },
-      },
-      onOk: () => updateStatus(id, "rejected"),
-    });
-
-
-
-
-
-
-
-
   const columns = [
     {
       title: "Partner ID",
@@ -274,8 +224,6 @@ const ApprovePartners = () => {
       },
     },
 
-
-    
     {
       title: "Actions",
       key: "actions",
@@ -290,7 +238,6 @@ const ApprovePartners = () => {
                 onConfirm={() => handleApprove(record.id, record.name)}
                 okText="Yes, Approve"
                 cancelText="Cancel"
-                
                 okButtonProps={{
                   style: { backgroundColor: "#ffc983", borderColor: "#ffc983" },
                 }}
@@ -362,6 +309,20 @@ const ApprovePartners = () => {
     });
   };
 
+  // pegination fucn
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+
+
+  const handleTableChange = (pagination) => {
+  console.log(pagination);
+  console.log(pagination.current, pagination.pageSize);
+};
+
+
   return (
     <div className="px-6 bg-gray-50 min-h-screen">
       <AdminProfile headingText="Approve Partners"></AdminProfile>
@@ -432,21 +393,23 @@ const ApprovePartners = () => {
           </div>
         </div> */}
 
-        <Table
-          columns={columns}
-          dataSource={filteredPartners}
-          rowKey="id"
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} partners`,
-            className: "px-6",
-          }}
-          className="custom-table"
-          rowClassName="hover:bg-gray-50"
-        />
+<Table
+  columns={columns}
+  dataSource={filteredPartners}
+  rowKey="id"
+  pagination={{
+    ...pagination,
+    position: ["bottomCenter"],
+    showSizeChanger: false,
+    showQuickJumper: false,
+    // showTotal: (total, range) =>
+    //   `${range[0]}-${range[1]} of ${total} partners`,
+    className: "px-6",
+  }}
+  onChange={handleTableChange}
+  className="custom-table"
+  rowClassName="hover:bg-gray-50"
+/>
       </div>
 
       <style jsx>{`
