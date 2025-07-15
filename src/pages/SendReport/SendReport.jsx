@@ -21,6 +21,8 @@ import {
   UserOutlined,
   SendOutlined
 } from "@ant-design/icons";
+import { useEffect } from "react";
+import AdminProfile from "../dashboard/components/AdminProfile";
 
 const { Search } = Input;
 const { TextArea } = Input;
@@ -291,19 +293,91 @@ const SendReport = () => {
     }
   ];
 
+
+
+    const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+
+  // Auto filter trigger
+  useEffect(() => {
+    handleSelect();
+  }, [selectedTime, selectedCountry, searchTerms]);
+
+  const handleSelect = () => {
+    console.log("Filter Applied:", {
+      time: selectedTime,
+      country: selectedCountry,
+      search: searchTerms,
+    });
+  };
+
+
   return (
-    <div style={{ 
+<div className="px-6">
+
+  <AdminProfile headingText="Notificaiton page"></AdminProfile>
+      <div style={{ 
       minHeight: '100vh', 
       backgroundColor: '#f9fafb', 
       padding: '24px' 
     }}>
-      <div style={{ marginBottom: '24px' }}>
-        <Title level={2} style={{ color: '#0d0d0d', marginBottom: '8px' }}>
+      <div style={{ marginBottom: '24px' }} className="flex py-4 justify-between items-center">
+        <div>
+          <Title level={2} style={{ color: '#0d0d0d', marginBottom: '8px' }}>
           Send Report
         </Title>
         <Text style={{ color: '#6b7280' }}>
           Generate and send partner reports
         </Text>
+        </div>
+
+        <div>
+                  {/* search filter  */}
+
+        <div className="flex gap-3 items-center flex-wrap">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
+
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="" disabled>
+              Select Country
+            </option>
+            <option value="us">United States </option>
+            <option value="uk">United Kingdom</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">France</option>
+            <option value="bd">Bangladesh</option>
+            <option value="es">Spain</option>
+          </select>
+
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+
+        </div>
       </div>
 
       <Card style={{ 
@@ -317,16 +391,15 @@ const SendReport = () => {
           alignItems: 'center', 
           marginBottom: '24px' 
         }}>
-          <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
+          {/* <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
             Partner Reports
-          </Title>
-          <Search
+          </Title> */}
+          {/* <Search
             placeholder="Search partners..."
             allowClear
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ width: 300 }}
-            prefix={<SearchOutlined />}
-          />
+          /> */}
         </div>
 
         <Table
@@ -336,7 +409,7 @@ const SendReport = () => {
           pagination={{
             pageSize: 10,
             showSizeChanger: false,
-            showQuickJumper: true,
+            showQuickJumper: false,
             showTotal: (total, range) => 
               `${range[0]}-${range[1]} of ${total} partners`
           }}
@@ -546,6 +619,7 @@ Admin Team` : ''}
         </div>
       </Modal>
     </div>
+</div>
   );
 };
 
