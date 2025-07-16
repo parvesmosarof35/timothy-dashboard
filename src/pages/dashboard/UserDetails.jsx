@@ -158,7 +158,7 @@ const UserDetails = () => {
         <h3 className="text-lg font-semibold text-darkGray mb-4">
           Transaction History
         </h3>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border md:w-full mx-auto w-full max-w-[24rem] md:max-w-full overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200">
@@ -313,7 +313,7 @@ const UserDetails = () => {
 
   return (
     <div className="font-sans bg-grayLightBg min-h-screen">
-      <div className="px-6 py-6 mx-auto">
+      <div className="md:px-6 px-2 py-6 mx-auto mt-20 md:mt-5">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-darkGray mb-2">Profile</h1>
           <p className="text-brandGray">

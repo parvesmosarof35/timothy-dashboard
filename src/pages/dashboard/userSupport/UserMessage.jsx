@@ -136,7 +136,7 @@ const UserMessage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-grayLightBg font-sans">
+    <div className="flex flex-col-reverse md:flex-row  md:h-screen bg-grayLightBg font-sans">
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
@@ -271,7 +271,7 @@ const UserMessage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="w-80 bg-white border-l border-gray-200 p-6">
+      <div className="md:w-80 w-full bg-white border-l border-gray-200 p-6">
         {/* Ticket Info */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-darkGray mb-4">
