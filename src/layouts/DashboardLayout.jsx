@@ -41,6 +41,7 @@ export default function DashboardLayout() {
             "You have been logged out successfully.",
             "success"
           );
+          navigate("/login")
         });
       }
     });

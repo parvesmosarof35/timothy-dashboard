@@ -79,7 +79,7 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                required
+                // required
                 ref={emailRef}
                 placeholder="Your email address"
                 className="mt-1 w-full px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -92,7 +92,7 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                required
+                // required
                 placeholder="Your password"
                 className="mt-1 w-full px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
