@@ -41,10 +41,13 @@ export default function DashboardLayout() {
             "You have been logged out successfully.",
             "success"
           );
-          navigate("/login")
+          navigate("/login");
         });
       }
     });
+  };
+  const sendReport = () => {
+   navigate("/dashboard/send-report");
   };
 
   useEffect(() => {
@@ -163,12 +166,19 @@ export default function DashboardLayout() {
 
       <div
         className="px-4 py-2 rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
+        onClick={sendReport}
+      >
+        <IoLogOutOutline className="text-xl" />
+        Send report
+      </div>
+
+      <div
+        className="px-4 py-2 rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
         onClick={logOutUser}
       >
         <IoLogOutOutline className="text-xl" />
         Log Out
       </div>
-    
     </>
   );
 
@@ -229,10 +239,11 @@ export default function DashboardLayout() {
 
             {/* Button fixed at the bottom of the card */}
             <div
-            onClick={()=>{
-              navigate("send-report")
-            }}
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4">
+              onClick={() => {
+                navigate("send-report");
+              }}
+              className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4"
+            >
               <button className="bg-white text-darkGray text-sm font-medium px-10 py-3 rounded-xl hover:bg-gray-200 transition w-full mx-auto">
                 Send
               </button>
