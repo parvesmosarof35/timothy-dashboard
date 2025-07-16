@@ -320,8 +320,8 @@ const SendReport = () => {
   };
 
   return (
-    <div className="px-6">
-      <AdminProfile headingText="Notificaiton page"></AdminProfile>
+    <div className="px-2 md:px-6">
+      <AdminProfile headingText="Send Report"></AdminProfile>
       <div
         style={{
           minHeight: "100vh",
@@ -335,11 +335,9 @@ const SendReport = () => {
         >
           <div>
             <Title level={2} style={{ color: "#0d0d0d", marginBottom: "8px" }}>
-              Send Report
+               Generate and send partner reports
             </Title>
-            <Text style={{ color: "#6b7280" }}>
-              Generate and send partner reports
-            </Text>
+            
           </div>
 
           <div>
@@ -402,6 +400,7 @@ const SendReport = () => {
               alignItems: "center",
               marginBottom: "24px",
             }}
+             
           >
             {/* <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
             Partner Reports
@@ -414,7 +413,8 @@ const SendReport = () => {
           /> */}
           </div>
 
-          <Table
+<div className="overflow-scroll w-[24rem] md:w-full mx-auto">
+            <Table
             columns={columns}
             dataSource={filteredPartners}
             rowKey="id"
@@ -427,6 +427,7 @@ const SendReport = () => {
             }}
             style={{ backgroundColor: "white" }}
           />
+</div>
         </Card>
 
         {/* Details Drawer */}

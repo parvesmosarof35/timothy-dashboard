@@ -10,6 +10,7 @@ import { IoLogOut, IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { AuthContext } from "../providers/AuthProvider";
 import { LuUsers } from "react-icons/lu";
+import { CiMail } from "react-icons/ci";
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -165,10 +166,10 @@ export default function DashboardLayout() {
       </NavLink>
 
       <div
-        className="px-4 py-2 rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
+        className="px-4 py-2 md:hidden rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
         onClick={sendReport}
       >
-        <IoLogOutOutline className="text-xl" />
+        <CiMail className="text-xl" />
         Send report
       </div>
 
