@@ -264,186 +264,89 @@ const UsersTable = () => {
   ];
 
   return (
-    <div className="p-6 bg-grayLightBg min-h-screen font-sans">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Manage Users</h2>
+<div className="md:p-4 p-2 sm:p-6 bg-grayLightBg md:min-h-screen font-sans w-full">
+  {/* Header + Filters */}
+  <div className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center mb-6">
+    <h2 className="text-xl sm:text-2xl font-semibold">Manage Users</h2>
 
-        {/* search filter  */}
+    {/* Filters */}
+    <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+      {/* Time Filter */}
+      <select
+        value={selectedTime}
+        onChange={(e) => setSelectedTime(e.target.value)}
+        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+      >
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+      </select>
 
-        <div className="flex gap-3 items-center flex-wrap">
-          {/* Time Filter */}
-          <select
-            value={selectedTime}
-            onChange={(e) => setSelectedTime(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
-          </select>
+      {/* Country Filter */}
+      <select
+        value={selectedCountry}
+        onChange={(e) => setSelectedCountry(e.target.value)}
+        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+      >
+        <option value="" disabled>
+          Select Country
+        </option>
+        <option value="us">United States</option>
+        <option value="uk">United Kingdom</option>
+        <option value="ae">United Arab Emirates</option>
+        <option value="pt">Portugal</option>
+        <option value="fr">France</option>
+        <option value="es">Spain</option>
+      </select>
 
-          {/* Country Filter */}
-          <select
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="" disabled>
-              Select Country
-            </option>
-            <option value="us">United States </option>
-            <option value="uk">United Kingdom</option>
-            <option value="ae">United Arab Emirates</option>
-            <option value="pt">Portugal</option>
-            <option value="fr">France</option>
-
-            <option value="es">Spain</option>
-          </select>
-
-          {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchTerms}
-            onChange={(e) => setSearchTerms(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-
-      <div className="overflow-x-auto border rounded-lg bg-white">
-        <div className="overflow-x-auto">
-          <Table
-            columns={columns}
-            dataSource={filteredUsers}
-            rowKey="id"
-            scroll={{ x: 800 }}
-            pagination={{
-              current: currentPage,
-              pageSize: usersPerPage,
-              total: filteredUsers.length,
-              onChange: setCurrentPage,
-              showSizeChanger: false,
-            }}
-          />
-        </div>
-
-        <style jsx>{`
-          .ant-table-pagination {
-            display: flex;
-            justify-content: center !important; /* center align */
-            padding: 16px;
-          }
-        `}</style>
-
-        {/* <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                ID
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                Name
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                Joined
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                Status
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                Level
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                Role
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-darkGray">
-                Earnings
-              </th>
-              <th className="px-4 py-3 text-center text-sm font-medium text-darkGray">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {currentUsers.map((user, index) => (
-              <tr key={user.id} className="hover:bg-grayLightBg">
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-darkGray">
-                  {user.id}
-                </td>
-                <td className="px-4 py-4 flex items-center gap-3">
-                  <img
-                    src={user.image}
-                    alt={user.name}
-                    className="w-9 h-9 rounded-full object-cover"
-                  />
-                  <span className="text-sm font-medium text-darkGray">
-                    {user.name}
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-sm text-darkGray">
-                  {user.joined}
-                </td>
-                <td className="px-4 py-4">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-greenMutedBg text-brandGreen">
-                    ↑ {user.status}
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-sm text-darkGray">
-                  {user.level}
-                </td>
-                <td className="px-4 py-4 text-sm text-darkGray">{user.role}</td>
-                <td className="px-4 py-4 text-sm font-semibold text-darkGray">
-                  {user.earnings}
-                </td>
-                <td className="px-4 py-4 text-center">
-                  <button
-                    onClick={() => {
-                      navigate(`/dashboard/user-info/details/${user.id}`);
-                    }}
-                    className="text-brandGray hover:text-darkGray"
-                  >
-                    <Info size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table> */}
-
-        {/* Pagination */}
-        {/* <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Previous
-              </button>
-            </div>
-
-            <div className="text-sm text-darkGray">
-              Page {currentPage} of {totalPages}
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div> */}
-      </div>
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search"
+        value={searchTerms}
+        onChange={(e) => setSearchTerms(e.target.value)}
+        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+      />
     </div>
+  </div>
+
+{/* Table */}
+<div className="w-[24rem] md:w-full mx-auto sm:overflow-scroll md:overflow-auto">
+  <div className="w-full flex justify-center">
+  <div className="w-full overflow-x-auto border rounded-lg bg-white">
+    <div className="">
+      <Table
+        columns={columns}
+        dataSource={filteredUsers}
+        rowKey="id"
+        scroll={{ x: true }} // Let AntD handle horizontal scroll
+        pagination={{
+          current: currentPage,
+          pageSize: usersPerPage,
+          total: filteredUsers.length,
+          onChange: setCurrentPage,
+          showSizeChanger: false,
+        }}
+      />
+    </div>
+  </div>
+</div>
+</div>
+<style jsx>{`
+  .ant-table-pagination {
+    display: flex;
+    justify-content: center !important;
+    padding: 16px;
+    width: 100%;
+  }
+`}</style>
+
+
+
+
+</div>
+
   );
 };
 
