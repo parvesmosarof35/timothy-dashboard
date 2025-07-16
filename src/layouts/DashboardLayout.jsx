@@ -168,30 +168,7 @@ export default function DashboardLayout() {
         <IoLogOutOutline className="text-xl" />
         Log Out
       </div>
-      {/* <NavLink to="/dashboard/userroles" className={({ isActive }) => linkClass(isActive)}>
-        <FiUsers className="text-lg" />
-        Roles
-      </NavLink> */}
-
-      {/* <button
-        onClick={handleSettingsClick}
-        className={`${navLinkBase} ${isSettingsActive ? "bg-orangePrimary text-darkGray" : "text-[#BCA88F] hover:bg-gray-100"}`}
-      >
-        <IoSettingsOutline className="text-lg" />
-        Settings
-      </button>
-
-      <button
-        onClick={handleSettingsClick}
-        className={`${navLinkBase} ${isSettingsActive ? "bg-orangePrimary text-darkGray" : "text-[#BCA88F] hover:bg-gray-100"}`}
-      >
-        <IoSettingsOutline className="text-lg" />
-        Settings
-      </button>
-      
-                <NavLink to="/dashboard/settings" end className={({ isActive }) => submenuLinkClass(isActive)}>
-            Profile
-          </NavLink> */}
+    
     </>
   );
 
@@ -276,13 +253,13 @@ export default function DashboardLayout() {
             </div>
 
             <div className="mt-auto border-t border-gray-200">
-              <button
+              {/* <button
                 className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md text-darkGray hover:bg-redMutedBg hover:text-red-600 transition-all"
                 onClick={() => console.log("Logout clicked")}
               >
                 <FiLogOut className="text-xl" />
                 <span className="font-bold">Logout</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

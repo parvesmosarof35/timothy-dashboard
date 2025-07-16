@@ -131,7 +131,7 @@ const Notification = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-<div className='px-6'>
+<div className='px-2 md:px-6'>
 
   <AdminProfile headingText='Notification'></AdminProfile>
       <div className="min-h-screen bg-gray-50 my-6">

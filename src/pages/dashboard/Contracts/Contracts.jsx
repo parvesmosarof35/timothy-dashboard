@@ -213,64 +213,63 @@ const Contracts = () => {
   );
 
   return (
-    <div className="px-6 bg-grayLightBg min-h-screen font-sans">
+    <div className="md:px-6 px-2 bg-grayLightBg min-h-screen font-sans">
       <AdminProfile headingText={`Contracts`}></AdminProfile>
       <div className="min-h-screen bg-grayLightBg p-6 font-sans">
         <div className=" mx-auto">
-          {/* Header */}
-          <div className="mb-8 flex justify-between">
-            <h1 className="text-2xl font-semibold mb-6 text-darkGray">
-              Contracts
-            </h1>
+{/* Header */}
+<div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
+  <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
+    Contracts
+  </h1>
 
-            {/* search filter  */}
+  {/* Filters */}
+  <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
+    {/* Time Filter */}
+    <select
+      value={selectedTime}
+      onChange={(e) => setSelectedTime(e.target.value)}
+      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+    >
+      <option value="today">Today</option>
+      <option value="week">This Week</option>
+      <option value="month">This Month</option>
+      <option value="year">This Year</option>
+    </select>
 
-            <div className="flex gap-3 items-center flex-wrap">
-              {/* Time Filter */}
-              <select
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
-              </select>
+    {/* Country Filter */}
+    <select
+      value={selectedCountry}
+      onChange={(e) => setSelectedCountry(e.target.value)}
+      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+    >
+      <option value="" disabled>
+        Select Country
+      </option>
+      <option value="us">United States</option>
+      <option value="uk">United Kingdom</option>
+      <option value="ae">United Arab Emirates</option>
+      <option value="pt">Portugal</option>
+      <option value="fr">France</option>
+      <option value="es">Spain</option>
+    </select>
 
-              {/* Country Filter */}
-              <select
-                value={selectedCountry}
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="" disabled>
-                  Select Country
-                </option>
-                <option value="us">United States </option>
-                <option value="uk">United Kingdom</option>
-                <option value="ae">United Arab Emirates</option>
-                <option value="pt">Portugal</option>
-                <option value="fr">France</option>
+    {/* Search Input */}
+    <input
+      type="text"
+      placeholder="Search"
+      value={searchTerms}
+      onChange={(e) => setSearchTerms(e.target.value)}
+      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+    />
+  </div>
+</div>
 
-                <option value="es">Spain</option>
-              </select>
-
-              {/* Search Input */}
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerms}
-                onChange={(e) => setSearchTerms(e.target.value)}
-                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
 
           {/* Filters and Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
             {/* Table */}
-            <div className="overflow-x-auto overflow-y-auto">
+            <div className="overflow-scroll w-[24rem] md:w-full mx-auto">
               <Table
                 columns={columns}
                 dataSource={filteredContracts}
@@ -290,6 +289,9 @@ const Contracts = () => {
               />
             </div>
           </div>
+
+
+
         </div>
       </div>
     </div>

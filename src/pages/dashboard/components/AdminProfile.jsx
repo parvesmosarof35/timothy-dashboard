@@ -84,14 +84,14 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
         </div>
 
         {/* Bell Icon with notification */}
-        <div className="relative hidden md:block">
+        <div className="relative  md:block">
           {/* Bell Icon */}
           <div
             onClick={handleNotification}
-            className="relative cursor-pointer w-[50px] h-[50px] rounded-full bg-white flex items-center justify-center shadow-sm border border-lightGrayBorders"
+            className="relative cursor-pointer md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full bg-white flex items-center justify-center shadow-sm border border-lightGrayBorders"
           >
             <PiBell className="text-[#88755A] text-2xl" />
-            <span className="absolute top-[8px] right-[8px] w-[10px] h-[10px] bg-brandRed rounded-full" />
+            <span className="absolute -top-[2px] md:top-[8px] -right-[0px] w-[10px] h-[10px] bg-brandRed rounded-full" />
           </div>
 
 
@@ -104,7 +104,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
               onClick={() => {
                 navigate("/dashboard/update-profile");
               }}
-              className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer"
+              className="md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer"
             >
               <img
                 src={profile}
