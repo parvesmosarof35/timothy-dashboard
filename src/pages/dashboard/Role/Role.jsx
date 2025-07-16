@@ -158,7 +158,7 @@ const Role = () => {
         {/* Header */}
         <div className="mb-8 flex justify-between">
           <h1 className="text-2xl font-semibold mb-6 text-darkGray">
-            Contracts
+            Manage Admins
           </h1>
 
           {/* search filter  */}

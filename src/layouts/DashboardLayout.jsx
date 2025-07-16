@@ -200,7 +200,7 @@ export default function DashboardLayout() {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-lg"
+        className="md:hidden fixed top-9 md:top-4 left-4 z-50 p-2 bg-white rounded-md shadow-lg"
       >
         {mobileMenuOpen ? (
           <FiX className="w-6 h-6" />
@@ -210,7 +210,7 @@ export default function DashboardLayout() {
       </button>
 
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex fixed left-0 top-0 w-64 h-screen bg-white shadow-lg flex-col justify-between z-40">
+      <aside className="hidden md:flex fixed left-0 top-0 w-64 h-screen bg-white shadow-lg flex-col justify-between z-40 z-100">
         <div className="p-6">
           <div className="flex justify-center mb-10">
             {/* <Link to="/">
@@ -297,8 +297,8 @@ export default function DashboardLayout() {
       )}
 
       {/* Main content */}
-      <main className="flex-1 md:ml-64 min-h-screen">
-        <div className="bg-[#fafafa]">
+      <main className="flex-1 md:ml-64 min-h-screen relative">
+        <div className="bg-[#fafafa] ">
           <Outlet />
         </div>
       </main>

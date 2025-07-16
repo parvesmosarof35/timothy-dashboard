@@ -16,7 +16,7 @@ import CommAndverification from "../pages/dashboard/CommunicationAndVerify/CommA
 
 const Dashboard = () => {
   return (
-    <div className="px-6 bg-grayLightBg min-h-screen font-sans">
+    <div className="md:px-6 px-4 bg-grayLightBg min-h-screen font-sans">
       <h1 className="text-2xl font-semibold mb-6 text-darkGray">Overview</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-6">

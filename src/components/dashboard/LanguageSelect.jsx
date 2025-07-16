@@ -6,7 +6,7 @@ const LanguageSelect = () => {
   const showGoogleTranslateElement = (show) => {
     const element = document.getElementById("google_translate_element");
     if (element) {
-      element.style.display = show ? "block" : "none";
+      element.style.display = show ? "none" : "none";
     }
   };
 

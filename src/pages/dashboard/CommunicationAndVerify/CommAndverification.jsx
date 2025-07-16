@@ -4,7 +4,7 @@ import CommunicationSupport from '../../../components/dashboard/CommunicationSup
 
 const CommAndverification = () => {
   return (
-    <div className='flex flex-row justify-center items-center gap-6  mx-auto  rounded-2xl'>
+    <div className='flex flex-col md:flex-row justify-center items-center gap-6  mx-auto  rounded-2xl'>
         <CommunicationSupport></CommunicationSupport>
         <PendingVerification></PendingVerification>
     </div>

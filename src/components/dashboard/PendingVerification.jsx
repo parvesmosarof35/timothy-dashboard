@@ -17,10 +17,10 @@ const PendingVerification = () => {
   const COLORS = ["#FF9900", "#FFCC66"]; // Adjusted to match the reference image
 
   return (
-    <div className="bg-white shadow-lg border rounded-xl p-6  w-full max-w-lg mx-auto h-[22rem]">
+    <div className="bg-white shadow-lg border rounded-xl p-6  w-full max-w-lg mx-auto h-[22rem] md:h-[24rem]">
       <div className="flex justify-between items-center h-full">
         {/* Left Section */}
-        <div className="h-full flex flex-col gap-2 justify-center items-center">
+        <div className="h-full flex flex-col gap-2 justify-center items-center text-center">
           <h2 className="!text-2xl sm:text-xl font-semibold text-darkGray mb-1">
             Pending Verification
           </h2>
