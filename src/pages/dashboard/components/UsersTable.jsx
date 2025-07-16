@@ -227,15 +227,6 @@ const UsersTable = () => {
     });
   };
 
-
-
-
-
-
-
-
-
-
   const columns = [
     { title: "ID", dataIndex: "id", key: "id" },
     {
@@ -263,22 +254,14 @@ const UsersTable = () => {
       key: "actions",
       render: (_, record) => (
         <button
-          onClick={() =>
-            navigate(`/dashboard/user-info/details/${record.id}`)
-          }
+          onClick={() => navigate(`/dashboard/user-info/details/${record.id}`)}
           className="text-brandGray hover:text-darkGray"
         >
           <Info size={16} />
         </button>
       ),
     },
-     ];
-
-
-
-
-
-
+  ];
 
   return (
     <div className="p-6 bg-grayLightBg min-h-screen font-sans">
@@ -314,7 +297,7 @@ const UsersTable = () => {
             <option value="ae">United Arab Emirates</option>
             <option value="pt">Portugal</option>
             <option value="fr">France</option>
-            <option value="bd">Bangladesh</option>
+
             <option value="es">Spain</option>
           </select>
 
@@ -330,38 +313,29 @@ const UsersTable = () => {
       </div>
 
       <div className="overflow-x-auto border rounded-lg bg-white">
+        <div className="overflow-x-auto">
+          <Table
+            columns={columns}
+            dataSource={filteredUsers}
+            rowKey="id"
+            scroll={{ x: 800 }}
+            pagination={{
+              current: currentPage,
+              pageSize: usersPerPage,
+              total: filteredUsers.length,
+              onChange: setCurrentPage,
+              showSizeChanger: false,
+            }}
+          />
+        </div>
 
-
-
-
-
-
-
-<div className="overflow-x-auto">
-  <Table
-    columns={columns}
-    dataSource={filteredUsers}
-    rowKey="id"
-    scroll={{ x: 800 }}
-    pagination={{
-      current: currentPage,
-      pageSize: usersPerPage,
-      total: filteredUsers.length,
-      onChange: setCurrentPage,
-      showSizeChanger: false,
-    }}
-  />
-</div>
-
-<style jsx>{`
-  .ant-table-pagination {
-    display: flex;
-    justify-content: center !important; /* center align */
-    padding: 16px;
-  }
-`}</style>
-
-
+        <style jsx>{`
+          .ant-table-pagination {
+            display: flex;
+            justify-content: center !important; /* center align */
+            padding: 16px;
+          }
+        `}</style>
 
         {/* <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
@@ -468,9 +442,6 @@ const UsersTable = () => {
             </div>
           </div>
         </div> */}
-
-
-
       </div>
     </div>
   );

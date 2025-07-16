@@ -190,7 +190,7 @@ const Role = () => {
               <option value="ae">United Arab Emirates</option>
               <option value="pt">Portugal</option>
               <option value="fr">France</option>
-              <option value="bd">Bangladesh</option>
+
               <option value="es">Spain</option>
             </select>
 

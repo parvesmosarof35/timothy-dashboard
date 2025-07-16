@@ -155,12 +155,6 @@ const UserSupport = () => {
     });
   };
 
-
-
-
-
-
-
   return (
     <div className="px-6 bg-grayLightBg min-h-screen font-sans space-y-6">
       <AdminProfile headingText={`User Support`}></AdminProfile>
@@ -201,7 +195,7 @@ const UserSupport = () => {
               <option value="ae">United Arab Emirates</option>
               <option value="pt">Portugal</option>
               <option value="fr">France</option>
-              <option value="bd">Bangladesh</option>
+
               <option value="es">Spain</option>
             </select>
 

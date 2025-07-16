@@ -153,7 +153,6 @@ const FinancialPayments = () => {
   const [searchTerms, setSearchTerms] = useState("");
   const [pageSize] = useState(5);
 
-
   // Auto filter trigger
   useEffect(() => {
     handleSelect();
@@ -167,84 +166,62 @@ const FinancialPayments = () => {
     });
   };
 
-
-
-
-
-
-
-
-
-
-
   const columns = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-    render: (text) => <span className="text-brandGray">{text}</span>,
-  },
-  {
-    title: "Payment Type",
-    dataIndex: "paymentType",
-    key: "paymentType",
-    render: (type) => (
-      <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
-        <span className="w-2 h-2 bg-brandGreen rounded-full"></span>
-        {type}
-      </span>
-    ),
-  },
-  { title: "Date", dataIndex: "date", key: "date" },
-  { title: "User", dataIndex: "user", key: "user" },
-  { title: "Partner", dataIndex: "partner", key: "partner" },
-  { title: "Order ID", dataIndex: "orderId", key: "orderId" },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-    render: (status) => (
-      <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
-        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-        {status}
-      </span>
-    ),
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-    key: "amount",
-    render: (amount) => (
-      <span className="text-sm font-medium text-darkGray">{amount}</span>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: () => (
-      <button className="text-brandGray hover:text-brandGray">
-        <MoreHorizontal className="w-5 h-5" />
-      </button>
-    ),
-  },
-];
-
-
-
-
-
-
-
-
-
-
-
-
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => <span className="text-brandGray">{text}</span>,
+    },
+    {
+      title: "Payment Type",
+      dataIndex: "paymentType",
+      key: "paymentType",
+      render: (type) => (
+        <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
+          <span className="w-2 h-2 bg-brandGreen rounded-full"></span>
+          {type}
+        </span>
+      ),
+    },
+    { title: "Date", dataIndex: "date", key: "date" },
+    { title: "User", dataIndex: "user", key: "user" },
+    { title: "Partner", dataIndex: "partner", key: "partner" },
+    { title: "Order ID", dataIndex: "orderId", key: "orderId" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
+          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount) => (
+        <span className="text-sm font-medium text-darkGray">{amount}</span>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: () => (
+        <button className="text-brandGray hover:text-brandGray">
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <div className="px-6 bg-grayLightBg min-h-screen font-sans">
@@ -274,23 +251,22 @@ const FinancialPayments = () => {
               </select>
 
               {/* Country Filter */}
-<select
-  value={selectedCountry}
-  onChange={(e) => setSelectedCountry(e.target.value)}
-  className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
->
-  <option value="" disabled>
-    Select Country
-  </option>
-  <option value="us">United States </option>
-  <option value="uk">United Kingdom</option>
-  <option value="ae">United Arab Emirates</option>
-  <option value="pt">Portugal</option>
-  <option value="fr">France</option>
-  <option value="bd">Bangladesh</option>
-  <option value="es">Spain</option>
-</select>
+              <select
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+                className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" disabled>
+                  Select Country
+                </option>
+                <option value="us">United States </option>
+                <option value="uk">United Kingdom</option>
+                <option value="ae">United Arab Emirates</option>
+                <option value="pt">Portugal</option>
+                <option value="fr">France</option>
 
+                <option value="es">Spain</option>
+              </select>
 
               {/* Search Input */}
               <input
@@ -349,27 +325,27 @@ const FinancialPayments = () => {
             </div> */}
 
             {/* Table */}
-<div className="overflow-x-auto">
-  <Table
-    columns={columns}
-    dataSource={payments.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
-    pagination={false}
-    rowKey="id"
-  />
+            <div className="overflow-x-auto">
+              <Table
+                columns={columns}
+                dataSource={payments.slice(
+                  (currentPage - 1) * pageSize,
+                  currentPage * pageSize
+                )}
+                pagination={false}
+                rowKey="id"
+              />
 
-  <div className="mt-4 text-center">
-    <Pagination
-      current={currentPage}
-      total={payments.length}
-      pageSize={pageSize}
-      onChange={(page) => setCurrentPage(page)}
-      showSizeChanger={false}
-      align="center"
-    />
-  </div>
-
-
-
+              <div className="mt-4 text-center">
+                <Pagination
+                  current={currentPage}
+                  total={payments.length}
+                  pageSize={pageSize}
+                  onChange={(page) => setCurrentPage(page)}
+                  showSizeChanger={false}
+                  align="center"
+                />
+              </div>
 
               {/* <table className="w-full">
                 <thead className="bg-grayLightBg border-b border-gray-200">
@@ -453,9 +429,6 @@ const FinancialPayments = () => {
                   ))}
                 </tbody>
               </table> */}
-
-
-
             </div>
 
             {/* Pagination */}
@@ -482,8 +455,6 @@ const FinancialPayments = () => {
                 </div>
               </div>
             </div> */}
-
-
           </div>
         </div>
       </div>

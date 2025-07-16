@@ -175,11 +175,7 @@ const Contracts = () => {
     });
   };
 
-
-
-
-
-   const columns = [
+  const columns = [
     { title: "ID", dataIndex: "id", key: "id" },
     {
       title: "Description",
@@ -190,7 +186,11 @@ const Contracts = () => {
     { title: "Category", dataIndex: "category", key: "category" },
     { title: "User", dataIndex: "user", key: "user" },
     { title: "Starting Date", dataIndex: "startingDate", key: "startingDate" },
-    { title: "Finishing Date", dataIndex: "finishingDate", key: "finishingDate" },
+    {
+      title: "Finishing Date",
+      dataIndex: "finishingDate",
+      key: "finishingDate",
+    },
     { title: "Milestones", dataIndex: "milestones", key: "milestones" },
     { title: "All Amount", dataIndex: "allAmount", key: "allAmount" },
     { title: "Current", dataIndex: "current", key: "current" },
@@ -216,9 +216,8 @@ const Contracts = () => {
     },
   ];
 
-
   const pageSize = 5;
-    const filteredContracts = contracts.filter((item) =>
+  const filteredContracts = contracts.filter((item) =>
     item.description.toLowerCase().includes(searchTerms.toLowerCase())
   );
 
@@ -262,7 +261,7 @@ const Contracts = () => {
                 <option value="ae">United Arab Emirates</option>
                 <option value="pt">Portugal</option>
                 <option value="fr">France</option>
-                <option value="bd">Bangladesh</option>
+
                 <option value="es">Spain</option>
               </select>
 
@@ -325,25 +324,23 @@ const Contracts = () => {
 
             {/* Table */}
             <div className="overflow-x-auto">
-
-
- <Table
-          columns={columns}
-          dataSource={filteredContracts}
-          rowKey="id"
-          pagination={{
-            current: currentPage,
-            pageSize,
-            total: filteredContracts.length,
-            onChange: (page) => setCurrentPage(page),
-            showSizeChanger: false,
-            position: ["bottomCenter"], // center align pagination
-          }}
-          onRow={(record) => ({
-            onClick: () => navigate(`${record.id}`),
-          })}
-          scroll={{ x: "max-content" }}
-        />
+              <Table
+                columns={columns}
+                dataSource={filteredContracts}
+                rowKey="id"
+                pagination={{
+                  current: currentPage,
+                  pageSize,
+                  total: filteredContracts.length,
+                  onChange: (page) => setCurrentPage(page),
+                  showSizeChanger: false,
+                  position: ["bottomCenter"], // center align pagination
+                }}
+                onRow={(record) => ({
+                  onClick: () => navigate(`${record.id}`),
+                })}
+                scroll={{ x: "max-content" }}
+              />
 
               {/* <table className="w-full">
                 <thead className="bg-grayLightBg border-b border-gray-200">
@@ -436,9 +433,6 @@ const Contracts = () => {
                   ))}
                 </tbody>
               </table> */}
-
-
-
             </div>
 
             {/* Pagination */}
@@ -463,8 +457,6 @@ const Contracts = () => {
                 </div>
               </div>
             </div> */}
-
-
           </div>
         </div>
       </div>

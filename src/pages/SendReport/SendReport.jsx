@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-import { 
-  Table, 
-  Button, 
-  Modal, 
-  Input, 
-  Space, 
-  Avatar, 
-  Tag, 
+import {
+  Table,
+  Button,
+  Modal,
+  Input,
+  Space,
+  Avatar,
+  Tag,
   message,
   Drawer,
   Descriptions,
   Typography,
-  Card
+  Card,
 } from "antd";
-import { 
-  InfoCircleOutlined, 
-  PrinterOutlined, 
+import {
+  InfoCircleOutlined,
+  PrinterOutlined,
   MailOutlined,
   SearchOutlined,
   UserOutlined,
-  SendOutlined
+  SendOutlined,
 } from "@ant-design/icons";
 import { useEffect } from "react";
 import AdminProfile from "../dashboard/components/AdminProfile";
@@ -50,7 +50,7 @@ const SendReport = () => {
       image: "https://randomuser.me/api/portraits/men/32.jpg",
       totalProjects: 15,
       completionRate: "98%",
-      rating: 4.9
+      rating: 4.9,
     },
     {
       id: "1981849263",
@@ -66,7 +66,7 @@ const SendReport = () => {
       image: "https://randomuser.me/api/portraits/women/44.jpg",
       totalProjects: 12,
       completionRate: "95%",
-      rating: 4.7
+      rating: 4.7,
     },
     {
       id: "1981849264",
@@ -82,7 +82,7 @@ const SendReport = () => {
       image: "https://randomuser.me/api/portraits/men/65.jpg",
       totalProjects: 20,
       completionRate: "97%",
-      rating: 4.8
+      rating: 4.8,
     },
     {
       id: "1981849265",
@@ -98,7 +98,7 @@ const SendReport = () => {
       image: "https://randomuser.me/api/portraits/women/55.jpg",
       totalProjects: 8,
       completionRate: "92%",
-      rating: 4.5
+      rating: 4.5,
     },
     {
       id: "1981849266",
@@ -114,8 +114,8 @@ const SendReport = () => {
       image: "https://randomuser.me/api/portraits/men/72.jpg",
       totalProjects: 18,
       completionRate: "99%",
-      rating: 5.0
-    }
+      rating: 5.0,
+    },
   ];
 
   const handleViewDetails = (partner) => {
@@ -147,12 +147,12 @@ const SendReport = () => {
         </p>
       </div>
     `;
-    
-    const printWindow = window.open('', '_blank');
+
+    const printWindow = window.open("", "_blank");
     printWindow.document.write(printContent);
     printWindow.document.close();
     printWindow.print();
-    message.success('Report sent to printer!');
+    message.success("Report sent to printer!");
   };
 
   const handleSendEmail = (partner) => {
@@ -164,87 +164,94 @@ const SendReport = () => {
     setLoading(true);
     try {
       // Simulate email sending
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       message.success(`Report sent successfully to ${selectedPartner?.email}!`);
       setEmailVisible(false);
     } catch (error) {
-      message.error('Failed to send email. Please try again.');
+      message.error("Failed to send email. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredPartners = partners.filter(partner =>
-    partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    partner.id.includes(searchTerm) ||
-    partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    partner.role.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPartners = partners.filter(
+    (partner) =>
+      partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.id.includes(searchTerm) ||
+      partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const columns = [
     {
-      title: 'Partner ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: "Partner ID",
+      dataIndex: "id",
+      key: "id",
       width: 120,
-      render: (text) => <span style={{ fontFamily: 'monospace', color: '#6b7280' }}>{text}</span>
+      render: (text) => (
+        <span style={{ fontFamily: "monospace", color: "#6b7280" }}>
+          {text}
+        </span>
+      ),
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
       render: (text, record) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Avatar 
-            src={record.image} 
-            icon={<UserOutlined />}
-            size={40}
-          />
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <Avatar src={record.image} icon={<UserOutlined />} size={40} />
           <div>
-            <div style={{ fontWeight: 600, color: '#0d0d0d' }}>{text}</div>
-            <div style={{ fontSize: '12px', color: '#6b7280' }}>{record.email}</div>
+            <div style={{ fontWeight: 600, color: "#0d0d0d" }}>{text}</div>
+            <div style={{ fontSize: "12px", color: "#6b7280" }}>
+              {record.email}
+            </div>
           </div>
         </div>
-      )
+      ),
     },
     {
-      title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
       render: (text) => (
-        <Tag style={{ 
-          backgroundColor: '#fff0dd', 
-          color: '#ea580c', 
-          border: 'none',
-          fontWeight: 500
-        }}>
+        <Tag
+          style={{
+            backgroundColor: "#fff0dd",
+            color: "#ea580c",
+            border: "none",
+            fontWeight: 500,
+          }}
+        >
           {text}
         </Tag>
-      )
+      ),
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
       render: (status) => (
-        <Tag style={{ 
-          backgroundColor: status === 'Active' ? '#dcfce7' : '#fef2f2',
-          color: status === 'Active' ? '#009106' : '#ef4444',
-          border: 'none',
-          fontWeight: 500
-        }}>
+        <Tag
+          style={{
+            backgroundColor: status === "Active" ? "#dcfce7" : "#fef2f2",
+            color: status === "Active" ? "#009106" : "#ef4444",
+            border: "none",
+            fontWeight: 500,
+          }}
+        >
           {status}
         </Tag>
-      )
+      ),
     },
     // {
     //   title: 'Level',
     //   dataIndex: 'level',
     //   key: 'level',
     //   render: (text) => (
-    //     <Tag style={{ 
-    //       backgroundColor: '#dbeafe', 
-    //       color: '#1e40af', 
+    //     <Tag style={{
+    //       backgroundColor: '#dbeafe',
+    //       color: '#1e40af',
     //       border: 'none',
     //       fontWeight: 500
     //     }}>
@@ -253,49 +260,49 @@ const SendReport = () => {
     //   )
     // },
     {
-      title: 'Earnings',
-      dataIndex: 'earnings',
-      key: 'earnings',
-      render: (text) => <span style={{ fontWeight: 600, color: '#0d0d0d' }}>{text}</span>
+      title: "Earnings",
+      dataIndex: "earnings",
+      key: "earnings",
+      render: (text) => (
+        <span style={{ fontWeight: 600, color: "#0d0d0d" }}>{text}</span>
+      ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       width: 200,
       render: (_, record) => (
         <Space size="small">
-          <Button 
+          <Button
             type="text"
             icon={<InfoCircleOutlined />}
             onClick={() => handleViewDetails(record)}
-            style={{ color: '#1e40af' }}
+            style={{ color: "#1e40af" }}
           >
             Details
           </Button>
-          <Button 
+          <Button
             type="text"
             icon={<PrinterOutlined />}
             onClick={() => handlePrint(record)}
-            style={{ color: '#6b7280' }}
+            style={{ color: "#6b7280" }}
           >
             Print
           </Button>
-          <Button 
+          <Button
             type="text"
             icon={<MailOutlined />}
             onClick={() => handleSendEmail(record)}
-            style={{ color: '#ea580c' }}
+            style={{ color: "#ea580c" }}
           >
             Email
           </Button>
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
-
-
-    const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
 
@@ -312,275 +319,316 @@ const SendReport = () => {
     });
   };
 
-
   return (
-<div className="px-6">
+    <div className="px-6">
+      <AdminProfile headingText="Notificaiton page"></AdminProfile>
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#f9fafb",
+          padding: "24px",
+        }}
+      >
+        <div
+          style={{ marginBottom: "24px" }}
+          className="flex py-4 justify-between items-center"
+        >
+          <div>
+            <Title level={2} style={{ color: "#0d0d0d", marginBottom: "8px" }}>
+              Send Report
+            </Title>
+            <Text style={{ color: "#6b7280" }}>
+              Generate and send partner reports
+            </Text>
+          </div>
 
-  <AdminProfile headingText="Notificaiton page"></AdminProfile>
-      <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: '#f9fafb', 
-      padding: '24px' 
-    }}>
-      <div style={{ marginBottom: '24px' }} className="flex py-4 justify-between items-center">
-        <div>
-          <Title level={2} style={{ color: '#0d0d0d', marginBottom: '8px' }}>
-          Send Report
-        </Title>
-        <Text style={{ color: '#6b7280' }}>
-          Generate and send partner reports
-        </Text>
+          <div>
+            {/* search filter  */}
+
+            <div className="flex gap-3 items-center flex-wrap">
+              {/* Time Filter */}
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+              </select>
+
+              {/* Country Filter */}
+              <select
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+                className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" disabled>
+                  Select Country
+                </option>
+                <option value="us">United States </option>
+                <option value="uk">United Kingdom</option>
+                <option value="ae">United Arab Emirates</option>
+                <option value="pt">Portugal</option>
+                <option value="fr">France</option>
+
+                <option value="es">Spain</option>
+              </select>
+
+              {/* Search Input */}
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchTerms}
+                onChange={(e) => setSearchTerms(e.target.value)}
+                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
         </div>
 
-        <div>
-                  {/* search filter  */}
-
-        <div className="flex gap-3 items-center flex-wrap">
-          {/* Time Filter */}
-          <select
-            value={selectedTime}
-            onChange={(e) => setSelectedTime(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <Card
+          style={{
+            borderRadius: "8px",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #d1d5db",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "24px",
+            }}
           >
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
-          </select>
-
-          {/* Country Filter */}
-          <select
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="" disabled>
-              Select Country
-            </option>
-            <option value="us">United States </option>
-            <option value="uk">United Kingdom</option>
-            <option value="ae">United Arab Emirates</option>
-            <option value="pt">Portugal</option>
-            <option value="fr">France</option>
-            <option value="bd">Bangladesh</option>
-            <option value="es">Spain</option>
-          </select>
-
-          {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchTerms}
-            onChange={(e) => setSearchTerms(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-
-        </div>
-      </div>
-
-      <Card style={{ 
-        borderRadius: '8px', 
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #d1d5db'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginBottom: '24px' 
-        }}>
-          {/* <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
+            {/* <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
             Partner Reports
           </Title> */}
-          {/* <Search
+            {/* <Search
             placeholder="Search partners..."
             allowClear
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ width: 300 }}
           /> */}
-        </div>
+          </div>
 
-        <Table
-          columns={columns}
-          dataSource={filteredPartners}
-          rowKey="id"
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: false,
-            showQuickJumper: false,
-            showTotal: (total, range) => 
-              `${range[0]}-${range[1]} of ${total} partners`
-          }}
-          style={{ backgroundColor: 'white' }}
-        />
-      </Card>
+          <Table
+            columns={columns}
+            dataSource={filteredPartners}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: false,
+              showQuickJumper: false,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} partners`,
+            }}
+            style={{ backgroundColor: "white" }}
+          />
+        </Card>
 
-      {/* Details Drawer */}
-      <Drawer
-        title={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Avatar 
-              src={selectedPartner?.image} 
-              icon={<UserOutlined />}
-              size={40}
-            />
+        {/* Details Drawer */}
+        <Drawer
+          title={
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <Avatar
+                src={selectedPartner?.image}
+                icon={<UserOutlined />}
+                size={40}
+              />
+              <div>
+                <div style={{ fontWeight: 600, color: "#0d0d0d" }}>
+                  {selectedPartner?.name}
+                </div>
+                <div style={{ fontSize: "12px", color: "#6b7280" }}>
+                  Partner Details
+                </div>
+              </div>
+            </div>
+          }
+          placement="right"
+          onClose={() => setDetailsVisible(false)}
+          open={detailsVisible}
+          width={500}
+        >
+          {selectedPartner && (
             <div>
-              <div style={{ fontWeight: 600, color: '#0d0d0d' }}>
-                {selectedPartner?.name}
-              </div>
-              <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                Partner Details
+              <Descriptions bordered column={1} size="middle">
+                <Descriptions.Item label="Partner ID">
+                  <span style={{ fontFamily: "monospace", color: "#6b7280" }}>
+                    {selectedPartner.id}
+                  </span>
+                </Descriptions.Item>
+                <Descriptions.Item label="Email">
+                  <span style={{ color: "#1e40af" }}>
+                    {selectedPartner.email}
+                  </span>
+                </Descriptions.Item>
+                <Descriptions.Item label="Phone">
+                  <span style={{ color: "#0d0d0d" }}>
+                    {selectedPartner.phone}
+                  </span>
+                </Descriptions.Item>
+                <Descriptions.Item label="Role">
+                  <Tag
+                    style={{
+                      backgroundColor: "#fff0dd",
+                      color: "#ea580c",
+                      border: "none",
+                    }}
+                  >
+                    {selectedPartner.role}
+                  </Tag>
+                </Descriptions.Item>
+                <Descriptions.Item label="Status">
+                  <Tag
+                    style={{
+                      backgroundColor:
+                        selectedPartner.status === "Active"
+                          ? "#dcfce7"
+                          : "#fef2f2",
+                      color:
+                        selectedPartner.status === "Active"
+                          ? "#009106"
+                          : "#ef4444",
+                      border: "none",
+                    }}
+                  >
+                    {selectedPartner.status}
+                  </Tag>
+                </Descriptions.Item>
+                <Descriptions.Item label="Level">
+                  <Tag
+                    style={{
+                      backgroundColor: "#dbeafe",
+                      color: "#1e40af",
+                      border: "none",
+                    }}
+                  >
+                    {selectedPartner.level}
+                  </Tag>
+                </Descriptions.Item>
+                <Descriptions.Item label="Location">
+                  {selectedPartner.location}
+                </Descriptions.Item>
+                <Descriptions.Item label="Joined Date">
+                  {selectedPartner.joinedDate}
+                </Descriptions.Item>
+                <Descriptions.Item label="Earnings">
+                  <span style={{ fontWeight: 600, color: "#009106" }}>
+                    {selectedPartner.earnings}
+                  </span>
+                </Descriptions.Item>
+                <Descriptions.Item label="Total Projects">
+                  {selectedPartner.totalProjects}
+                </Descriptions.Item>
+                <Descriptions.Item label="Completion Rate">
+                  <span style={{ color: "#009106" }}>
+                    {selectedPartner.completionRate}
+                  </span>
+                </Descriptions.Item>
+                <Descriptions.Item label="Rating">
+                  <span style={{ color: "#ea580c", fontWeight: 600 }}>
+                    {selectedPartner.rating}/5
+                  </span>
+                </Descriptions.Item>
+              </Descriptions>
+
+              <div style={{ marginTop: "24px", textAlign: "right" }}>
+                <Space>
+                  <Button
+                    icon={<PrinterOutlined />}
+                    onClick={() => handlePrint(selectedPartner)}
+                    style={{
+                      backgroundColor: "#f9fafb",
+                      borderColor: "#d1d5db",
+                      color: "#6b7280",
+                    }}
+                  >
+                    Print Report
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<MailOutlined />}
+                    onClick={() => handleSendEmail(selectedPartner)}
+                    style={{
+                      backgroundColor: "#ea580c",
+                      borderColor: "#ea580c",
+                    }}
+                  >
+                    Send Email
+                  </Button>
+                </Space>
               </div>
             </div>
-          </div>
-        }
-        placement="right"
-        onClose={() => setDetailsVisible(false)}
-        open={detailsVisible}
-        width={500}
-      >
-        {selectedPartner && (
+          )}
+        </Drawer>
+
+        {/* Email Modal */}
+        <Modal
+          title={
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <MailOutlined style={{ color: "#ea580c" }} />
+              <span>Send Report Email</span>
+            </div>
+          }
+          open={emailVisible}
+          onCancel={() => setEmailVisible(false)}
+          footer={null}
+          width={600}
+        >
           <div>
-            <Descriptions bordered column={1} size="middle">
-              <Descriptions.Item label="Partner ID">
-                <span style={{ fontFamily: 'monospace', color: '#6b7280' }}>
-                  {selectedPartner.id}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Email">
-                <span style={{ color: '#1e40af' }}>{selectedPartner.email}</span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Phone">
-                <span style={{ color: '#0d0d0d' }}>{selectedPartner.phone}</span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Role">
-                <Tag style={{ 
-                  backgroundColor: '#fff0dd', 
-                  color: '#ea580c', 
-                  border: 'none'
-                }}>
-                  {selectedPartner.role}
-                </Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                <Tag style={{ 
-                  backgroundColor: selectedPartner.status === 'Active' ? '#dcfce7' : '#fef2f2',
-                  color: selectedPartner.status === 'Active' ? '#009106' : '#ef4444',
-                  border: 'none'
-                }}>
-                  {selectedPartner.status}
-                </Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="Level">
-                <Tag style={{ 
-                  backgroundColor: '#dbeafe', 
-                  color: '#1e40af', 
-                  border: 'none'
-                }}>
-                  {selectedPartner.level}
-                </Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="Location">
-                {selectedPartner.location}
-              </Descriptions.Item>
-              <Descriptions.Item label="Joined Date">
-                {selectedPartner.joinedDate}
-              </Descriptions.Item>
-              <Descriptions.Item label="Earnings">
-                <span style={{ fontWeight: 600, color: '#009106' }}>
-                  {selectedPartner.earnings}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Total Projects">
-                {selectedPartner.totalProjects}
-              </Descriptions.Item>
-              <Descriptions.Item label="Completion Rate">
-                <span style={{ color: '#009106' }}>
-                  {selectedPartner.completionRate}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Rating">
-                <span style={{ color: '#ea580c', fontWeight: 600 }}>
-                  {selectedPartner.rating}/5
-                </span>
-              </Descriptions.Item>
-            </Descriptions>
-
-            <div style={{ marginTop: '24px', textAlign: 'right' }}>
-              <Space>
-                <Button 
-                  icon={<PrinterOutlined />}
-                  onClick={() => handlePrint(selectedPartner)}
-                  style={{ 
-                    backgroundColor: '#f9fafb',
-                    borderColor: '#d1d5db',
-                    color: '#6b7280'
-                  }}
-                >
-                  Print Report
-                </Button>
-                <Button 
-                  type="primary"
-                  icon={<MailOutlined />}
-                  onClick={() => handleSendEmail(selectedPartner)}
-                  style={{ 
-                    backgroundColor: '#ea580c',
-                    borderColor: '#ea580c'
-                  }}
-                >
-                  Send Email
-                </Button>
-              </Space>
+            <div style={{ marginBottom: "16px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 500,
+                }}
+              >
+                Recipient Email
+              </label>
+              <Input
+                prefix={<MailOutlined />}
+                placeholder="Enter recipient email"
+                defaultValue={selectedPartner?.email}
+              />
             </div>
-          </div>
-        )}
-      </Drawer>
 
-      {/* Email Modal */}
-      <Modal
-        title={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <MailOutlined style={{ color: '#ea580c' }} />
-            <span>Send Report Email</span>
-          </div>
-        }
-        open={emailVisible}
-        onCancel={() => setEmailVisible(false)}
-        footer={null}
-        width={600}
-      >
-        <div>
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
-              Recipient Email
-            </label>
-            <Input 
-              prefix={<MailOutlined />}
-              placeholder="Enter recipient email"
-              defaultValue={selectedPartner?.email}
-            />
-          </div>
+            <div style={{ marginBottom: "16px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 500,
+                }}
+              >
+                Subject
+              </label>
+              <Input
+                placeholder="Enter email subject"
+                defaultValue={`Partner Report - ${selectedPartner?.name}`}
+              />
+            </div>
 
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
-              Subject
-            </label>
-            <Input 
-              placeholder="Enter email subject"
-              defaultValue={`Partner Report - ${selectedPartner?.name}`}
-            />
-          </div>
-
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
-              Message
-            </label>
-            <TextArea 
-              rows={8}
-              placeholder="Enter your message here..."
-              defaultValue={selectedPartner ? `Dear ${selectedPartner.name},
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 500,
+                }}
+              >
+                Message
+              </label>
+              <TextArea
+                rows={8}
+                placeholder="Enter your message here..."
+                defaultValue={
+                  selectedPartner
+                    ? `Dear ${selectedPartner.name},
 
 Please find your partner report details below:
 
@@ -593,33 +641,33 @@ Completion Rate: ${selectedPartner.completionRate}
 Rating: ${selectedPartner.rating}/5
 
 Best regards,
-Admin Team` : ''}
-            />
-          </div>
+Admin Team`
+                    : ""
+                }
+              />
+            </div>
 
-          <div style={{ textAlign: 'right', marginBottom: 0 }}>
-            <Space>
-              <Button onClick={() => setEmailVisible(false)}>
-                Cancel
-              </Button>
-              <Button 
-                type="primary" 
-                loading={loading}
-                icon={<SendOutlined />}
-                onClick={() => handleEmailSubmit()}
-                style={{ 
-                  backgroundColor: '#ea580c',
-                  borderColor: '#ea580c'
-                }}
-              >
-                Send Email
-              </Button>
-            </Space>
+            <div style={{ textAlign: "right", marginBottom: 0 }}>
+              <Space>
+                <Button onClick={() => setEmailVisible(false)}>Cancel</Button>
+                <Button
+                  type="primary"
+                  loading={loading}
+                  icon={<SendOutlined />}
+                  onClick={() => handleEmailSubmit()}
+                  style={{
+                    backgroundColor: "#ea580c",
+                    borderColor: "#ea580c",
+                  }}
+                >
+                  Send Email
+                </Button>
+              </Space>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
     </div>
-</div>
   );
 };
 

@@ -316,12 +316,10 @@ const ApprovePartners = () => {
     total: 0,
   });
 
-
   const handleTableChange = (pagination) => {
-  console.log(pagination);
-  console.log(pagination.current, pagination.pageSize);
-};
-
+    console.log(pagination);
+    console.log(pagination.current, pagination.pageSize);
+  };
 
   return (
     <div className="px-6 bg-gray-50 min-h-screen">
@@ -360,7 +358,6 @@ const ApprovePartners = () => {
             <option value="ae">United Arab Emirates</option>
             <option value="pt">Portugal</option>
             <option value="fr">France</option>
-            <option value="bd">Bangladesh</option>
             <option value="es">Spain</option>
           </select>
 
@@ -393,23 +390,23 @@ const ApprovePartners = () => {
           </div>
         </div> */}
 
-<Table
-  columns={columns}
-  dataSource={filteredPartners}
-  rowKey="id"
-  pagination={{
-    ...pagination,
-    position: ["bottomCenter"],
-    showSizeChanger: false,
-    showQuickJumper: false,
-    // showTotal: (total, range) =>
-    //   `${range[0]}-${range[1]} of ${total} partners`,
-    className: "px-6",
-  }}
-  onChange={handleTableChange}
-  className="custom-table"
-  rowClassName="hover:bg-gray-50"
-/>
+        <Table
+          columns={columns}
+          dataSource={filteredPartners}
+          rowKey="id"
+          pagination={{
+            ...pagination,
+            position: ["bottomCenter"],
+            showSizeChanger: false,
+            showQuickJumper: false,
+            // showTotal: (total, range) =>
+            //   `${range[0]}-${range[1]} of ${total} partners`,
+            className: "px-6",
+          }}
+          onChange={handleTableChange}
+          className="custom-table"
+          rowClassName="hover:bg-gray-50"
+        />
       </div>
 
       <style jsx>{`
