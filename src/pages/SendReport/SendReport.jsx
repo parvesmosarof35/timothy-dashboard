@@ -244,21 +244,6 @@ const SendReport = () => {
         </Tag>
       ),
     },
-    // {
-    //   title: 'Level',
-    //   dataIndex: 'level',
-    //   key: 'level',
-    //   render: (text) => (
-    //     <Tag style={{
-    //       backgroundColor: '#dbeafe',
-    //       color: '#1e40af',
-    //       border: 'none',
-    //       fontWeight: 500
-    //     }}>
-    //       {text}
-    //     </Tag>
-    //   )
-    // },
     {
       title: "Earnings",
       dataIndex: "earnings",
@@ -320,113 +305,104 @@ const SendReport = () => {
   };
 
   return (
-    <div className="px-2 md:px-6">
+    <div className="px-0 md:px-6">
       <AdminProfile headingText="Send Report"></AdminProfile>
       <div
         style={{
           minHeight: "100vh",
           backgroundColor: "#f9fafb",
-          padding: "24px",
+          padding: "0px",
         }}
       >
         <div
           style={{ marginBottom: "24px" }}
           className="flex py-4 justify-between items-center"
         >
-          <div>
-            <Title level={2} style={{ color: "#0d0d0d", marginBottom: "8px" }}>
+          <div className="w-60 md:w-[50%]">
+            <Title level={2} style={{ color: "#0d0d0d", marginBottom: "8px", }}>
               Generate and send partner reports
             </Title>
           </div>
 
           <div>
-            {/* search filter  */}
 
-            <div className="flex gap-3 items-center flex-wrap">
-              {/* Time Filter */}
-              <select
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
-              </select>
 
-              {/* Country Filter */}
-              <select
-                value={selectedCountry}
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                className="border px-2 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="" disabled>
-                  Select Country
-                </option>
-                <option value="us">United States </option>
-                <option value="uk">United Kingdom</option>
-                <option value="ae">United Arab Emirates</option>
-                <option value="pt">Portugal</option>
-                <option value="fr">France</option>
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
 
-                <option value="es">Spain</option>
-              </select>
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="" disabled>
+              Select Country
+            </option>
+            <option value="us">United States</option>
+            <option value="uk">United Kingdom</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">France</option>
+            <option value="es">Spain</option>
+          </select>
 
-              {/* Search Input */}
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerms}
-                onChange={(e) => setSearchTerms(e.target.value)}
-                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          />
+        </div>
+
+
           </div>
         </div>
 
-        <Card
-          style={{
-            borderRadius: "8px",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #d1d5db",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "24px",
-            }}
-          >
-            {/* <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
-            Partner Reports
-          </Title> */}
-            {/* <Search
-            placeholder="Search partners..."
-            allowClear
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: 300 }}
-          /> */}
-          </div>
 
-          <div className="overflow-scroll w-[20rem] md:w-full mx-auto">
-            <Table
-              columns={columns}
-              dataSource={filteredPartners}
-              rowKey="id"
-              pagination={{
-                pageSize: 10,
-                showSizeChanger: false,
-                showQuickJumper: false,
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} partners`,
-              }}
-              style={{ backgroundColor: "white" }}
-            />
-          </div>
-        </Card>
+      <div className="w-[20rem] md:w-full mx-auto sm:overflow-scroll md:overflow-auto">
+        <div>
+  <Card
+  className="rounded-lg shadow-sm border border-gray-300 p-0 md:p-4"
+>
+  {/* Responsive table wrapper */}
+  <div className="overflow-x-auto w-full">
+    <div className=" md:w-full">
+      <Table
+        columns={columns}
+        dataSource={filteredPartners}
+        rowKey="id"
+        pagination={{
+          pageSize: 10,
+          showSizeChanger: false,
+          showQuickJumper: false,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} partners`,
+        }}
+        style={{ backgroundColor: "white" }}
+      />
+    </div>
+  </div>
+</Card>
+</div>
+
+
+      </div>
+
+
 
         {/* Details Drawer */}
         <Drawer

@@ -309,6 +309,7 @@ const UsersTable = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           />
         </div>
+        
       </div>
 
       {/* Table */}

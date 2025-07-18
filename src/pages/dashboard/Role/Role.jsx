@@ -151,10 +151,10 @@ const Role = () => {
   };
 
   return (
-    <div className="px-2 md:px-6 mx-auto font-sans">
+    <div className="px-0 md:px-6 mx-auto font-sans">
       <AdminProfile headingText="Manage Roles"></AdminProfile>
 
-      <div className="px-6 mt-6">
+      <div className="px-2 md:px-6 mt-6">
         {/* Header */}
         <div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
           <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
@@ -205,7 +205,7 @@ const Role = () => {
 
         <div className="mt-6  mx-auto bg-grayLightBg min-h-screen">
           {/* Header */}
-          <div className="bg-white pt-6 rounded-lg shadow-sm px-6 mb-6">
+          <div className="bg-white pt-6 rounded-lg shadow-sm px-2 md:px-6 mb-6">
             {/* Search and Add Button */}
             <div className="flex justify-end items-center mb-6">
               <button
