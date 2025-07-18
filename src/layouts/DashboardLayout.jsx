@@ -188,7 +188,7 @@ export default function DashboardLayout() {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className="md:hidden fixed top-9 md:top-4 left-2 z-50 p-2 bg-white rounded-md shadow-lg"
+        className="md:hidden fixed top-10 left-2 z-50 p-1 bg-white rounded-md shadow-lg"
       >
         {mobileMenuOpen ? (
           <FiX className="w-6 h-6" />

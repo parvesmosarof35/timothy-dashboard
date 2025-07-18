@@ -113,7 +113,7 @@ const ProfileSettings = () => {
 
   return (
     <>
-      <div className="space-y-6 bg-grayLightBg min-h-screen px-2 md:px-6 mb-10 font-sans">
+      <div className="space-y-6 bg-grayLightBg min-h-screen px-0 md:px-6 mb-10 font-sans">
         <AdminProfile headingText="User Settings" />
         <div className="max-w-2xl mx-auto ">
           {/* Profile Header with Image */}

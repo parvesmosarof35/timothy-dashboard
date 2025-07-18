@@ -72,7 +72,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
       <h1 className="text-xs md:text-2xl  ml-12 font-bold text-darkGray">{headingText}</h1>
 
       {/* Right-side controls */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {/* Search box */}
         <div className="flex  items-center md:min-w-[20rem] justify-between min-h-12 gap-2 bg-white rounded-md px-4 py-2 border border-gray-200 shadow-sm">
           <input
