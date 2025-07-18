@@ -217,7 +217,7 @@ const FinancialPayments = () => {
   ];
 
   return (
-    <div className="px-0 sm-px-6 bg-grayLightBg min-h-screen font-sans">
+    <div className="px-0 sm:px-6  bg-grayLightBg min-h-screen font-sans">
       <AdminProfile headingText={`Payments`}></AdminProfile>
 
       <div className="min-h-screen bg-grayLightBg p-6">
