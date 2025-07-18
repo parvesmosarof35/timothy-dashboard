@@ -335,9 +335,8 @@ const SendReport = () => {
         >
           <div>
             <Title level={2} style={{ color: "#0d0d0d", marginBottom: "8px" }}>
-               Generate and send partner reports
+              Generate and send partner reports
             </Title>
-            
           </div>
 
           <div>
@@ -400,7 +399,6 @@ const SendReport = () => {
               alignItems: "center",
               marginBottom: "24px",
             }}
-             
           >
             {/* <Title level={4} style={{ color: '#0d0d0d', margin: 0 }}>
             Partner Reports
@@ -413,21 +411,21 @@ const SendReport = () => {
           /> */}
           </div>
 
-<div className="overflow-scroll w-[24rem] md:w-full mx-auto">
+          <div className="overflow-scroll w-[20rem] md:w-full mx-auto">
             <Table
-            columns={columns}
-            dataSource={filteredPartners}
-            rowKey="id"
-            pagination={{
-              pageSize: 10,
-              showSizeChanger: false,
-              showQuickJumper: false,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} partners`,
-            }}
-            style={{ backgroundColor: "white" }}
-          />
-</div>
+              columns={columns}
+              dataSource={filteredPartners}
+              rowKey="id"
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: false,
+                showQuickJumper: false,
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} partners`,
+              }}
+              style={{ backgroundColor: "white" }}
+            />
+          </div>
         </Card>
 
         {/* Details Drawer */}

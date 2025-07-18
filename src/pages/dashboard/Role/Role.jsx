@@ -155,63 +155,59 @@ const Role = () => {
       <AdminProfile headingText="Manage Roles"></AdminProfile>
 
       <div className="px-6 mt-6">
-{/* Header */}
-<div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
-  <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
-    Manage Admins
-  </h1>
+        {/* Header */}
+        <div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
+          <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
+            Manage Admins
+          </h1>
 
-  {/* Filters */}
-  <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
-    {/* Time Filter */}
-    <select
-      value={selectedTime}
-      onChange={(e) => setSelectedTime(e.target.value)}
-      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-    >
-      <option value="today">Today</option>
-      <option value="week">This Week</option>
-      <option value="month">This Month</option>
-      <option value="year">This Year</option>
-    </select>
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
+            {/* Time Filter */}
+            <select
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
 
-    {/* Country Filter */}
-    <select
-      value={selectedCountry}
-      onChange={(e) => setSelectedCountry(e.target.value)}
-      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-    >
-      <option value="" disabled>
-        Select Country
-      </option>
-      <option value="us">United States</option>
-      <option value="uk">United Kingdom</option>
-      <option value="ae">United Arab Emirates</option>
-      <option value="pt">Portugal</option>
-      <option value="fr">France</option>
-      <option value="es">Spain</option>
-    </select>
+            {/* Country Filter */}
+            <select
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="" disabled>
+                Select Country
+              </option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="ae">United Arab Emirates</option>
+              <option value="pt">Portugal</option>
+              <option value="fr">France</option>
+              <option value="es">Spain</option>
+            </select>
 
-    {/* Search Input */}
-    <input
-      type="text"
-      placeholder="Search"
-      value={searchTerms}
-      onChange={(e) => setSearchTerms(e.target.value)}
-      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-    />
-  </div>
-</div>
-
+            {/* Search Input */}
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerms}
+              onChange={(e) => setSearchTerms(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            />
+          </div>
+        </div>
 
         <div className="mt-6  mx-auto bg-grayLightBg min-h-screen">
           {/* Header */}
           <div className="bg-white pt-6 rounded-lg shadow-sm px-6 mb-6">
-
-
             {/* Search and Add Button */}
             <div className="flex justify-end items-center mb-6">
-             
               <button
                 onClick={() => setShowModal(true)}
                 className="ml-4 bg-orangePrimary hover:bg-yellow-500  px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
@@ -222,7 +218,7 @@ const Role = () => {
             </div>
 
             {/* Admin Table */}
-             <div className="overflow-scroll w-[24rem] md:w-full mx-auto">
+            <div className="overflow-scroll w-[20rem] md:w-full mx-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">

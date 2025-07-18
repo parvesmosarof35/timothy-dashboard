@@ -322,106 +322,105 @@ const ApprovePartners = () => {
   };
 
   return (
-<div className="px-2 sm:px-6 bg-gray-50 min-h-screen">
-  <AdminProfile headingText="Approve Partners" />
+    <div className="px-0 sm:px-6 bg-gray-50 min-h-screen">
+      <AdminProfile headingText="Approve Partners" />
 
-  {/* Title + Filters Section */}
-  <div className="my-4 sm:my-6 flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
-    <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
-      Review and approve partner applications
-    </h2>
+      {/* Title + Filters Section */}
+      <div className="my-4 sm:my-6 flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+          Review and approve partner applications
+        </h2>
 
-    {/* Filters */}
-    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full md:w-auto">
-      {/* Time Filter */}
-      <select
-        value={selectedTime}
-        onChange={(e) => setSelectedTime(e.target.value)}
-        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-      >
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-      </select>
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full md:w-auto">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
 
-      {/* Country Filter */}
-      <select
-        value={selectedCountry}
-        onChange={(e) => setSelectedCountry(e.target.value)}
-        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-      >
-        <option value="" disabled>
-          Select Country
-        </option>
-        <option value="us">United States</option>
-        <option value="uk">United Kingdom</option>
-        <option value="ae">United Arab Emirates</option>
-        <option value="pt">Portugal</option>
-        <option value="fr">France</option>
-        <option value="es">Spain</option>
-      </select>
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="" disabled>
+              Select Country
+            </option>
+            <option value="us">United States</option>
+            <option value="uk">United Kingdom</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">France</option>
+            <option value="es">Spain</option>
+          </select>
 
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search"
-        value={searchTerms}
-        onChange={(e) => setSearchTerms(e.target.value)}
-        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-      />
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          />
+        </div>
+      </div>
+
+      {/* Table Wrapper for Mobile Responsiveness */}
+      <div className="overflow-x-auto md:min-w-[600px] max-w-[20rem] md:max-w-full mx-auto  rounded-lg shadow-sm border border-gray-200 w-full">
+        <div className=" ">
+          <Table
+            columns={columns}
+            dataSource={filteredPartners}
+            rowKey="id"
+            pagination={{
+              ...pagination,
+              position: ["bottomCenter"],
+              showSizeChanger: false,
+              showQuickJumper: false,
+              className: "px-6",
+            }}
+            onChange={handleTableChange}
+            className="custom-table"
+            rowClassName="hover:bg-gray-50"
+            scroll={{ x: 900 }}
+          />
+        </div>
+      </div>
+
+      <style jsx>{`
+        .custom-table .ant-table-thead > tr > th {
+          background-color: #f8f9fa;
+          border-bottom: 2px solid #e9ecef;
+          font-weight: 600;
+          color: #495057;
+        }
+
+        .custom-table .ant-table-tbody > tr > td {
+          border-bottom: 1px solid #f1f3f5;
+          padding: 16px;
+        }
+
+        .custom-table .ant-table-tbody > tr:hover > td {
+          background-color: #f8f9fa;
+        }
+
+        .ant-btn-primary {
+          box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+        }
+
+        .ant-btn-primary:hover {
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+      `}</style>
     </div>
-  </div>
-
-  {/* Table Wrapper for Mobile Responsiveness */}
-  <div className="overflow-x-auto md:min-w-[600px] max-w-[24rem] md:max-w-full mx-auto  rounded-lg shadow-sm border border-gray-200 w-full">
-    <div className=" ">
-      <Table
-        columns={columns}
-        dataSource={filteredPartners}
-        rowKey="id"
-        pagination={{
-          ...pagination,
-          position: ["bottomCenter"],
-          showSizeChanger: false,
-          showQuickJumper: false,
-          className: "px-6",
-        }}
-        onChange={handleTableChange}
-        className="custom-table"
-        rowClassName="hover:bg-gray-50"
-        scroll={{ x: 900 }}
-      />
-    </div>
-  </div>
-
-  <style jsx>{`
-    .custom-table .ant-table-thead > tr > th {
-      background-color: #f8f9fa;
-      border-bottom: 2px solid #e9ecef;
-      font-weight: 600;
-      color: #495057;
-    }
-
-    .custom-table .ant-table-tbody > tr > td {
-      border-bottom: 1px solid #f1f3f5;
-      padding: 16px;
-    }
-
-    .custom-table .ant-table-tbody > tr:hover > td {
-      background-color: #f8f9fa;
-    }
-
-    .ant-btn-primary {
-      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
-    }
-
-    .ant-btn-primary:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-  `}</style>
-</div>
-
   );
 };
 

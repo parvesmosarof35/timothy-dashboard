@@ -169,83 +169,82 @@ const ServiceProvider = () => {
   ];
 
   return (
-<div className="px-2 sm:px-6">
-  <AdminProfile headingText="Manage Partners" />
+    <div className="px-0 sm:px-6">
+      <AdminProfile headingText="Manage Partners" />
 
-  <div className="p-4 sm:p-6 bg-grayLightBg min-h-screen font-sans">
-    {/* Header + Filters */}
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-      <h2 className="text-xl sm:text-2xl font-semibold">Our Partners</h2>
+      <div className="p-4 sm:p-6 bg-grayLightBg min-h-screen font-sans">
+        {/* Header + Filters */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+          <h2 className="text-xl sm:text-2xl font-semibold">Our Partners</h2>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:items-center w-full md:w-auto">
-        {/* Time Filter */}
-        <select
-          value={selectedTime}
-          onChange={(e) => setSelectedTime(e.target.value)}
-          className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-        >
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="year">This Year</option>
-        </select>
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:items-center w-full md:w-auto">
+            {/* Time Filter */}
+            <select
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
 
-        {/* Country Filter */}
-        <select
-          value={selectedCountry}
-          onChange={(e) => setSelectedCountry(e.target.value)}
-          className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-        >
-          <option value="" disabled>
-            Select Country
-          </option>
-          <option value="us">United States</option>
-          <option value="uk">United Kingdom</option>
-          <option value="ae">United Arab Emirates</option>
-          <option value="pt">Portugal</option>
-          <option value="fr">France</option>
-          <option value="es">Spain</option>
-        </select>
+            {/* Country Filter */}
+            <select
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="" disabled>
+                Select Country
+              </option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="ae">United Arab Emirates</option>
+              <option value="pt">Portugal</option>
+              <option value="fr">France</option>
+              <option value="es">Spain</option>
+            </select>
 
-        {/* Search Input */}
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerms}
-          onChange={(e) => setSearchTerms(e.target.value)}
-          className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-        />
+            {/* Search Input */}
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerms}
+              onChange={(e) => setSearchTerms(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            />
+          </div>
+        </div>
+
+        {/* Responsive Table Wrapper */}
+        <div className="overflow-x-auto border rounded-lg bg-white max-w-[20rem] mx-auto md:max-w-full">
+          <Table
+            columns={columns}
+            dataSource={filteredUsers}
+            rowKey="id"
+            pagination={{
+              current: currentPage,
+              pageSize: usersPerPage,
+              total: filteredUsers.length,
+              onChange: setCurrentPage,
+              showSizeChanger: false,
+            }}
+            scroll={{ x: 900 }}
+          />
+
+          <style jsx>{`
+            .ant-table-pagination {
+              display: flex;
+              justify-content: center !important;
+              padding: 16px;
+            }
+          `}</style>
+        </div>
       </div>
     </div>
-
-    {/* Responsive Table Wrapper */}
-    <div className="overflow-x-auto border rounded-lg bg-white max-w-[24rem] mx-auto md:max-w-full">
-      <Table
-        columns={columns}
-        dataSource={filteredUsers}
-        rowKey="id"
-        pagination={{
-          current: currentPage,
-          pageSize: usersPerPage,
-          total: filteredUsers.length,
-          onChange: setCurrentPage,
-          showSizeChanger: false,
-        }}
-        scroll={{ x: 900 }}
-      />
-
-      <style jsx>{`
-        .ant-table-pagination {
-          display: flex;
-          justify-content: center !important;
-          padding: 16px;
-        }
-      `}</style>
-    </div>
-  </div>
-</div>
-
   );
 };
 

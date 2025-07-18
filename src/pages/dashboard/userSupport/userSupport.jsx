@@ -156,70 +156,66 @@ const UserSupport = () => {
   };
 
   return (
-    <div className="px-2 md:px-6 bg-grayLightBg min-h-screen font-sans space-y-6">
+    <div className="px-0 md:px-6 bg-grayLightBg min-h-screen font-sans space-y-6">
       <AdminProfile headingText={`User Support`}></AdminProfile>
 
-      <div className="px-6">
-{/* Header */}
-<div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
-  <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
-     Tickets
-  </h1>
+      <div className=" px-2 md:px-6">
+        {/* Header */}
+        <div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
+          <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
+            Tickets
+          </h1>
 
-  {/* Filters */}
-  <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
-    {/* Time Filter */}
-    <select
-      value={selectedTime}
-      onChange={(e) => setSelectedTime(e.target.value)}
-      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-    >
-      <option value="today">Today</option>
-      <option value="week">This Week</option>
-      <option value="month">This Month</option>
-      <option value="year">This Year</option>
-    </select>
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
+            {/* Time Filter */}
+            <select
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
 
-    {/* Country Filter */}
-    <select
-      value={selectedCountry}
-      onChange={(e) => setSelectedCountry(e.target.value)}
-      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-    >
-      <option value="" disabled>
-        Select Country
-      </option>
-      <option value="us">United States</option>
-      <option value="uk">United Kingdom</option>
-      <option value="ae">United Arab Emirates</option>
-      <option value="pt">Portugal</option>
-      <option value="fr">France</option>
-      <option value="es">Spain</option>
-    </select>
+            {/* Country Filter */}
+            <select
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="" disabled>
+                Select Country
+              </option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="ae">United Arab Emirates</option>
+              <option value="pt">Portugal</option>
+              <option value="fr">France</option>
+              <option value="es">Spain</option>
+            </select>
 
-    {/* Search Input */}
-    <input
-      type="text"
-      placeholder="Search"
-      value={searchTerms}
-      onChange={(e) => setSearchTerms(e.target.value)}
-      className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-    />
-  </div>
-</div>
+            {/* Search Input */}
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerms}
+              onChange={(e) => setSearchTerms(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            />
+          </div>
+        </div>
 
-
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="bg-white p-2 md:p-6 rounded-lg shadow-sm">
           {/* Header */}
           <div className="flex items-center justify-between mb-0">
-            <div className="flex items-center gap-4">
-
-            </div>
-
+            <div className="flex items-center gap-4"></div>
           </div>
 
           {/* Table */}
-           <div className="overflow-scroll w-[24rem] md:w-full mx-auto">
+          <div className="overflow-scroll w-[20rem] md:w-full mx-auto">
             <table className="w-full">
               <thead>
                 <tr className="text-left text-brandGray text-sm font-medium border-b">

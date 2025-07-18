@@ -67,9 +67,9 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
 
   // console.log(user);
   return (
-    <div className="flex items-center justify-between sticky top-0 md:top-2 w-full md:w-[98%] px-6 py-8 md:py-4 gap-2 bg-white rounded-md shadow z-20">
+    <div className="flex items-center justify-between  sticky top-0 md:top-2 w-full md:w-[98%] px-2 md:px-6 py-8 md:py-4 gap-2 bg-white rounded-md shadow z-20">
       {/* Left dynamic text */}
-      <h1 className="text-xl md:text-2xl ml-10 font-bold text-darkGray">{headingText}</h1>
+      <h1 className="text-xs md:text-2xl  ml-12 font-bold text-darkGray">{headingText}</h1>
 
       {/* Right-side controls */}
       <div className="flex items-center gap-4">

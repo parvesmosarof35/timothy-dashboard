@@ -166,7 +166,7 @@ export default function DashboardLayout() {
       </NavLink>
 
       <div
-        className="px-4 py-2 md:hidden rounded transition  font-medium cursor-pointer hover:text-red-400 flex gap-3 text-[#BCA88F]"
+        className="px-4 py-2 md:hidden rounded transition  font-medium cursor-pointer hover:text-yellow-500 flex gap-3 text-[#BCA88F]"
         onClick={sendReport}
       >
         <CiMail className="text-xl" />
@@ -188,7 +188,7 @@ export default function DashboardLayout() {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className="md:hidden fixed top-9 md:top-4 left-4 z-50 p-2 bg-white rounded-md shadow-lg"
+        className="md:hidden fixed top-9 md:top-4 left-2 z-50 p-2 bg-white rounded-md shadow-lg"
       >
         {mobileMenuOpen ? (
           <FiX className="w-6 h-6" />

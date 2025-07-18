@@ -29,10 +29,10 @@ const data = [
 ];
 
 const MetricCard = ({ title, value, trend, icon: Icon, trendColor }) => (
-  <div className="bg-white flex-row-reverse p-6 rounded-lg flex items-center justify-start gap-2">
+  <div className="bg-white flex-row-reverse p-2 md:p-6 rounded-lg flex items-center justify-start gap-2">
     <div>
       <p className="text-brandGray text-sm font-medium mb-1">{title}</p>
-      <p className="text-lg font-semibold text-darkGray">
+      <p className="text-sm md:text-lg font-semibold text-darkGray">
         {value.toLocaleString()}
       </p>
     </div>
@@ -85,7 +85,7 @@ const FinancialDashboard = () => {
       </h1>
 
       {/* Chart Section */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm">
+      <div className="bg-white rounded-2xl p-2 md:p-6 shadow-sm">
         {/* Chart Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-brandGray">
@@ -129,7 +129,7 @@ const FinancialDashboard = () => {
         </div>
 
         {/* Metric Cards */}
-        <div className="flex mb-8 justify-start">
+        <div className="flex mb-8 justify-start gap-2">
           <MetricCard
             title="Admin"
             value={1009123}

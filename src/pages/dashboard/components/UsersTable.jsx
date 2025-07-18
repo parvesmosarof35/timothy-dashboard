@@ -264,89 +264,84 @@ const UsersTable = () => {
   ];
 
   return (
-<div className="md:p-6 p-2 sm:p-6 bg-grayLightBg md:min-h-screen font-sans w-full">
-  {/* Header + Filters */}
-  <div className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center mb-6">
-    <h2 className="text-xl sm:text-2xl font-semibold">Manage Users</h2>
+    <div className="md:p-6 p-2 sm:p-6 bg-grayLightBg md:min-h-screen font-sans w-full">
+      {/* Header + Filters */}
+      <div className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center mb-6">
+        <h2 className="text-xl sm:text-2xl font-semibold">Manage Users</h2>
 
-    {/* Filters */}
-    <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
-      {/* Time Filter */}
-      <select
-        value={selectedTime}
-        onChange={(e) => setSelectedTime(e.target.value)}
-        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-      >
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-      </select>
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
 
-      {/* Country Filter */}
-      <select
-        value={selectedCountry}
-        onChange={(e) => setSelectedCountry(e.target.value)}
-        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-      >
-        <option value="" disabled>
-          Select Country
-        </option>
-        <option value="us">United States</option>
-        <option value="uk">United Kingdom</option>
-        <option value="ae">United Arab Emirates</option>
-        <option value="pt">Portugal</option>
-        <option value="fr">France</option>
-        <option value="es">Spain</option>
-      </select>
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="" disabled>
+              Select Country
+            </option>
+            <option value="us">United States</option>
+            <option value="uk">United Kingdom</option>
+            <option value="ae">United Arab Emirates</option>
+            <option value="pt">Portugal</option>
+            <option value="fr">France</option>
+            <option value="es">Spain</option>
+          </select>
 
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search"
-        value={searchTerms}
-        onChange={(e) => setSearchTerms(e.target.value)}
-        className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-      />
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          />
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="w-[20rem] md:w-full mx-auto sm:overflow-scroll md:overflow-auto">
+        <div className="w-full flex justify-center">
+          <div className="w-full overflow-x-auto border rounded-lg bg-white">
+            <div className="">
+              <Table
+                columns={columns}
+                dataSource={filteredUsers}
+                rowKey="id"
+                scroll={{ x: true }} // Let AntD handle horizontal scroll
+                pagination={{
+                  current: currentPage,
+                  pageSize: usersPerPage,
+                  total: filteredUsers.length,
+                  onChange: setCurrentPage,
+                  showSizeChanger: false,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+        .ant-table-pagination {
+          display: flex;
+          justify-content: center !important;
+          padding: 16px;
+          width: 100%;
+        }
+      `}</style>
     </div>
-  </div>
-
-{/* Table */}
-<div className="w-[24rem] md:w-full mx-auto sm:overflow-scroll md:overflow-auto">
-  <div className="w-full flex justify-center">
-  <div className="w-full overflow-x-auto border rounded-lg bg-white">
-    <div className="">
-      <Table
-        columns={columns}
-        dataSource={filteredUsers}
-        rowKey="id"
-        scroll={{ x: true }} // Let AntD handle horizontal scroll
-        pagination={{
-          current: currentPage,
-          pageSize: usersPerPage,
-          total: filteredUsers.length,
-          onChange: setCurrentPage,
-          showSizeChanger: false,
-        }}
-      />
-    </div>
-  </div>
-</div>
-</div>
-<style jsx>{`
-  .ant-table-pagination {
-    display: flex;
-    justify-content: center !important;
-    padding: 16px;
-    width: 100%;
-  }
-`}</style>
-
-
-
-
-</div>
-
   );
 };
 
