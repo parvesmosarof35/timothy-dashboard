@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
+import { Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Table } from "antd";
-import { useMemo } from "react";
 
 const users = [
   {
@@ -309,7 +308,7 @@ const UsersTable = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           />
         </div>
-        
+
       </div>
 
       {/* Table */}

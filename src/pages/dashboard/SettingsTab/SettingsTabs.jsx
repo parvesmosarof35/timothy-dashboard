@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiSettings, FiBell } from "react-icons/fi";
 import Swal from "sweetalert2";
 import AdminProfile from "../components/AdminProfile";

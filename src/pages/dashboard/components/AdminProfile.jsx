@@ -1,14 +1,14 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import profile from "../../../assets/profile.png";
-import { FaSearch } from "react-icons/fa";
 import { PiBell } from "react-icons/pi";
 import { CiSearch } from "react-icons/ci";
-import Swal from "sweetalert2";
 import { AuthContext } from "../../../providers/AuthProvider";
-import { DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { RxDropdownMenu } from "react-icons/rx";
-import { DownCircleOutlined } from "@ant-design/icons";
+// import { FaSearch } from "react-icons/fa";
+// import Swal from "sweetalert2";
+// import { DollarSign } from "lucide-react";
+// import { RxDropdownMenu } from "react-icons/rx";
+// import { DownCircleOutlined } from "@ant-design/icons";
 
 const AdminProfile = ({ headingText = "Users Management" }) => {
   const { user, logOut } = useContext(AuthContext);
@@ -18,27 +18,27 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
 
   const navigate = useNavigate();
 
-  const logOutUser = () => {
-    Swal.fire({
-      title: "Are you sure you want to log out?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, log out",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        logOut().then(() => {
-          Swal.fire(
-            "Logged out!",
-            "You have been logged out successfully.",
-            "success"
-          );
-        });
-      }
-    });
-  };
+  // const logOutUser = () => {
+  //   Swal.fire({
+  //     title: "Are you sure you want to log out?",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     confirmButtonText: "Yes, log out",
+  //     cancelButtonText: "Cancel",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       logOut().then(() => {
+  //         Swal.fire(
+  //           "Logged out!",
+  //           "You have been logged out successfully.",
+  //           "success"
+  //         );
+  //       });
+  //     }
+  //   });
+  // };
 
   const [modalOpen, setModalOpen] = useState(false);
 

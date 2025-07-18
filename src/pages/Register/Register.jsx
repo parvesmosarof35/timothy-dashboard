@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Facebook, Apple } from "lucide-react";
+import { useContext, useState } from "react";
+import { Facebook } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 

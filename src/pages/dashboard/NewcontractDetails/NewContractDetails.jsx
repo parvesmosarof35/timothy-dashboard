@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowLeft, FileText, User, Building, Calendar, Hash, Phone, Mail, MapPin, DollarSign, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+
+import { User, Building, Calendar, Hash, Phone, Mail, DollarSign, Clock } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 const NewContractDetails = () => {

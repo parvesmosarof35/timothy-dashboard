@@ -1,12 +1,12 @@
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef, useContext } from "react";
 import Logo from "../assets/logo.png";
-import { FiLogOut, FiMenu, FiUsers, FiX } from "react-icons/fi";
+import { FiMenu, FiX } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
 import { TbUserCog, TbUserHexagon } from "react-icons/tb";
 import { MdOutlinePayments, MdOutlineSupportAgent } from "react-icons/md";
 import { LiaFileContractSolid } from "react-icons/lia";
-import { IoLogOut, IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { AuthContext } from "../providers/AuthProvider";
 import { LuUsers } from "react-icons/lu";

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import PendingVerification from '../../../components/dashboard/PendingVerification'
 import CommunicationSupport from '../../../components/dashboard/CommunicationSupport'
 

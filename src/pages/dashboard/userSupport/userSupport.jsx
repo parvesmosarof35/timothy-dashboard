@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  Search,
   MoreHorizontal,
-  X,
   User,
   Calendar,
   DollarSign,
-  AlertCircle,
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Bell, CheckCircle, AlertCircle, Info, AlertTriangle, Check, CheckCheck, User, DollarSign, Settings, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Bell, Check, User, DollarSign, Settings, Shield } from 'lucide-react';
 import AdminProfile from '../components/AdminProfile';
 
 const Notification = () => {

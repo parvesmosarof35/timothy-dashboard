@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { MoreHorizontal, User, DollarSign, MessageCircle } from "lucide-react";
+import { useState } from "react";
+import { User, DollarSign, MessageCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import UserMessage from "./userSupport/UserMessage";
 

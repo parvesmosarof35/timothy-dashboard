@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  Search,
-  Filter,
-  ChevronDown,
   MoreHorizontal,
-  X,
-  ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useEffect } from "react";

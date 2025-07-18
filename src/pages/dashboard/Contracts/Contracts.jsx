@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";

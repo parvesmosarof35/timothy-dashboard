@@ -1,12 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useRef, useState } from "react";
-
-import GoogleLoginButton from "../../components/GoogleLoginButton";
 import signInIMG from "../../assets/sign-in-image.png";
-import { Facebook } from "lucide-react";
 import { AuthContext } from "../../providers/AuthProvider";
-import FBLogo from "../../assets/facebook-logo.png";
-import GoogleLogo from "../../assets/Google-logo.png";
 import ContinueGoogle from "../../assets/ContinueGoogle.png";
 
 const Login = () => {

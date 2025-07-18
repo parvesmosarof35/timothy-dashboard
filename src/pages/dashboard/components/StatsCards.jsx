@@ -1,4 +1,4 @@
-import React from "react";
+
 import { User, DollarSign, Users, TrendingUp } from "lucide-react";
 
 const stats = [

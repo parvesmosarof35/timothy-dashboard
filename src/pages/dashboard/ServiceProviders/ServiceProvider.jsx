@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Info, MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { Info } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
