@@ -166,7 +166,7 @@ const UserSupport = () => {
           {/* Filters */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
             {/* Time Filter */}
-            <select
+            {/* <select
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
@@ -175,10 +175,21 @@ const UserSupport = () => {
               <option value="week">This Week</option>
               <option value="month">This Month</option>
               <option value="year">This Year</option>
+            </select> */}
+            {/* Time Filter */}
+            <select
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+            >
+              <option value="today">Critical</option>
+              <option value="week">High</option>
+              <option value="month">Medium</option>
+              <option value="year">Low</option>
             </select>
 
             {/* Country Filter */}
-            <select
+            {/* <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
@@ -192,7 +203,7 @@ const UserSupport = () => {
               <option value="pt">Portugal</option>
               <option value="fr">France</option>
               <option value="es">Spain</option>
-            </select>
+            </select> */}
 
             {/* Search Input */}
             <input
