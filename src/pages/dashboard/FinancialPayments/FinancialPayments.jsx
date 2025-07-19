@@ -273,7 +273,7 @@ const FinancialPayments = () => {
           {/* Filters and Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 pb-6">
             {/* Table */}
-            <div className="overflow-scroll w-[20rem] md:w-full mx-auto">
+            <div className="overflow-x-scroll overflow-y-hidden w-[20rem] md:w-full mx-auto">
               <Table
                 columns={columns}
                 dataSource={payments.slice(
