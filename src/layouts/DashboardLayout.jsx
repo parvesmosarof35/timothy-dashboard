@@ -259,7 +259,7 @@ export default function DashboardLayout() {
           <div className="absolute left-0 top-0 w-64 h-full bg-white shadow-lg flex flex-col overflow-y-auto">
             <div className="p-6">
               <div className="text-xl font-bold mb-6">
-                <img className="mx-auto w-24 h-auto" src={`https://i.ibb.co/d0Z012S4/image.png`} alt="logo" />
+                <img className="mx-auto w-24 h-auto" src={`https://i.ibb.co/9kdTMjGb/image.png`} alt="logo" />
               </div>
               <nav className="flex flex-col gap-2">{renderNavLinks()}</nav>
             </div>
