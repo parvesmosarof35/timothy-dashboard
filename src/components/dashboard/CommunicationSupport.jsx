@@ -121,7 +121,7 @@ const CommunicationSupport = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-2">
           {/* Pie Chart */}
           <div className="flex justify-center md:justify-start">
             {/* bump size up on all screens, scale further on ≥md */}
