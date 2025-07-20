@@ -21,6 +21,10 @@ import SendReport from "../pages/SendReport/SendReport";
 import Notification from "../pages/dashboard/Notification/notification";
 import NewContractDetails from "../pages/dashboard/NewcontractDetails/NewContractDetails";
 import ProfileSettings from "../components/ProfileSetting";
+import ApprovePartnerDetails from "../pages/dashboard/ApprovePartners/ApprovePartnerDetails";
+import RoleDetails from "../pages/dashboard/Role/RoleDetails";
+import FinancialPaymentDetails from "../pages/dashboard/FinancialPayments/FinancialPaymentDetails";
+import RoleDetailsReadOnly from "../pages/dashboard/Role/RoleDetailsReadOnly";
 
 
 const router = createBrowserRouter([
@@ -48,14 +52,18 @@ const router = createBrowserRouter([
     { path: 'user-info/details/:id', element: <UserDetails></UserDetails> },
     { path: 'service-provider', element: <ServiceProvider></ServiceProvider> },
     { path: 'approve-partners', element: <AprouvePartners></AprouvePartners> },
+    { path: 'approve-partners/approve-details/:id', element: <ApprovePartnerDetails></ApprovePartnerDetails> },
     { path: 'service-provider/details/:id', element: <UserDetails></UserDetails> },
     { path: 'financialpayments', element: <FinancialPayments /> },
+    { path: 'financialpayments/details/:id', element: <FinancialPaymentDetails></FinancialPaymentDetails> },
     { path: 'contracts', element: <Contracts /> },
     { path: `contracts/:id`, element: <NewContractDetails></NewContractDetails> },
     // { path: 'userroles', element: <div>user roles</div> },
     { path: 'support', element: <UserSupport></UserSupport> },
     { path: 'support/:id', element: <UserMessage></UserMessage> },
     { path: 'role', element: <Role></Role> },
+    { path: 'role/details/:id', element: <RoleDetails></RoleDetails> },
+    { path: 'role/view/:id', element: <RoleDetailsReadOnly></RoleDetailsReadOnly> },
     { path: 'settings', element: <SettingsTab></SettingsTab> },
     { path: 'update-profile', element: <ProfileSettings></ProfileSettings> },
     { path: 'send-report', element: <SendReport></SendReport> },

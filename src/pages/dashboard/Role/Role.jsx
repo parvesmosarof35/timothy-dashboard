@@ -7,10 +7,14 @@ import {
   EyeOff,
   ChevronLeft,
   ChevronRight,
+  Edit,
+  Info,
+  InfoIcon,
 } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // import { Tabs } from 'antd';
 // import { AndroidOutlined, AppleOutlined } from '@ant-design/icons';
 
@@ -18,6 +22,7 @@ const Role = () => {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,19 +35,19 @@ const Role = () => {
   // Sample admin data
   const [admins, setAdmins] = useState([
     {
-      id: "#12345",
+      id: "12345",
       name: "Ahmed Osman",
       email: "socialahoy@gmail.com",
       userType: "Admin",
     },
     {
-      id: "#12346",
+      id: "12346",
       name: "Raj",
       email: "socialahoy@gmail.com",
       userType: "Admin",
     },
     {
-      id: "#12347",
+      id: "12347",
       name: "Sarah Johnson",
       email: "sarah.j@gmail.com",
       userType: "SuperAdmin",
@@ -223,7 +228,7 @@ const Role = () => {
                       Email
                     </th>
                     <th className="text-left py-3 px-4 font-medium text-darkGray">
-                      User Type
+                      Role
                     </th>
                     <th className="text-left py-3 px-4 font-medium text-darkGray">
                       Action
@@ -251,12 +256,33 @@ const Role = () => {
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <button
+                       <div className="flex gap-4">
+                         <button
                           onClick={() => handleDelete(admin.id)}
                           className="text-brandRed hover:text-red-700 transition-colors"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="size-5" />
                         </button>
+                        <button
+                          onClick={()=>{
+                            navigate(`details/${admin.id}`)
+                          }}
+                          className="text-brandGray hover:text-gray-700 transition-colors"
+                        >
+                          <Edit className="size-5" />
+                        </button>
+
+                        <button
+                          onClick={()=>{
+                            navigate(`view/${admin.id}`)
+                          }}
+                          className="text-brandGray hover:text-gray-700 transition-colors"
+                        >
+                          <InfoIcon className="size-5" />
+                        </button>
+
+
+                       </div>
                       </td>
                     </tr>
                   ))}
@@ -267,7 +293,7 @@ const Role = () => {
             {/* Pagination */}
             <div className="px-6 py-4 ">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                   <button className="flex items-center gap-2 px-3 py-2 text-sm text-darkGray hover:bg-grayLightBg rounded-lg">
                     <ChevronLeft className="w-4 h-4" />
                     Previous
@@ -365,7 +391,7 @@ const Role = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-darkGray mb-1">
-                      User Type
+                      Role
                     </label>
                     <select
                       name="userType"

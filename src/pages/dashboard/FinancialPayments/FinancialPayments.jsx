@@ -5,10 +5,12 @@ import {
 import AdminProfile from "../components/AdminProfile";
 import { useEffect } from "react";
 import { Pagination, Table } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const FinancialPayments = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 10;
+  const navigate = useNavigate();
 
   // Mock data for payments
   const payments = [
@@ -205,15 +207,21 @@ const FinancialPayments = () => {
         <span className="text-sm font-medium text-darkGray">{amount}</span>
       ),
     },
-    {
-      title: "Action",
-      key: "action",
-      render: () => (
-        <button className="text-brandGray hover:text-brandGray">
-          <MoreHorizontal className="w-5 h-5" />
-        </button>
-      ),
-    },
+   {
+  title: "Action",
+  key: "action",
+  render: (_, record) => (
+    <button
+      onClick={() => {
+        navigate(`details/${record.id}`);
+      }}
+      className="text-brandGray hover:text-brandGray"
+    >
+      <MoreHorizontal className="w-5 h-5" />
+    </button>
+  ),
+},
+
   ];
 
   return (

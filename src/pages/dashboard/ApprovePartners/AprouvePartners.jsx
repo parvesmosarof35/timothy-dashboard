@@ -14,14 +14,17 @@ import {
   CloseOutlined,
   UserOutlined,
   ExclamationCircleOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import AdminProfile from "../components/AdminProfile";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { Search } = Input;
 
 const ApprovePartners = () => {
   const [searchTerm, setSearchTerm] = useState("");
+   const navigate = useNavigate();
   const [partners, setPartners] = useState([
     {
       id: "1981849262",
@@ -184,7 +187,7 @@ const ApprovePartners = () => {
     {
       title: "Email",
       dataIndex: "email",
-      key: "appliedDate",
+      key: "email",
       render: (text) => <span className="text-gray-600">{text}</span>,
     },
     {
@@ -223,7 +226,6 @@ const ApprovePartners = () => {
         );
       },
     },
-
     {
       title: "Actions",
       key: "actions",
@@ -262,9 +264,7 @@ const ApprovePartners = () => {
                 okButtonProps={{
                   style: { backgroundColor: "#ff4d4f", borderColor: "#ff4d4f" },
                 }}
-                icon={
-                  <ExclamationCircleOutlined style={{ color: "#ff4d4f" }} />
-                }
+                icon={<ExclamationCircleOutlined style={{ color: "#ff4d4f" }} />}
               >
                 <Button
                   type="primary"
@@ -277,6 +277,17 @@ const ApprovePartners = () => {
               </Popconfirm>
             </>
           )}
+
+          {/* Info Button to navigate to details */}
+          <Button
+            type="default"
+            size="small"
+            icon={<InfoCircleOutlined />}
+            onClick={() => navigate(`approve-details/${record.id}`)}  // Navigate to details page with the partner id
+          >
+            Info
+          </Button>
+
           {record.status === "approved" && (
             <Tag color="#52c41a" className="border-none font-medium">
               <CheckOutlined /> Approved
