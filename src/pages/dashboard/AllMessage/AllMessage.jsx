@@ -132,9 +132,9 @@ const AllMessage = () => {
     <div className="space-y-6 bg-grayLightBg min-h-screen md:px-6 font-sans">
       <AdminProfile headingText="All Messages" />
 
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex flex-col w-full h-full justify-center md:flex-row bg-gray-100">
         {/* Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+        <div className="md:w-80 w-full h-full bg-white border-r border-gray-200 flex flex-col">
           {/* Header */}
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
@@ -151,7 +151,7 @@ const AllMessage = () => {
           </div>
 
           {/* Conversations List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1  overflow-y-auto">
             {conversations.map((conversation) => (
               <div
                 key={conversation.id}
@@ -285,7 +285,10 @@ const AllMessage = () => {
               </button>
             </div>
           </div>
+
+
         </div>
+
       </div>
     </div>
   );
