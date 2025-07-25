@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../providers/AuthProvider";
 import { LuUsers } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
+import { TiMessages } from "react-icons/ti";
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -125,6 +126,15 @@ export default function DashboardLayout() {
         Approve Partners
       </NavLink>
 
+
+            <NavLink
+        to="/dashboard/all-messages"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <TiMessages className="text-lg" />
+        All Messages
+      </NavLink>
+
       <NavLink
         to="/dashboard/financialpayments"
         className={({ isActive }) => linkClass(isActive)}
@@ -198,9 +208,9 @@ export default function DashboardLayout() {
       </button>
 
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex fixed left-0 top-0 w-64 h-screen bg-white shadow-lg flex-col justify-between z-40 z-100">
+      <aside className="hidden md:flex fixed left-0 top-0 w-64 h-screen bg-white shadow-lg flex-col justify-between z-40 z-100 overflow-visible">
         <div className="p-6">
-          <div className="flex justify-center mb-10">
+          <div className="flex justify-center mb-4">
             {/* <Link to="/">
               <img src={Logo} alt="logo" className="w-20" />
             </Link> */}

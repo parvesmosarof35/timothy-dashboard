@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Info } from "lucide-react";
+import { Info, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Table } from "antd";
@@ -256,7 +256,7 @@ const UsersTable = () => {
           onClick={() => navigate(`/dashboard/user-info/details/${record.id}`)}
           className="text-brandGray hover:text-darkGray"
         >
-          <Info size={16} />
+          <MoreHorizontal className="w-5 h-5" />
         </button>
       ),
     },

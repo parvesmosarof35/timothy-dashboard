@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Info } from "lucide-react";
+import { Info, MoreHorizontal } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -162,7 +162,7 @@ const ServiceProvider = () => {
           }
           className="text-brandGray hover:text-darkGray"
         >
-          <Info size={16} />
+          <MoreHorizontal className="w-5 h-5" />
         </button>
       ),
     },

@@ -25,6 +25,7 @@ import ApprovePartnerDetails from "../pages/dashboard/ApprovePartners/ApprovePar
 import RoleDetails from "../pages/dashboard/Role/RoleDetails";
 import FinancialPaymentDetails from "../pages/dashboard/FinancialPayments/FinancialPaymentDetails";
 import RoleDetailsReadOnly from "../pages/dashboard/Role/RoleDetailsReadOnly";
+import AllMessage from "../pages/dashboard/AllMessage/AllMessage";
 
 
 const router = createBrowserRouter([
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
     { path: 'approve-partners', element: <AprouvePartners></AprouvePartners> },
     { path: 'approve-partners/approve-details/:id', element: <ApprovePartnerDetails></ApprovePartnerDetails> },
     { path: 'service-provider/details/:id', element: <UserDetails></UserDetails> },
+    {path: "all-messages", element: <AllMessage></AllMessage>},
     { path: 'financialpayments', element: <FinancialPayments /> },
     { path: 'financialpayments/details/:id', element: <FinancialPaymentDetails></FinancialPaymentDetails> },
     { path: 'contracts', element: <Contracts /> },

@@ -53,7 +53,7 @@ const Login = () => {
   };
 
   return (
-<div className="relative">
+<div className="relative font-poppins">
   {/* Image - hidden on mobile */}
   <img
     src={signInIMG}
@@ -64,7 +64,7 @@ const Login = () => {
   <div className="absolute left-0 min-h-screen flex items-center container mx-auto px-4 lg:px-0">
     <div className="bg-white mt-[1rem] lg:ml-[15rem] p-8 py-12 lg:py-20 rounded-2xl w-full max-w-md min-h-[40rem] flex flex-col justify-center">
       <h2 className="text-3xl font-bold text-orangeAction">Welcome Back</h2>
-      <p className="text-lg font-semibold mb-8 text-brandGray mt-2">
+      <p className="text-md font-semibold mb-8 text-[#A0AEC0] mt-2">
         Enter your email and password to sign in
       </p>
 
@@ -111,7 +111,7 @@ const Login = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-orangeAction hover:bg-orange-500 text-white font-semibold py-4 rounded-2xl transition"
+          className="w-full bg-orangeAction uppercase text-sm  hover:bg-orange-500 text-white font-semibold py-4 rounded-2xl transition"
         >
           Sign In
         </button>
@@ -121,8 +121,8 @@ const Login = () => {
         <p className="text-red-600 text-center text-sm mt-3">{error}</p>
       )}
 
-      <p className="text-lg font-semibold text-brandGray text-center mt-4 mb-3">
-        Do not have an account?{" "}
+      <p className="text-md font-semibold text-[#A0AEC0] text-center mt-4 mb-3">
+        Don’t have an account?{" "}
         <Link
           to="/register"
           className="text-orangeAction font-semibold hover:underline"

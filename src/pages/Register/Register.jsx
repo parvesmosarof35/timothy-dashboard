@@ -192,7 +192,7 @@ const Register = () => {
           </button>
         </div>
 
-        <p className=" mt-6 text-lg font-semibold text-brandGray text-center">
+        <p className=" mt-6 text-md font-semibold text-[#A0AEC0] text-center">
           Already have an account?{" "}
           <Link to={`/login`}>
             <span className="text-orange-500 font-medium hover:underline cursor-pointer">

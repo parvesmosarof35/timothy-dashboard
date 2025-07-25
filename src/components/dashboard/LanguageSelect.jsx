@@ -29,13 +29,13 @@ const LanguageSelect = () => {
       <select
         value={selectedLang}
         onChange={handleChange}
-        className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="en">English (Default)</option>
         <option value="es">Español</option>
         <option value="ar">العربية</option>
         <option value="pt">Português</option>
-        <option value="pt">French</option>
+        <option value="pr">French</option>
       </select>
     </div>
   );

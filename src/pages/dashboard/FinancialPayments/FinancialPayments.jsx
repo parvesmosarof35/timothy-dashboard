@@ -226,7 +226,7 @@ const FinancialPayments = () => {
 
   return (
     <div className="px-0 sm:px-6  bg-grayLightBg min-h-screen font-sans">
-      <AdminProfile headingText={`Payments`}></AdminProfile>
+      <AdminProfile headingText={`Financial Management`}></AdminProfile>
 
       <div className="min-h-screen bg-grayLightBg p-6">
         <div className=" mx-auto">

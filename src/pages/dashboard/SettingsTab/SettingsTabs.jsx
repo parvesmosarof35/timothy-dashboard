@@ -135,12 +135,12 @@ const SettingsTab = () => {
                     <input
                       type="text"
                       value="English (Default)"
-                      disabled
-                      className="w-full px-4 py-2 border text-brandGray rounded-md bg-gray-100  cursor-not-allowed"
+                     disabled
+                      className="w-full px-4 py-2 border text-brandGray rounded-md   cursor-not-allowed"
                     />
                   </div>
 
- <LanguageSelect />
+                  <LanguageSelect />
 
                   {/* currency select  */}
                   {/* <div>
@@ -252,7 +252,7 @@ const SettingsTab = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center mt-8">
+                <div className="flex justify-start mt-8">
                   <button
                     onClick={handleSaveGeneralSettings}
                     className="px-6 py-2 bg-orangeAction text-white  rounded-md hover:bg-yellow-600 font-semibold transition-colors"
