@@ -3,9 +3,13 @@ import { FiSettings, FiBell } from "react-icons/fi";
 import Swal from "sweetalert2";
 import AdminProfile from "../components/AdminProfile";
 import LanguageSelect from "../../../components/dashboard/LanguageSelect";
+import { SlArrowDown } from "react-icons/sl";
 
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("general");
+
+   const isSelected = (value) => generalSettings.timeFormat === value;
+
 
   // General settings state
   const [generalSettings, setGeneralSettings] = useState({
@@ -62,6 +66,7 @@ const SettingsTab = () => {
   };
 
   const handleSaveGeneralSettings = () => {
+    console.log(generalSettings)
     Swal.fire({
       title: "Settings Updated!",
       text: "Your general settings have been saved.",
@@ -175,80 +180,92 @@ const SettingsTab = () => {
                     <option value="Chinese">Chinese</option>
                   </select>
                 </div> */}
+{/* timezone  */}
+<div>
+  <label className="block text-sm font-medium text-darkGray mb-1">
+    Timezone
+  </label>
 
-                  <div>
-                    <label className="block text-sm font-medium text-darkGray mb-1">
-                      Timezone
-                    </label>
-                    <select
-                      name="timezone"
-                      value={generalSettings.timezone}
-                      onChange={handleGeneralSettingsChange}
-                      className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                    >
-                      <option value="English (Default)">
-                        English (Default)
-                      </option>
-                      <option value="UTC-12">UTC-12</option>
-                      <option value="UTC-11">UTC-11</option>
-                      <option value="UTC-10">UTC-10</option>
-                      <option value="UTC-9">UTC-9</option>
-                      <option value="UTC-8">UTC-8</option>
-                      <option value="UTC-7">UTC-7</option>
-                      <option value="UTC-6">UTC-6</option>
-                      <option value="UTC-5">UTC-5</option>
-                      <option value="UTC-4">UTC-4</option>
-                      <option value="UTC-3">UTC-3</option>
-                      <option value="UTC-2">UTC-2</option>
-                      <option value="UTC-1">UTC-1</option>
-                      <option value="UTC+0">UTC+0</option>
-                      <option value="UTC+1">UTC+1</option>
-                      <option value="UTC+2">UTC+2</option>
-                      <option value="UTC+3">UTC+3</option>
-                      <option value="UTC+4">UTC+4</option>
-                      <option value="UTC+5">UTC+5</option>
-                      <option value="UTC+6">UTC+6</option>
-                      <option value="UTC+7">UTC+7</option>
-                      <option value="UTC+8">UTC+8</option>
-                      <option value="UTC+9">UTC+9</option>
-                      <option value="UTC+10">UTC+10</option>
-                      <option value="UTC+11">UTC+11</option>
-                      <option value="UTC+12">UTC+12</option>
-                    </select>
-                  </div>
+  <div className="relative w-full">
+    <select
+      name="timezone"
+      value={generalSettings.timezone}
+      onChange={handleGeneralSettingsChange}
+      className="w-full appearance-none px-4 py-2 pr-10 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-[#FBB040]"
+    >
+      <option value="English (Default)">English (Default)</option>
+      <option value="UTC-12">UTC-12</option>
+      <option value="UTC-11">UTC-11</option>
+      <option value="UTC-10">UTC-10</option>
+      <option value="UTC-9">UTC-9</option>
+      <option value="UTC-8">UTC-8</option>
+      <option value="UTC-7">UTC-7</option>
+      <option value="UTC-6">UTC-6</option>
+      <option value="UTC-5">UTC-5</option>
+      <option value="UTC-4">UTC-4</option>
+      <option value="UTC-3">UTC-3</option>
+      <option value="UTC-2">UTC-2</option>
+      <option value="UTC-1">UTC-1</option>
+      <option value="UTC+0">UTC+0</option>
+      <option value="UTC+1">UTC+1</option>
+      <option value="UTC+2">UTC+2</option>
+      <option value="UTC+3">UTC+3</option>
+      <option value="UTC+4">UTC+4</option>
+      <option value="UTC+5">UTC+5</option>
+      <option value="UTC+6">UTC+6</option>
+      <option value="UTC+7">UTC+7</option>
+      <option value="UTC+8">UTC+8</option>
+      <option value="UTC+9">UTC+9</option>
+      <option value="UTC+10">UTC+10</option>
+      <option value="UTC+11">UTC+11</option>
+      <option value="UTC+12">UTC+12</option>
+    </select>
+
+    {/* Arrow Icon */}
+    <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-brandGray">
+      <SlArrowDown className="text-sm" />
+    </div>
+  </div>
+</div>
 
                   <div>
                     <label className="block text-sm font-medium text-darkGray mb-1">
                       Time Format
                     </label>
-                    <div className="flex gap-4 mt-2">
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="timeFormat"
-                          value="24 Hours"
-                          checked={generalSettings.timeFormat === "24 Hours"}
-                          onChange={handleGeneralSettingsChange}
-                          className="mr-2"
-                        />
-                        <span className="text-sm font-medium text-darkGray">
-                          24 Hours
-                        </span>
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="timeFormat"
-                          value="12 Hours"
-                          checked={generalSettings.timeFormat === "12 Hours"}
-                          onChange={handleGeneralSettingsChange}
-                          className="mr-2"
-                        />
-                        <span className="text-sm font-medium text-darkGray">
-                          12 Hours
-                        </span>
-                      </label>
-                    </div>
+
+
+
+ <div className="flex gap-4 mt-2">
+      {["24 Hours", "12 Hours"].map((label) => (
+        <label
+          key={label}
+          className={`flex items-center justify-between w-[160px] px-4 py-3 rounded-xl cursor-pointer border transition-all
+            ${isSelected(label) ? "border-[#FBB040]" : "border-[#f0f0f0]"}`}
+        >
+          <span className="text-base font-medium text-darkGray">{label}</span>
+
+          {/* Custom hollow circle */}
+          <span
+            className={`w-5 h-5 rounded-full border-[4px] transition-all
+              ${isSelected(label) ? "border-[#FBB040] " : "border-[#f0f0f0]"}`}
+          ></span>
+
+          {/* Hidden native radio */}
+          <input
+            type="radio"
+            name="timeFormat"
+            value={label}
+            checked={isSelected(label)}
+            onChange={handleGeneralSettingsChange}
+            className="hidden"
+          />
+        </label>
+      ))}
+    </div>
+
+
+
+
                   </div>
                 </div>
 
