@@ -2,6 +2,11 @@ import { useContext, useState } from "react";
 import { Facebook } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { createUser, resetUserState } from "../../redux/features/user/userSlice";
+import { Alert, message } from "antd";
+import { useEffect } from "react";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -9,30 +14,84 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const { user, signInGoogle, signInFacebook } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
-    e.preventDefault();
+  const dispatch = useDispatch();
+  const { loading, success, error } = useSelector((state) => state.user);
 
-    if (
-      password.length < 6 ||
-      !/[A-Z]/.test(password) ||
-      !/[a-z]/.test(password)
-    ) {
-      setPasswordError(
-        "Password must be at least 6 characters long, must include at least one Uppercase and Lowercase"
-      );
-      return;
-    } else {
-      setPasswordError("");
-      navigate("/login")
+
+  // handleRegister
+const handleRegister = (e) => {
+  e.preventDefault();
+
+  // Email validation regex (basic but effective)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    setPasswordError("Please enter a valid email address.");
+    return;
+  }
+
+  if (
+    password.length < 6 ||
+    !/[A-Z]/.test(password) ||
+    !/[a-z]/.test(password)
+  ) {
+    setPasswordError(
+      "Password must be at least 6 characters long, and include both uppercase and lowercase letters."
+    );
+    return;
+  } else {
+    setPasswordError("");
+  }
+
+  // Continue registration
+  console.log("Registration attempt:", { name, email, password });
+  const role = "ADMIN";
+  let fullName = name;
+  dispatch(createUser({ email, password, role, fullName }));
+};
+
+
+  useEffect(() => {
+    if (success) {
+      setShowSuccess(true);
+      message.success("Account created successfully. Awaiting admin approval.");
+
+      setTimeout(() => {
+        dispatch(resetUserState()); // ✅ reset the Redux state
+      }, 1500);
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     }
+  }, [success, dispatch, navigate]);
 
-    // Add your registration logic here
-    console.log("Registration attempt:", { name, email, password, rememberMe });
-  };
+
+
+
+useEffect(() => {
+  if (error) {
+    // If error is a string (from thunk), use it directly
+    const errorMessage =
+      typeof error === "string"
+        ? error
+        : error?.message || "Something went wrong";
+
+    setPasswordError(errorMessage);
+
+    const timer = setTimeout(() => {
+      setPasswordError("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }
+}, [error]);
+
 
   const handleSocialLogin = (provider) => {
     console.log(`Login with ${provider}`);
@@ -58,9 +117,22 @@ const Register = () => {
     }
   };
 
-  console.log(user);
+  // console.log(user);
   return (
-    <div className="min-h-screen mb-32 bg-white relative">
+<div>
+
+        {showSuccess && (
+        <Alert
+          message="Account created successfully"
+          description="Please wait for admin approval."
+          type="success"
+          showIcon
+          closable
+        />
+      )}
+      <div className="min-h-screen mb-32 bg-white relative">
+
+
       {/* Top Orange Section */}
       <div className=" relative overflow-hidden py-40">
         <img
@@ -69,17 +141,16 @@ const Register = () => {
           className="absolute h-full top-0 w-full px-6 py-6"
         />
 
-<div className="text-center relative z-10">
-  <h1 className="text-3xl font-bold text-darkGray mb-2 font-sans">
-    Welcome!
-  </h1>
-  <p className="text-brandGray text-lg font-semibold">
-    Create your account to get started
-    <br />
-    and explore all the features we offer.
-  </p>
-</div>
-
+        <div className="text-center relative z-10">
+          <h1 className="text-3xl font-bold text-darkGray mb-2 font-sans">
+            Welcome!
+          </h1>
+          <p className="text-brandGray text-lg font-semibold">
+            Create your account to get started
+            <br />
+            and explore all the features we offer.
+          </p>
+        </div>
       </div>
 
       {/* Registration Form */}
@@ -159,7 +230,7 @@ const Register = () => {
           </div>
 
           {/* Remember Me Toggle */}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <label className="flex items-center cursor-pointer">
               <div className="relative">
                 <input
@@ -182,13 +253,13 @@ const Register = () => {
               </div>
               <span className="ml-3 text-sm text-darkGray">Remember me</span>
             </label>
-          </div>
+          </div> */}
 
           <button
             onClick={handleRegister}
             className="w-full bg-orangeAction hover:bg-orange-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </div>
 
@@ -202,6 +273,7 @@ const Register = () => {
         </p>
       </div>
     </div>
+</div>
   );
 };
 

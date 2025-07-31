@@ -144,7 +144,7 @@ const RoleDetails = () => {
         onClick={() => navigate(-1)} 
         style={{ marginBottom: 16 }}
       >
-        ← Back to Partners
+        ← Back to  Admins
       </Button>
 
       <Card
@@ -177,12 +177,13 @@ const RoleDetails = () => {
           <Form.Item 
             label="Email" 
             name="email" 
+            className='cursor-not-allowed'
             rules={[
-              { required: true, message: 'Please input the email!' },
+              {  message: 'Please input the email!' },
               { type: 'email', message: 'Please enter a valid email!' }
             ]}
           >
-            <Input prefix={<MailOutlined />} />
+            <Input readOnly prefix={<MailOutlined />} />
           </Form.Item>
 
           <Form.Item 
@@ -191,8 +192,8 @@ const RoleDetails = () => {
             rules={[{ required: true, message: 'Please select the role!' }]}
           >
             <Select>
-              <Select.Option value="admin">Admin</Select.Option>
-              <Select.Option value="manager">SuperAdmin</Select.Option>
+              <Select.Option value="ADMIN">Admin</Select.Option>
+              {/* <Select.Option value="manager">SuperAdmin</Select.Option> */}
             </Select>
           </Form.Item>
 

@@ -68,6 +68,7 @@ const router = createBrowserRouter([
     { path: 'role/view/:id', element: <RoleDetailsReadOnly></RoleDetailsReadOnly> },
     { path: 'settings', element: <SettingsTab></SettingsTab> },
     { path: 'update-profile', element: <ProfileSettings></ProfileSettings> },
+    // { path: 'send-report', element: <SendReport></SendReport> },
     { path: 'send-report', element: <SendReport></SendReport> },
     { path: 'notification', element: <Notification></Notification> },
   //   { path: 'settings/terms', element: <TermsPage /> },

@@ -12,6 +12,9 @@ import { AuthContext } from "../providers/AuthProvider";
 import { LuUsers } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
 import { TiMessages } from "react-icons/ti";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/auth/authSlice";
+
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -20,6 +23,8 @@ export default function DashboardLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const submenuRef = useRef(null);
   const isSettingsActive = location.pathname.startsWith("/dashboard/settings");
+  const dispatch = useDispatch();
+
 
   const { user, logOut } = useContext(AuthContext);
 
@@ -43,13 +48,14 @@ export default function DashboardLayout() {
             "You have been logged out successfully.",
             "success"
           );
+           dispatch(logout()); 
           navigate("/login");
         });
       }
     });
   };
   const sendReport = () => {
-   navigate("/dashboard/send-report");
+   navigate("send-report");
   };
 
   useEffect(() => {
@@ -251,7 +257,7 @@ export default function DashboardLayout() {
             {/* Button fixed at the bottom of the card */}
             <div
               onClick={() => {
-                navigate("send-report");
+                navigate("/dashboard/send-report");
               }}
               className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full px-4"
             >

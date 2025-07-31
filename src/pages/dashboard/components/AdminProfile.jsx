@@ -4,6 +4,7 @@ import { PiBell } from "react-icons/pi";
 import { CiSearch } from "react-icons/ci";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 // import { FaSearch } from "react-icons/fa";
 // import Swal from "sweetalert2";
 // import { DollarSign } from "lucide-react";
@@ -11,10 +12,9 @@ import { useNavigate } from "react-router-dom";
 // import { DownCircleOutlined } from "@ant-design/icons";
 
 const AdminProfile = ({ headingText = "Users Management" }) => {
-  const { user, logOut } = useContext(AuthContext);
-
-  const role = "Admin";
-  const name = "Ar Raihan";
+  // const { user, logOut } = useContext(AuthContext);
+  const { user } = useSelector((state) => state.auth);
+  
 
   const navigate = useNavigate();
 
@@ -67,7 +67,7 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
 
   // console.log(user);
   return (
-    <div className="flex items-center justify-between sticky top-0 md:top-0  w-full md:w-full px-0 md:px-6 py-8 md:py-4 gap-2 bg-white rounded-md shadow z-20">
+    <div className="flex items-center justify-between sticky top-0 md:top-0  w-full md:w-full px-0 md:px-6 py-8 md:py-4 gap-2 bg-white font-sans rounded-md shadow z-20">
       {/* Left dynamic text */}
       <h1 className="text-xs md:text-2xl  ml-12 md:ml-0 font-bold text-darkGray">{headingText}</h1>
 
@@ -107,14 +107,14 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
               className="md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer"
             >
               <img
-                src={profile}
+                src={user?.profileImage}
                 alt="Admin"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="text-brandGray font-semibold hidden md:block">
-              <p>{user?.displayName ? user.displayName : name}</p>
-              <p> {role}</p>
+              <p>{user?.fullName ? user.fullName : name}</p>
+              <p> {user?.role}</p>
             </div>
           </div>
 
