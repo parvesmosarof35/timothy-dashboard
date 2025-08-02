@@ -2,76 +2,108 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api";
 import { jwtDecode } from "jwt-decode";
 
+// Safely parse token and extract userId
+let accessToken = localStorage.getItem("accessToken");
+let refreshToken = localStorage.getItem("refreshToken");
+let userId = null;
+
+if (accessToken) {
+  try {
+    const decoded = jwtDecode(accessToken);
+    userId = decoded.id || null;
+  } catch (error) {
+    console.error("Invalid access token", error);
+    accessToken = null;
+    refreshToken = null;
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  }
+}
+
+// Initial state
 const initialState = {
-  token: null,
-  refreshToken: null,
-  userId: null,
+  token: accessToken,
+  refreshToken: refreshToken,
+  userId: userId,
   user: null,
   loading: false,
   error: null,
 };
 
-// Login user
+// Async Thunk: User Login
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await api.post("/auth/login", { email, password });
-      return response.data.data; // { accessToken, refreshToken }
+      return response.data.data; // Expected: { accessToken, refreshToken }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || "Login failed");
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Get user profile (after login)
+// Async Thunk: Get Logged In User's Profile
 export const getUserProfile = createAsyncThunk(
   "auth/getUserProfile",
   async (_, thunkAPI) => {
     try {
       const response = await api.get("/users/my-profile");
-      console.log(response);
       return response.data.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Failed to fetch user profile");
+      const message =
+        error.response?.data?.message || "Failed to fetch user profile";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
+// Auth Slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout(state) {
+    logout: (state) => {
       state.token = null;
       state.refreshToken = null;
       state.userId = null;
       state.user = null;
+      state.error = null;
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
     },
   },
   extraReducers: (builder) => {
     builder
+
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         const { accessToken, refreshToken } = action.payload;
-        const decoded = jwtDecode(accessToken);
-        state.token = accessToken;
-        state.refreshToken = refreshToken;
-        state.userId = decoded.id;
+        try {
+          const decoded = jwtDecode(accessToken);
+          state.token = accessToken;
+          state.refreshToken = refreshToken;
+          state.userId = decoded.id;
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+        } catch (error) {
+          console.error("Token decode error:", error);
+          state.error = "Invalid token received";
+        }
         state.loading = false;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ;
+        state.error = action.payload;
       })
 
+      // Get Profile
       .addCase(getUserProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -82,7 +114,7 @@ const authSlice = createSlice({
       })
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ;
+        state.error = action.payload;
       });
   },
 });

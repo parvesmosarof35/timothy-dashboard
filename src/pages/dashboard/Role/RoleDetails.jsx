@@ -28,7 +28,7 @@ const RoleDetails = () => {
           id: id,
           name: "John Doe",
           email: "john.doe@example.com",
-          role: "manager",
+          role: "Admin",
           phone: "+1 234 567 890",
           address: "123 Main St, New York, NY 10001",
           birthDate: "1985-05-15",
@@ -151,7 +151,7 @@ const RoleDetails = () => {
         title={
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Avatar src={partner.avatar} size={40} style={{ marginRight: 12 }} />
-            <span>Edit Partner: {partner.name}</span>
+            <span>Edit Admin: {partner.name}</span>
           </div>
         }
         bordered={false}
@@ -213,29 +213,9 @@ const RoleDetails = () => {
             <Input.TextArea rows={3} prefix={<HomeOutlined />} />
           </Form.Item>
 
-          <Form.Item 
-            label="Birth Date" 
-            name="birthDate" 
-            rules={[{ required: true, message: 'Please select the birth date!' }]}
-          >
-            <DatePicker 
-              format="YYYY-MM-DD" 
-              style={{ width: '100%' }} 
-              suffixIcon={<CalendarOutlined />} 
-            />
-          </Form.Item>
+        
 
-          <Form.Item 
-            label="Start Date" 
-            name="startDate" 
-            rules={[{ required: true, message: 'Please select the start date!' }]}
-          >
-            <DatePicker 
-              format="YYYY-MM-DD" 
-              style={{ width: '100%' }} 
-              suffixIcon={<CalendarOutlined />} 
-            />
-          </Form.Item>
+   
 
           <Form.Item style={{ marginTop: 32 }}>
             <Button 

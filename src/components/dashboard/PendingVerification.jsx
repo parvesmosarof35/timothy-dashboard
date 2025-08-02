@@ -20,16 +20,18 @@ const PendingVerification = () => {
     <div className="bg-white shadow-lg border rounded-xl p-6  w-full max-w-lg mx-auto h-[22rem] md:h-[24rem]">
       <div className="flex justify-between items-center h-full">
         {/* Left Section */}
-        <div className="h-full flex flex-col gap-2 justify-center items-center text-center">
+        <div className="h-full flex flex-col gap-16 justify-center items-center text-center">
+<div className="">
           <h2 className="!text-2xl sm:text-xl font-semibold text-darkGray mb-1">
             Pending Verification
           </h2>
-          <p className="text-xl semibold  text-darkGray mb-1">
+            <p className="text-xl semibold  text-darkGray mb-1">
             Total
           </p>
           <p className="text-3xl font-bold text-darkGray mb-4">
             {total.toLocaleString()}
           </p>
+</div>
 
           <button
             onClick={() => navigate("/dashboard/approve-partners")}

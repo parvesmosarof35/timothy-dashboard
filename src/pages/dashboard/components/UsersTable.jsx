@@ -3,209 +3,16 @@ import { Info, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Table } from "antd";
-
-const users = [
-  {
-    id: "1981849262",
-    name: "John Doe",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: "19818492345235235263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "198184924534364",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "1981849265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "1981849266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "19812352345243849263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "1981345345849264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "19818492345634565",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "198184932456346345266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "198184233456345642349263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "19818493463465345264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "193635634681849265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "19818767849266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "1981823423449263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "19818494678467264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "198184947467265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "1981844574579266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-];
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
 
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const { users, loading } = useSelector((state) => state.getAllUsers);
+  const dispatch = useDispatch();
   const usersPerPage = 10;
-  const totalPages = Math.ceil(users.length / usersPerPage);
-
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.includes(searchTerm) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
 
   const navigate = useNavigate();
 
@@ -218,24 +25,34 @@ const UsersTable = () => {
     handleSelect();
   }, [selectedTime, selectedCountry, searchTerms]);
 
+  // Fetch users when page changes or component mounts
+  useEffect(() => {
+    dispatch(
+      getAllUsers({
+        page: currentPage,
+        limit: usersPerPage,
+        search: searchTerms,
+        time: selectedTime,
+        country: selectedCountry,
+      })
+    );
+  }, [currentPage, selectedTime, selectedCountry, searchTerms]);
+
   const handleSelect = () => {
-    console.log("Filter Applied:", {
-      time: selectedTime,
-      country: selectedCountry,
-      search: searchTerms,
-    });
+    // Reset to first page when filters change
+    setCurrentPage(1);
   };
 
   const columns = [
     { title: "ID", dataIndex: "id", key: "id" },
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "fullName",
       key: "name",
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={record.image}
+            src={record.profileImage}
             alt={text}
             className="w-6 h-6 rounded-full object-cover"
           />
@@ -243,11 +60,15 @@ const UsersTable = () => {
         </div>
       ),
     },
-    { title: "Joined", dataIndex: "joined", key: "joined" },
+    { title: "Email", dataIndex: "email", key: "email" },
+    {
+      title: "Joined",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt) => new Date(createdAt).toISOString().split("T")[0],
+    },
     { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Level", dataIndex: "level", key: "level" },
     { title: "Role", dataIndex: "role", key: "role" },
-    { title: "Earnings", dataIndex: "earnings", key: "earnings" },
     {
       title: "Actions",
       key: "actions",
@@ -276,6 +97,7 @@ const UsersTable = () => {
             onChange={(e) => setSelectedTime(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
+            <option value="">All Time</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
             <option value="month">This Month</option>
@@ -288,9 +110,7 @@ const UsersTable = () => {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="" disabled>
-              Select Country
-            </option>
+            <option value="">All Countries</option>
             <option value="us">United States</option>
             <option value="uk">United Kingdom</option>
             <option value="ae">United Arab Emirates</option>
@@ -308,7 +128,6 @@ const UsersTable = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           />
         </div>
-
       </div>
 
       {/* Table */}
@@ -318,14 +137,16 @@ const UsersTable = () => {
             <div className="">
               <Table
                 columns={columns}
-                dataSource={filteredUsers}
+                dataSource={Array.isArray(users.data) ? users.data : []}
                 rowKey="id"
-                scroll={{ x: true }} // Let AntD handle horizontal scroll
+                loading={loading}
+                scroll={{ x: true }}
                 pagination={{
+                  position: ["bottomCenter"], // This centers the pagination
                   current: currentPage,
                   pageSize: usersPerPage,
-                  total: filteredUsers.length,
-                  onChange: setCurrentPage,
+                  total: users?.meta?.total, // Use total from API response
+                  onChange: (page) => setCurrentPage(page),
                   showSizeChanger: false,
                 }}
               />
@@ -333,14 +154,6 @@ const UsersTable = () => {
           </div>
         </div>
       </div>
-      <style jsx>{`
-        .ant-table-pagination {
-          display: flex;
-          justify-content: center !important;
-          padding: 16px;
-          width: 100%;
-        }
-      `}</style>
     </div>
   );
 };

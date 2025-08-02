@@ -1,91 +1,51 @@
-import { useContext, useState } from "react";
-import profile from "../../../assets/profile.png";
+import { useState } from "react";
 import { PiBell } from "react-icons/pi";
 import { CiSearch } from "react-icons/ci";
-import { AuthContext } from "../../../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import { FaSearch } from "react-icons/fa";
-// import Swal from "sweetalert2";
-// import { DollarSign } from "lucide-react";
-// import { RxDropdownMenu } from "react-icons/rx";
-// import { DownCircleOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getUserProfile } from "../../../redux/features/auth/authSlice";
+import { Skeleton } from "antd";
 
 const AdminProfile = ({ headingText = "Users Management" }) => {
-  // const { user, logOut } = useContext(AuthContext);
-  const { user } = useSelector((state) => state.auth);
-  
-
+  const { user, loading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
-
-  // const logOutUser = () => {
-  //   Swal.fire({
-  //     title: "Are you sure you want to log out?",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "Yes, log out",
-  //     cancelButtonText: "Cancel",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       logOut().then(() => {
-  //         Swal.fire(
-  //           "Logged out!",
-  //           "You have been logged out successfully.",
-  //           "success"
-  //         );
-  //       });
-  //     }
-  //   });
-  // };
-
   const [modalOpen, setModalOpen] = useState(false);
 
+  useEffect(() => {
+    if (token && !user) {
+      dispatch(getUserProfile());
+    }
+  }, [token, user, dispatch]);
+
   const handleNotification = () => {
-    // setModalOpen(!modalOpen);
     navigate("/dashboard/notification");
-    console.log(modalOpen);
   };
 
-  const notifications = [
-    { id: 1, text: "You have a new message from John." },
-    { id: 2, text: "Your book has been borrowed successfully." },
-    { id: 3, text: "Admin approved your request." },
-    { id: 4, text: "Admin approved your request." },
-    { id: 5, text: "Admin approved your request." },
-    { id: 6, text: "Admin approved your request." },
-    { id: 7, text: "Admin approved your request." },
-    { id: 8, text: "Admin approved your request." },
-    { id: 9, text: "Admin approved your request." },
-    { id: 10, text: "Admin approved your request." },
-    { id: 11, text: "Admin approved your request." },
-    { id: 12, text: "Admin approved your request." },
-    { id: 13, text: "Admin approved your request." },
-    { id: 14, text: "Admin approved your request." },
-  ];
-
-  // console.log(user);
   return (
-    <div className="flex items-center justify-between sticky top-0 md:top-0  w-full md:w-full px-0 md:px-6 py-8 md:py-4 gap-2 bg-white font-sans rounded-md shadow z-20">
+    <div className="flex items-center justify-between sticky top-0 md:top-0 w-full md:w-full px-0 md:px-6 py-8 md:py-4 gap-2 bg-white font-sans rounded-md shadow z-20">
       {/* Left dynamic text */}
-      <h1 className="text-xs md:text-2xl  ml-12 md:ml-0 font-bold text-darkGray">{headingText}</h1>
+      <h1 className="text-xs md:text-2xl ml-12 md:ml-0 font-bold text-darkGray">
+        {headingText}
+      </h1>
 
       {/* Right-side controls */}
       <div className="flex items-center gap-2">
         {/* Search box */}
-        <div className="flex  items-center md:min-w-[20rem] justify-between min-h-12 gap-2 bg-white rounded-md px-4 py-2 border border-gray-200 shadow-sm">
+        <div className="flex items-center md:min-w-[20rem] justify-between min-h-12 gap-2 bg-white rounded-md px-4 py-2 border border-gray-200 shadow-sm">
           <input
             type="text"
             placeholder="Search"
             className="outline-none text-sm text-[#88755A] bg-transparent placeholder:text-[#88755A] w-full"
           />
-          <CiSearch className="text-[#88755A]  text-3xl" />
+          <CiSearch className="text-[#88755A] text-3xl" />
         </div>
 
         {/* Bell Icon with notification */}
-        <div className="relative  md:block">
-          {/* Bell Icon */}
+        <div className="relative md:block">
           <div
             onClick={handleNotification}
             className="relative cursor-pointer md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full bg-white flex items-center justify-center shadow-sm border border-lightGrayBorders"
@@ -93,105 +53,40 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
             <PiBell className="text-[#88755A] text-2xl" />
             <span className="absolute -top-[2px] md:top-[8px] -right-[0px] w-[10px] h-[10px] bg-brandRed rounded-full" />
           </div>
-
-
         </div>
 
-        <div className="relative group flex items-center">
-          {/* Profile Image */}
-          <div className="flex gap-2">
-            <div
-              onClick={() => {
-                navigate("/dashboard/update-profile");
-              }}
-              className="md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer"
-            >
-              <img
-                src={user?.profileImage}
-                alt="Admin"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="text-brandGray font-semibold hidden md:block">
-              <p>{user?.fullName ? user.fullName : name}</p>
-              <p> {user?.role}</p>
-            </div>
-          </div>
-
-          {/* Name Popup */}
-          {/* {user?.displayName && (
-            <div
-              className="
-        absolute
-        top-[90px]
-        left-1/2
-        -translate-x-1/2
-        px-3
-        py-1
-        text-xs
-        bg-white
-        text-brandGray
-        border
-        rounded
-        opacity-0
-        group-hover:opacity-100
-        transition
-        pointer-events-none
-        whitespace-nowrap
-        shadow
-      "
-            >
-              {user.displayName}
-            </div>
-          )} */}
-
-          {/* Logout Button */}
-          {/* <button
-            onClick={logOutUser}
-            className="
-      absolute
-      top-full
-      mt-0
-      left-1/2
-      -translate-x-1/2
-      bg-orangePrimary
-      border
-      text-brandGray
-      shadow
-      px-5
-      py-2
-      text-sm
-      rounded
-      font-semibold
-      opacity-0
-      group-hover:opacity-100
-      transition
-      hover:bg-[#ffcc80]
-      hover:border-gray-400
-    "
-          >
-            Logout
-          </button> */}
-        </div>
-
-        {/* <div className="relative group flex items-center">
-          
-          <div className="flex gap-2">
-            <div
-              onClick={() => {
-                console.log("tapped")
-              }}
-              className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-sm cursor-pointer"
-            >
-              <DownCircleOutlined className="w-full h-full text-4xl" />
-             
-            </div>
+        {/* Profile Section with Loading State */}
+        {loading ? (
+          <div className="flex gap-4 items-center">
+            <Skeleton.Avatar active size="large" />
+            <div className="hidden md:block">
             
+              <Skeleton.Input active size="small" />
+            </div>
           </div>
-        </div> */}
-
-
-
+        ) : (
+          <div className="relative group flex items-center">
+            <div className="flex gap-2">
+              <div
+                onClick={() => navigate("/dashboard/update-profile")}
+                className="md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 shadow-sm cursor-pointer"
+              >
+                <img
+                  src={user?.profileImage || "/default-avatar.png"}
+                  alt="Admin"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "/default-avatar.png";
+                  }}
+                />
+              </div>
+              <div className="text-brandGray font-semibold hidden md:block">
+                <p>{user?.fullName || "Admin User"}</p>
+                <p>{user?.role || "Admin"}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

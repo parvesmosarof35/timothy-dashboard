@@ -29,7 +29,7 @@ const RoleDetailsReadOnly = () => {
           id: id,
           name: "John Doe",
           email: "john.doe@example.com",
-          role: "manager",
+          role: "Admin",
           phone: "+1 234 567 890",
           address: "123 Main St, New York, NY 10001",
           birthDate: "1985-05-15",
@@ -90,9 +90,7 @@ const RoleDetailsReadOnly = () => {
           <Descriptions.Item label={<><HomeOutlined /> Address</>}>
             {partner.address}
           </Descriptions.Item>
-          <Descriptions.Item label={<><CalendarOutlined /> Birth Date</>}>
-            {dayjs(partner.birthDate).format('MMMM D, YYYY')}
-          </Descriptions.Item>
+         
           <Descriptions.Item label={<><CalendarOutlined /> Start Date</>}>
             {dayjs(partner.startDate).format('MMMM D, YYYY')}
           </Descriptions.Item>

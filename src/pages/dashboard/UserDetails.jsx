@@ -2,25 +2,70 @@ import { useState } from "react";
 import { User, DollarSign, MessageCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import UserMessage from "./userSupport/UserMessage";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getSingleUser } from "../../redux/features/user/getSIngleUserSlice";
+
+import { Spin, Alert, Result } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+
 
 const UserDetails = () => {
   // Mock id for demonstration - in your actual app, use useParams()
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("profile");
+  const dispatch = useDispatch();
+  const { singleUser, loading, error } = useSelector(
+    (state) => state.singleUser
+  );
 
-  // Mock user data
-  const userData = {
-    id: id,
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1234567890",
-    status: "Active",
-    joinDate: "2023-01-15",
-    profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
-    address: "123 Main St, City, State 12345",
-    lastLogin: "2024-07-10 14:30:00",
-    role: "Admin",
-  };
+ useEffect(() => {
+    if (id) {
+      dispatch(getSingleUser(id));
+    }
+  }, []);
+
+  // console.log(singleUser);
+
+
+if (loading) {
+  return (
+    <div className="flex items-center justify-center h-64">
+      <Spin
+        indicator={<LoadingOutlined style={{ fontSize: 40 }} spin />}
+        tip="Fetching user details..."
+      />
+    </div>
+  );
+}
+
+if (error) {
+  return (
+    <div className="flex justify-center mt-10">
+      <Result
+        status="error"
+        title="Failed to Fetch User"
+        subTitle={error}
+      />
+    </div>
+  );
+}
+
+ 
+const userData = {
+  id: singleUser?.data?.id,
+  name: singleUser?.data?.fullName,
+  email: singleUser?.data?.email,
+  phone: singleUser?.data?.contactNumber || "N/A",
+  status: singleUser?.data?.status || "N/A",
+  joinDate: new Date(singleUser?.data?.createdAt).toLocaleDateString(),
+  profileImage: singleUser?.data?.profileImage || "https://via.placeholder.com/100",
+  address: singleUser?.data?.address || "Not Provided",
+  role: singleUser?.data?.role || "N/A",
+  lastLogin: singleUser?.data?.updatedAt || "N/A"
+};
+
 
   // Mock transaction data
   const transactions = [
@@ -172,7 +217,7 @@ const UserDetails = () => {
                   Type
                 </th>
                 <th className="text-left py-3 px-4 font-medium text-darkGray">
-                  Code
+                  Transaction ID
                 </th>
                 <th className="text-left py-3 px-4 font-medium text-darkGray">
                   Amount

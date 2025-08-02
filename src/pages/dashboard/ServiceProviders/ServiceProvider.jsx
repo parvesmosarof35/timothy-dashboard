@@ -1,137 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Info, MoreHorizontal } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { Table } from "antd";
-
-const users = [
-  {
-    id: "1981849262",
-    name: "John Doe",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: "1981849234263",
-    name: "Jane Smith",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "1981849264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "1981849265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-  {
-    id: "1981849266",
-    name: "Michael Lee",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "-",
-    role: "User",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/72.jpg",
-  },
-  {
-    id: "1981849264",
-    name: "Robert Johnson",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-  {
-    id: "1981849265",
-    name: "Alice Brown",
-    joined: "12 Dec 2023",
-    status: "Active",
-    level: "New Seller",
-    role: "Business Partner",
-    earnings: "$1981849262",
-    image: "https://randomuser.me/api/portraits/women/55.jpg",
-  },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { getAllPartners } from "../../../redux/features/user/getPartnersSlice";
 
 const ServiceProvider = () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const usersPerPage = 10;
-  const totalPages = Math.ceil(users.length / usersPerPage);
-
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.includes(searchTerm) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  const dispatch = useDispatch();
 
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Auto filter trigger
+  const { users, total, loading } = useSelector((state) => state.getAllPartners);
+
+  const usersPerPage = 10;
+
+  // Fetch partners
   useEffect(() => {
-    handleSelect();
+    dispatch(
+      getAllPartners({
+        page: currentPage,
+        limit: usersPerPage,
+        search: searchTerms,
+        time: selectedTime,
+        country: selectedCountry,
+      })
+    );
+  }, [currentPage, selectedTime, selectedCountry, searchTerms]);
+
+  // Trigger re-fetch on filters
+  useEffect(() => {
+    setCurrentPage(1); // Reset page
   }, [selectedTime, selectedCountry, searchTerms]);
 
-  const handleSelect = () => {
-    console.log("Filter Applied:", {
-      time: selectedTime,
-      country: selectedCountry,
-      search: searchTerms,
-    });
-  };
+  // Transform API data to table-friendly format
+  const tableData = Array.isArray(users?.data)
+    ? users.data.map((user) => ({
+        id: user.id,
+        name: user.fullName || "N/A",
+        image: user.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png",
+        joined: new Date(user.createdAt).toISOString().split("T")[0],
+        status: user.status,
+        level: "New Seller",
+        role: user.role,
+        earnings: "$0", // Dummy earnings
+      }))
+    : [];
 
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
+    { title: "ID", dataIndex: "id", key: "id" },
     {
       title: "Name",
       dataIndex: "name",
@@ -171,35 +92,29 @@ const ServiceProvider = () => {
   return (
     <div className="px-0 sm:px-6">
       <AdminProfile headingText="Manage Partners" />
-
       <div className="p-4 sm:p-6 bg-grayLightBg min-h-screen font-sans">
         {/* Header + Filters */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
           <h2 className="text-xl sm:text-2xl font-semibold">Our Partners</h2>
-
-          {/* Filters */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:items-center w-full md:w-auto">
-            {/* Time Filter */}
             <select
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
             >
+              <option value="">All Time</option>
               <option value="today">Today</option>
               <option value="week">This Week</option>
               <option value="month">This Month</option>
               <option value="year">This Year</option>
             </select>
 
-            {/* Country Filter */}
             <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
             >
-              <option value="" disabled>
-                Select Country
-              </option>
+              <option value="">All Countries</option>
               <option value="us">United States</option>
               <option value="uk">United Kingdom</option>
               <option value="ae">United Arab Emirates</option>
@@ -208,7 +123,6 @@ const ServiceProvider = () => {
               <option value="es">Spain</option>
             </select>
 
-            {/* Search Input */}
             <input
               type="text"
               placeholder="Search"
@@ -219,16 +133,16 @@ const ServiceProvider = () => {
           </div>
         </div>
 
-        {/* Responsive Table Wrapper */}
         <div className="overflow-x-auto border rounded-lg bg-white max-w-[20rem] mx-auto md:max-w-full">
           <Table
             columns={columns}
-            dataSource={filteredUsers}
+            dataSource={tableData}
             rowKey="id"
+            loading={loading}
             pagination={{
               current: currentPage,
               pageSize: usersPerPage,
-              total: filteredUsers.length,
+              total: users?.meta?.total, // Use total from API response
               onChange: setCurrentPage,
               showSizeChanger: false,
             }}

@@ -58,6 +58,9 @@ const AddAdminModal = ({ open, onClose, refetchAdmins }) => {
           .catch((info) => console.log("Validation Failed:", info));
       }}
       okText="Submit"
+      okButtonProps={{
+        className: "!bg-orangePrimary !text-black hover:!bg-orange-300",
+      }}
       cancelText="Cancel"
       confirmLoading={loading}
     >

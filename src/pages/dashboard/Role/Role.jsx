@@ -10,7 +10,7 @@ import AdminProfile from "../components/AdminProfile";
 const Role = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  7;
+  const [selectedTime, setSelectedTime] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
@@ -79,10 +79,10 @@ const Role = () => {
           <button onClick={() => handleDelete(admin.id)}>
             <Trash2 className="text-red-500" />
           </button>
-          <button onClick={() => navigate(`view/${admin.id}`)}>
+          <button onClick={() => navigate(`details/${admin.id}`)}>
             <Edit className="text-gray-700" />
           </button>
-          <button onClick={() => navigate(`details/${admin.id}`)}>
+          <button onClick={() => navigate(`view/${admin.id}`)}>
             <InfoIcon className="text-gray-700" />
           </button>
         </div>
@@ -98,7 +98,7 @@ const Role = () => {
     <div className="px-0 md:px-6 mx-auto font-sans">
       <AdminProfile headingText="Manage Roles" />
 
-      <div className="flex justify-between items-center mb-6 mt-6">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-6 mt-6">
         <h2 className="text-2xl font-semibold text-darkGray">Manage Admins</h2>
 
         <div className="flex flex-wrap gap-3">
@@ -106,12 +106,22 @@ const Role = () => {
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: 200 }}
+           
+            className="w-full md:w-[200px] !py-2"
           />
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="today">Approved</option>
+            <option value="week">Pending</option>
+            
+          </select>
           <Button
             type="primary"
             icon={<Plus />}
-            className="bg-orangePrimary text-black"
+            className="bg-orangePrimary text-black !h-full !py-2"
             onClick={() => setShowModal(true)}
           >
             Add New Admin
@@ -128,19 +138,17 @@ const Role = () => {
           className="mb-4"
         />
       )}
+  <div className="w-[20rem] mx-auto md:!w-full overflow-x-auto border rounded-lg bg-white">
 
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <Spin tip="Loading admins..." />
-        </div>
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={admins}
-          pagination={false}
-          rowKey="id"
+      <Table
+        columns={columns}
+        dataSource={admins}
+        loading={loading}
+        scroll={{ x: true }}
+        pagination={false}
+        rowKey="id"
         />
-      )}
+        </div>
 
       <div className="flex justify-center mt-4">
         <Pagination
