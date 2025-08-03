@@ -66,7 +66,23 @@ export const updateUserProfile = createAsyncThunk(
   async (updatedData, thunkAPI) => {
     try {
       const response = await api.patch("/users/update", updatedData);
-      console.log(updatedData)
+      console.log(updatedData);
+      console.log(response);
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to update user profile";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (updatedPass, thunkAPI) => {
+    try {
+      const response = await api.put("/auth/change-password", updatedPass);
+      console.log(updatedPass);
       console.log(response);
       return response.data.data;
     } catch (error) {
@@ -134,7 +150,6 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-
       // update user
       .addCase(updateUserProfile.pending, (state) => {
         state.loading = true;
@@ -145,6 +160,19 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Change Password
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

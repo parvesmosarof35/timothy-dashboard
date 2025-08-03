@@ -16,9 +16,3 @@ export const updateUser = createAsyncThunk(
     }
   }
 );
-
-const initialState = {
-  : null,
-  loading: false,
-  error: null,
-};

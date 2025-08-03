@@ -7,7 +7,12 @@ import { useSelector } from "react-redux";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { updateUserProfile } from "../redux/features/auth/authSlice";
+import {
+  changePassword,
+  getUserProfile,
+  updateUserProfile,
+} from "../redux/features/auth/authSlice";
+import { useEffect } from "react";
 
 const ProfileSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -21,10 +26,31 @@ const ProfileSettings = () => {
   const [profileData, setProfileData] = useState({
     fullName: user?.fullName || "",
     email: user?.email || "",
-    contactNo: user?.contactNumber || "",
+    contactNumber: user?.contactNumber || "",
     address: user?.address || "",
     country: user?.country || "",
   });
+
+  const token = localStorage.getItem("accessToken");
+
+useEffect(() => {
+  if (token && !user) {
+    dispatch(getUserProfile());
+  }
+}, [token, user, dispatch]);
+
+// Sync profile form state when user data is loaded
+useEffect(() => {
+  if (user) {
+    setProfileData({
+      fullName: user.fullName || "",
+      email: user.email || "",
+      contactNumber: user.contactNumber || "",
+      address: user.address || "",
+      country: user.country || "",
+    });
+  }
+}, [user]);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -59,21 +85,21 @@ const ProfileSettings = () => {
       if (result.isConfirmed) {
         console.log("Profile update confirmed with data:", profileData);
 
-         dispatch(updateUserProfile(profileData))
-        .unwrap()
-        .then(() => {
-          Swal.fire({
-            title: "Saved!",
-            text: "Your profile has been updated.",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false,
+        dispatch(updateUserProfile(profileData))
+          .unwrap()
+          .then(() => {
+            Swal.fire({
+              title: "Saved!",
+              text: "Your profile has been updated.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          })
+          .catch((error) => {
+            console.error("Update failed:", error);
+            Swal.fire("Error", error || "Update failed", "error");
           });
-        })
-        .catch((error) => {
-          console.error("Update failed:", error);
-          Swal.fire("Error", error || "Update failed", "error");
-        });
       } else {
         console.log("Profile update cancelled");
       }
@@ -106,17 +132,26 @@ const ProfileSettings = () => {
       cancelButtonColor: "#EF4444",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Password update confirmed with data:", {
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword
-        });
-        Swal.fire({
-          title: "Updated!",
-          text: "Your password has been changed.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-        });
+        dispatch(
+          changePassword({
+            oldPassword: passwordData.currentPassword,
+            newPassword: passwordData.newPassword,
+          })
+        )
+          .unwrap()
+          .then(() => {
+            Swal.fire({
+              title: "Updated!",
+              text: "Your password has been changed.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          });
+        // console.log("Password update confirmed with data:", {
+        //   currentPassword: passwordData.currentPassword,
+        //   newPassword: passwordData.newPassword
+        // });
 
         setPasswordData({
           currentPassword: "",
@@ -129,27 +164,24 @@ const ProfileSettings = () => {
     });
   };
 
-
   const handleProfileImageChange = (newImageUrl) => {
     console.log(newImageUrl);
 
-  dispatch(updateUserProfile({ profileImage: newImageUrl }))
-    .unwrap()
-    .then(() => {
-      Swal.fire({
-        title: "Profile Updated",
-        text: "Profile image updated successfully.",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
+    dispatch(updateUserProfile({ profileImage: newImageUrl }))
+      .unwrap()
+      .then(() => {
+        Swal.fire({
+          title: "Profile Updated",
+          text: "Profile image updated successfully.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        Swal.fire("Error", error || "Image update failed", "error");
       });
-    })
-    .catch((error) => {
-      Swal.fire("Error", error || "Image update failed", "error");
-    });
-};
-
-
+  };
 
   if (loading) {
     return (
@@ -167,11 +199,11 @@ const ProfileSettings = () => {
       <AdminProfile headingText="User Settings" />
       <div className="max-w-2xl mx-auto">
         {/* Profile Header with Image */}
-        <ProfileImgandName 
-          name={user?.fullName} 
-          img={user?.profileImage} 
-          role={user?.role} 
-          onImageUpload={handleProfileImageChange} 
+        <ProfileImgandName
+          name={user?.fullName}
+          img={user?.profileImage}
+          role={user?.role}
+          onImageUpload={handleProfileImageChange}
         />
 
         {/* Tabs */}
@@ -242,8 +274,8 @@ const ProfileSettings = () => {
                   </label>
                   <input
                     type="tel"
-                    name="contactNo"
-                    value={profileData.contactNo}
+                    name="contactNumber"
+                    value={profileData.contactNumber}
                     onChange={handleProfileChange}
                     className="w-full px-4 py-2 font-poppins border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
@@ -317,7 +349,9 @@ const ProfileSettings = () => {
                     <button
                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-brandGray hover:text-darkGray"
-                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      onClick={() =>
+                        setShowCurrentPassword(!showCurrentPassword)
+                      }
                     >
                       {showCurrentPassword ? <FiEyeOff /> : <FiEye />}
                     </button>
@@ -361,7 +395,9 @@ const ProfileSettings = () => {
                     <button
                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-brandGray hover:text-darkGray"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
                       {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
                     </button>
