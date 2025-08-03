@@ -85,7 +85,7 @@ export const changePassword = createAsyncThunk(
       console.log(updatedPass);
       console.log(response);
       return response.data.data;
-    } catch (error) {
+    } catch (error) { 
       const message =
         error.response?.data?.message || "Failed to update user profile";
       return thunkAPI.rejectWithValue(message);
