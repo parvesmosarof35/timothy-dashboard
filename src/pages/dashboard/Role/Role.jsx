@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Edit, InfoIcon, Trash2 } from "lucide-react";
-import { Table, Input, Button, Pagination, Modal, Spin, Alert } from "antd";
+import { Table, Input, Button, Pagination, Modal, Spin, Alert, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdmins } from "../../../redux/features/admin/adminSlice";
 import AddAdminModal from "./AddAdminModal";
 import AdminProfile from "../components/AdminProfile";
+import { deleteSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
 
 const Role = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,6 +35,18 @@ const Role = () => {
       cancelText: "No",
       onOk: () => {
         console.log("Deleted Admin ID:", id);
+
+        dispatch(deleteSingleUser(id))
+          .unwrap()
+          .then(() => {
+            message.success("User deleted successfully");
+            dispatch(getAdmins({ page: currentPage, limit: 10 }));
+          })
+          .catch((err) => {
+            message.error("Failed to delete user");
+            console.error(err);
+          });
+
         // TODO: Add delete logic (e.g., dispatch(deleteAdmin(id)))
       },
     });
@@ -97,6 +110,7 @@ const Role = () => {
   return (
     <div className="px-0 md:px-6 mx-auto font-sans">
       <AdminProfile headingText="Manage Roles" />
+      
 
       <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-6 mt-6">
         <h2 className="text-2xl font-semibold text-darkGray">Manage Admins</h2>
@@ -106,7 +120,6 @@ const Role = () => {
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-           
             className="w-full md:w-[200px] !py-2"
           />
           <select
@@ -116,7 +129,6 @@ const Role = () => {
           >
             <option value="today">Approved</option>
             <option value="week">Pending</option>
-            
           </select>
           <Button
             type="primary"
@@ -138,17 +150,16 @@ const Role = () => {
           className="mb-4"
         />
       )}
-  <div className="w-[20rem] mx-auto md:!w-full overflow-x-auto border rounded-lg bg-white">
-
-      <Table
-        columns={columns}
-        dataSource={admins}
-        loading={loading}
-        scroll={{ x: true }}
-        pagination={false}
-        rowKey="id"
+      <div className="w-[20rem] mx-auto md:!w-full overflow-x-auto border rounded-lg bg-white">
+        <Table
+          columns={columns}
+          dataSource={admins}
+          loading={loading}
+          scroll={{ x: true }}
+          pagination={false}
+          rowKey="id"
         />
-        </div>
+      </div>
 
       <div className="flex justify-center mt-4">
         <Pagination

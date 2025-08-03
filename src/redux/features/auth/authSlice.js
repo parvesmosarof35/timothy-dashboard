@@ -60,6 +60,23 @@ export const getUserProfile = createAsyncThunk(
   }
 );
 
+// Fix the updateUserProfile thunk
+export const updateUserProfile = createAsyncThunk(
+  "auth/updateUserProfile",
+  async (updatedData, thunkAPI) => {
+    try {
+      const response = await api.patch("/users/update", updatedData);
+      console.log(updatedData)
+      console.log(response);
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to update user profile";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",
@@ -113,6 +130,21 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(getUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
+      // update user
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.user = action.payload; // update user in store
+        state.loading = false;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

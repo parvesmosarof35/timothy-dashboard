@@ -7,10 +7,8 @@ import { ImSpinner2 } from "react-icons/im"; // for loading spinner
 const CLOUDINARY_UPLOAD_PRESET = "DashboardImage";
 const CLOUDINARY_CLOUD_NAME = "didsuo0le"; // 🔁 Replace this with your actual Cloudinary cloud name
 
-const ProfileImgandName = () => {
-  const [imagePreview, setImagePreview] = useState(
-    "https://static.vecteezy.com/system/resources/thumbnails/051/670/568/small/a-contented-financial-analyst-surrounded-by-growth-charts-photo.jpeg"
-  );
+const ProfileImgandName = ({ name = "N/A", img = "N/A", role = "N/A",onImageUpload  }) => {
+  const [imagePreview, setImagePreview] = useState(img);
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadToCloudinary = async (file) => {
@@ -31,6 +29,10 @@ const ProfileImgandName = () => {
       const data = await res.json();
       if (data.secure_url) {
         setImagePreview(data.secure_url); // ⬅️ Set uploaded image
+         
+          onImageUpload(data.secure_url);
+        
+
         Swal.fire({
           title: "Uploaded!",
           text: "Your profile picture has been changed.",
@@ -106,7 +108,7 @@ const ProfileImgandName = () => {
           )}
         </button>
       </div>
-      <h1 className="text-2xl font-bold text-center">Robert Smith</h1>
+      <h1 className="text-2xl font-bold text-center">{name}{`(${role})`}</h1>
     </div>
   );
 };

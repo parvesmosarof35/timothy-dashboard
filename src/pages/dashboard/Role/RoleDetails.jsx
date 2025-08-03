@@ -1,54 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Form, Input, Button, DatePicker, Select, message, Spin, Modal, Card, Descriptions, Avatar } from 'antd';
-import { 
-  UserOutlined, 
-  MailOutlined, 
-  PhoneOutlined, 
-  HomeOutlined, 
-  CalendarOutlined,
-  ExclamationCircleOutlined 
-} from '@ant-design/icons';
-import dayjs from 'dayjs';
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  message,
+  Spin,
+  Modal,
+  Card,
+  Descriptions,
+  Avatar,
+} from "antd";
+import {
+  UserOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { deleteSingleUser, getSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
+import { useDispatch, useSelector } from 'react-redux';
 
 const RoleDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(true);
-  const [partner, setPartner] = useState(null);
+  const dispatch = useDispatch();
+  
+  const { singleUser, loading } = useSelector((state) => state.singleUser);
+  const user = singleUser?.data;
 
-  // Mock data - replace with actual API call
+
+    useEffect(() => {
+      if (id) {
+        dispatch(getSingleUser(id));
+      }
+    }, [dispatch, id]);
+
   useEffect(() => {
-    const fetchPartnerDetails = () => {
-      setLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        setPartner({
-          id: id,
-          name: "John Doe",
-          email: "john.doe@example.com",
-          role: "Admin",
-          phone: "+1 234 567 890",
-          address: "123 Main St, New York, NY 10001",
-          birthDate: "1985-05-15",
-          startDate: "2020-01-10",
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg"
-        });
-        setLoading(false);
-      }, 800);
-    };
-
-    fetchPartnerDetails();
-  }, [id]);
+    if (user) {
+      form.setFieldsValue({
+        name: user?.fullName,
+        email: user?.email,
+        role: user?.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase(),
+        phone: user?.contactNumber || "N/A",
+        address: user?.address || "N/A",
+      });
+    }
+  }, [user, form]);
 
   const showUpdateConfirm = (values) => {
     Modal.confirm({
-      title: 'Confirm Update',
+      title: "Confirm Update",
       icon: <ExclamationCircleOutlined />,
       content: (
         <div>
-          <p>Are you sure you want to update this partner's details?</p>
+          <p>Are you sure you want to update this admin's details?</p>
           <Card bordered={false} style={{ marginTop: 16 }}>
             <Descriptions column={1}>
               <Descriptions.Item label="Name">{values.name}</Descriptions.Item>
@@ -59,51 +67,46 @@ const RoleDetails = () => {
           </Card>
         </div>
       ),
-      okText: 'Yes, Update',
-      cancelText: 'Cancel',
+      okText: "Yes, Update",
+      cancelText: "Cancel",
       onOk: () => handleUpdate(values),
     });
   };
 
   const handleUpdate = async (values) => {
     try {
-      setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Update values:', values);
+      // Here you would typically dispatch an update action
+      // await dispatch(updateUser({ id, ...values }));
       
-      message.success({
-        content: 'Partner details updated successfully!',
-        duration: 3,
-      });
-      
-      // Update local state
-      setPartner(prev => ({ ...prev, ...values }));
+      message.success("Admin details updated successfully!");
     } catch (error) {
-      message.error('Failed to update partner details');
-    } finally {
-      setLoading(false);
+      message.error("Failed to update admin details");
     }
   };
 
   const showDeleteConfirm = () => {
     Modal.confirm({
-      title: 'Delete Partner',
+      title: "Delete Admin",
       icon: <ExclamationCircleOutlined />,
       content: (
         <div>
-          <p>Are you sure you want to delete this partner?</p>
-          <div style={{ display: 'flex', alignItems: 'center', marginTop: 16 }}>
-            <Avatar src={partner.avatar} size={64} />
+          <p>Are you sure you want to delete this admin?</p>
+          <div style={{ display: "flex", alignItems: "center", marginTop: 16 }}>
+            <Avatar 
+              src={user?.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"} 
+              size={64} 
+            />
             <div style={{ marginLeft: 16 }}>
-              <p><strong>{partner.name}</strong></p>
-              <p>{partner.email}</p>
-              <p>{partner.role}</p>
+              <p><strong>{user?.fullName}</strong></p>
+              <p>{user?.email}</p>
+              <p>{user?.role}</p>
             </div>
           </div>
         </div>
       ),
-      okText: 'Yes, Delete',
-      cancelText: 'Cancel',
+      okText: "Yes, Delete",
+      cancelText: "Cancel",
       okButtonProps: { danger: true },
       onOk: handleDelete,
     });
@@ -111,27 +114,22 @@ const RoleDetails = () => {
 
   const handleDelete = async () => {
     try {
-      setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      message.success({
-        content: 'Partner deleted successfully!',
-        duration: 3,
-      });
-      
-    //   setTimeout(() => {
-    //     navigate('/partners'); // Redirect to partners list after 3 seconds
-    //   }, 3000);
+       dispatch(deleteSingleUser(id));
+      message.success("Admin deleted successfully!");
+      navigate('/dashboard/role');
     } catch (error) {
-      message.error('Failed to delete partner');
-      setLoading(false);
+      message.error("Failed to delete admin");
     }
   };
 
-  if (loading && !partner) {
+  if (loading || !user) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}>
         <Spin size="large" />
       </div>
     );
@@ -139,19 +137,23 @@ const RoleDetails = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <Button 
-        type="text" 
-        onClick={() => navigate(-1)} 
+      <Button
+        type="text"
+        onClick={() => navigate(-1)}
         style={{ marginBottom: 16 }}
       >
-        ← Back to  Admins
+        ← Back to Admins
       </Button>
 
       <Card
         title={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar src={partner.avatar} size={40} style={{ marginRight: 12 }} />
-            <span>Edit Admin: {partner.name}</span>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              src={user?.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"}
+              size={40}
+              style={{ marginRight: 12 }}
+            />
+            <span>Edit Admin: {user?.fullName}</span>
           </div>
         }
         bordered={false}
@@ -159,79 +161,71 @@ const RoleDetails = () => {
         <Form
           form={form}
           layout="vertical"
-          initialValues={{
-            ...partner,
-            birthDate: dayjs(partner.birthDate),
-            startDate: dayjs(partner.startDate)
-          }}
           onFinish={showUpdateConfirm}
         >
-          <Form.Item 
-            label="Name" 
-            name="name" 
-            rules={[{ required: true, message: 'Please input the name!' }]}
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: "Please input the name!" }]}
           >
             <Input prefix={<UserOutlined />} />
           </Form.Item>
 
-          <Form.Item 
-            label="Email" 
-            name="email" 
-            className='cursor-not-allowed'
+          <Form.Item
+            label="Email"
+            name="email"
             rules={[
-              {  message: 'Please input the email!' },
-              { type: 'email', message: 'Please enter a valid email!' }
+              { required: true, message: "Please input the email!" },
+              { type: "email", message: "Please enter a valid email!" },
             ]}
           >
-            <Input readOnly prefix={<MailOutlined />} />
+            <Input prefix={<MailOutlined />} readOnly />
           </Form.Item>
 
-          <Form.Item 
-            label="Role" 
-            name="role" 
-            rules={[{ required: true, message: 'Please select the role!' }]}
+          <Form.Item
+            label="Role"
+            name="role"
+            rules={[{ required: true, message: "Please select the role!" }]}
           >
             <Select>
-              <Select.Option value="ADMIN">Admin</Select.Option>
-              {/* <Select.Option value="manager">SuperAdmin</Select.Option> */}
+              <Select.Option value="Admin">Admin</Select.Option>
+              <Select.Option value="SuperAdmin">Super Admin</Select.Option>
             </Select>
           </Form.Item>
 
-          <Form.Item 
-            label="Phone" 
-            name="phone" 
-            rules={[{ required: true, message: 'Please input the phone number!' }]}
+          <Form.Item
+            label="Phone"
+            name="phone"
+            rules={[
+              { required: true, message: "Please input the phone number!" },
+            ]}
           >
             <Input prefix={<PhoneOutlined />} />
           </Form.Item>
 
-          <Form.Item 
-            label="Address" 
-            name="address" 
-            rules={[{ required: true, message: 'Please input the address!' }]}
+          <Form.Item
+            label="Address"
+            name="address"
+            rules={[{ required: true, message: "Please input the address!" }]}
           >
             <Input.TextArea rows={3} prefix={<HomeOutlined />} />
           </Form.Item>
 
-        
-
-   
-
           <Form.Item style={{ marginTop: 32 }}>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
+            <Button
+              type="primary"
+              htmlType="submit"
               loading={loading}
               style={{ marginRight: 16 }}
             >
-              Update Partner
+              Update Admin
             </Button>
             <Button 
               danger 
-              onClick={showDeleteConfirm}
+              onClick={showDeleteConfirm} 
               loading={loading}
             >
-              Delete Partner
+              Delete Admin
             </Button>
           </Form.Item>
         </Form>

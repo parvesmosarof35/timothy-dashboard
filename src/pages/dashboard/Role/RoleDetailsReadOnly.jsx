@@ -1,51 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Descriptions, Button, Spin, Avatar } from 'antd';
-import { 
-  UserOutlined, 
-  MailOutlined, 
-  PhoneOutlined, 
-  HomeOutlined, 
+import {
+  UserOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  HomeOutlined,
   CalendarOutlined,
   ArrowLeftOutlined,
   IdcardOutlined,
   CrownOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleUser } from '../../../redux/features/user/getSIngleUserSlice';
 
 const RoleDetailsReadOnly = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [partner, setPartner] = useState(null);
+  const dispatch = useDispatch();
 
-  // Mock data - replace with actual API call
+  const { singleUser, loading } = useSelector((state) => state.singleUser);
+  const user = singleUser?.data;
+
   useEffect(() => {
-    const fetchPartnerDetails = () => {
-      setLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        setPartner({
-          id: id,
-          name: "John Doe",
-          email: "john.doe@example.com",
-          role: "Admin",
-          phone: "+1 234 567 890",
-          address: "123 Main St, New York, NY 10001",
-          birthDate: "1985-05-15",
-          startDate: "2020-01-10",
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg"
-        });
-        setLoading(false);
-      }, 800);
-    };
+    if (id) {
+      dispatch(getSingleUser(id));
+    }
+  }, [dispatch, id]);
 
-    fetchPartnerDetails();
-  }, [id]);
-
-  if (loading && !partner) {
+  if (loading || !user) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <Spin size="large" />
       </div>
     );
@@ -53,10 +46,10 @@ const RoleDetailsReadOnly = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <Button 
-        type="text" 
+      <Button
+        type="text"
         icon={<ArrowLeftOutlined />}
-        onClick={() => navigate(-1)} 
+        onClick={() => navigate(-1)}
         style={{ marginBottom: 16 }}
       >
         Back
@@ -65,51 +58,52 @@ const RoleDetailsReadOnly = () => {
       <Card
         title={
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar src={partner.avatar} size={40} style={{ marginRight: 12 }} />
-            <span>Partner Details: {partner.name}</span>
+            <Avatar
+              src={user.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"}
+              size={40}
+              style={{ marginRight: 12 }}
+            />
+            <span>Admin Details: {user.fullName}</span>
           </div>
         }
         bordered={false}
       >
         <Descriptions bordered column={1}>
           <Descriptions.Item label={<><IdcardOutlined /> ID</>}>
-            {partner.id}
+            {user.id}
           </Descriptions.Item>
           <Descriptions.Item label={<><UserOutlined /> Name</>}>
-            {partner.name}
+            {user.fullName}
           </Descriptions.Item>
           <Descriptions.Item label={<><MailOutlined /> Email</>}>
-            {partner.email}
+            {user.email}
           </Descriptions.Item>
           <Descriptions.Item label={<><CrownOutlined /> Role</>}>
-            {partner.role.charAt(0).toUpperCase() + partner.role.slice(1)}
+            {user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()}
           </Descriptions.Item>
           <Descriptions.Item label={<><PhoneOutlined /> Phone</>}>
-            {partner.phone}
+            {user.contactNumber || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item label={<><HomeOutlined /> Address</>}>
-            {partner.address}
+            {user.address || "N/A"}
           </Descriptions.Item>
-         
           <Descriptions.Item label={<><CalendarOutlined /> Start Date</>}>
-            {dayjs(partner.startDate).format('MMMM D, YYYY')}
+            {dayjs(user.createdAt).format('MMMM D, YYYY')}
           </Descriptions.Item>
           <Descriptions.Item label={<><CalendarOutlined /> Years with Company</>}>
-            {dayjs().diff(partner.startDate, 'year')} years
+            {dayjs().diff(user.createdAt, 'year')} years
           </Descriptions.Item>
         </Descriptions>
 
         <div style={{ marginTop: 24, textAlign: 'center' }}>
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             onClick={() => navigate(`/dashboard/role/details/${id}`)}
             style={{ marginRight: 16 }}
           >
             Edit Partner
           </Button>
-          <Button onClick={() => navigate(-1)}>
-            Return to List
-          </Button>
+          <Button onClick={() => navigate(-1)}>Return to List</Button>
         </div>
       </Card>
     </div>
