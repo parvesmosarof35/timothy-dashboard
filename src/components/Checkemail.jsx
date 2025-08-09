@@ -2,6 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Loader2 } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../providers/AuthProvider";
+import { checkOTP } from "../redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 // Simulated dummy request
 const fakeRequest = (success = true, delay = 1000) =>
@@ -13,13 +17,14 @@ const fakeRequest = (success = true, delay = 1000) =>
   });
 
 function VerificationCodeInput({
-  length = 5,
+  length = 4,
   value,
   onChange,
   disabled = false,
 }) {
   const inputRefs = useRef([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     inputRefs.current = inputRefs.current.slice(0, length);
@@ -98,7 +103,7 @@ function VerificationCodeInput({
           onPaste={handlePaste}
           onFocus={() => setActiveIndex(index)}
           disabled={disabled}
-          className={`w-12 h-12 text-center text-lg font-medium border text-brandGray rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`w-12 h-12 text-center text-lg font-medium border text-brandGray rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff9000]-500 focus:border-[#ff9000]-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
             disabled ? "bg-grayLightBg" : ""
           }`}
           autoComplete="off"
@@ -112,11 +117,12 @@ function VerificationCodeInput({
 
 export default function Checkemail() {
   const [verificationCode, setVerificationCode] = useState("");
-  const [email] = useState("contact@dscode.com");
+  const { email } = useContext(AuthContext);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
+  console.log(email)
   useEffect(() => {
     if (resendCooldown > 0) {
       const timer = setTimeout(() => {
@@ -126,25 +132,25 @@ export default function Checkemail() {
     }
   }, [resendCooldown]);
 
-  const handleVerification = async (e) => {
-    e.preventDefault();
-    if (verificationCode.length !== 5 || isVerifying) return;
+const handleVerification = async (e) => {
+  e.preventDefault();
+  if (verificationCode.length !== 4 || isVerifying) return;
 
-    setIsVerifying(true);
-    try {
-      const isValid = verificationCode === "12345"; // Dummy correct code
-      await fakeRequest(isValid);
-      toast.success("Email verified successfully!");
-      setTimeout(() => {
-        console.log("Redirecting...");
-      }, 1500);
-    } catch {
-      toast.error("Invalid verification code. Please try again.");
-      setVerificationCode("");
-    } finally {
-      setIsVerifying(false);
-    }
-  };
+  setIsVerifying(true);
+
+  try {
+    await dispatch(checkOTP(verificationCode)).unwrap();
+    toast.success("OTP verified successfully!");
+
+    // Navigate to reset password page (or wherever appropriate)
+    // Example: navigate("/reset-password");
+  } catch (error) {
+    toast.error(error || "Invalid or expired OTP.");
+  } finally {
+    setIsVerifying(false);
+  }
+};
+
 
   const handleResend = async () => {
     if (resendCooldown > 0 || isResending) return;
@@ -163,7 +169,7 @@ export default function Checkemail() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#d0d9d0]">
+      <div className="min-h-screen bg-gray-200 font-sans">
         <div className="flex items-center justify-center min-h-screen p-4">
           <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8 min-h-[40rem] flex flex-col justify-center">
             <div className="text-center mb-8">
@@ -171,8 +177,7 @@ export default function Checkemail() {
                 Check your email
               </h1>
               <p className="text-sm text-brandGray leading-relaxed">
-                We sent a reset link to{" "}
-                <span className="font-medium">{email}</span>. Enter the 5-digit
+                <span className="font-medium"></span>Enter the 4-digit
                 code from the email.
               </p>
             </div>
@@ -188,8 +193,8 @@ export default function Checkemail() {
 
               <button
                 type="submit"
-                disabled={verificationCode.length !== 5 || isVerifying}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                disabled={verificationCode.length !== 4 || isVerifying}
+                className="w-full bg-[#ff9000] hover:bg-yellow-500 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff9000]-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isVerifying ? (
                   <>

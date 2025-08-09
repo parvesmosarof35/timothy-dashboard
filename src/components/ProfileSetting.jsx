@@ -106,63 +106,74 @@ useEffect(() => {
     });
   };
 
-  const handleUpdatePassword = (e) => {
-    e.preventDefault();
-    console.log("Password Data to be updated:", passwordData);
+const handleUpdatePassword = async (e) => {
+  e.preventDefault();
+  console.log("Password Data to be updated:", passwordData);
 
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      console.log("Password mismatch error");
+  if (passwordData.newPassword !== passwordData.confirmPassword) {
+    console.log("Password mismatch error");
+    Swal.fire({
+      title: "Error!",
+      text: "New password and confirm password do not match.",
+      icon: "error",
+      confirmButtonColor: "#EF4444",
+    });
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you want to update your password?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, update it!",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#10B981",
+    cancelButtonColor: "#EF4444",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await dispatch(
+        changePassword({
+          oldPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
+        })
+      ).unwrap();
+
       Swal.fire({
-        title: "Error!",
-        text: "New password and confirm password do not match.",
+        title: "Updated!",
+        text: "Your password has been changed.",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      console.error("Password update failed:", error);
+      Swal.fire({
+        title: "Failed!",
+        text: error || "Something went wrong while updating password.",
         icon: "error",
         confirmButtonColor: "#EF4444",
       });
-      return;
     }
-
+  } else {
     Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to update your password?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, update it!",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#10B981",
-      cancelButtonColor: "#EF4444",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(
-          changePassword({
-            oldPassword: passwordData.currentPassword,
-            newPassword: passwordData.newPassword,
-          })
-        )
-          .unwrap()
-          .then(() => {
-            Swal.fire({
-              title: "Updated!",
-              text: "Your password has been changed.",
-              icon: "success",
-              timer: 1500,
-              showConfirmButton: false,
-            });
-          });
-        // console.log("Password update confirmed with data:", {
-        //   currentPassword: passwordData.currentPassword,
-        //   newPassword: passwordData.newPassword
-        // });
-
-        setPasswordData({
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
-      } else {
-        console.log("Password update cancelled");
-      }
+      title: "Cancelled!",
+      text: "Password update cancelled",
+      icon: "info",
+      timer: 1500,
+      showConfirmButton: false,
     });
-  };
+  }
+};
+
 
   const handleProfileImageChange = (newImageUrl) => {
     console.log(newImageUrl);

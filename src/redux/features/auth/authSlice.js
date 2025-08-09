@@ -93,6 +93,42 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email, thunkAPI) => {
+    try {
+      const response = await api.post("/auth/forgot-password", {email});
+      console.log(email);
+      console.log(response);
+      return response.data.data;
+    } catch (error) { 
+      const message =
+        error.response?.data?.message || "Failed to update user profile";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+
+export const checkOTP = createAsyncThunk(
+  "auth/verify-otp",
+  async (otp, thunkAPI) => {
+    try {
+      const response = await api.post("/auth/verify-otp", {otp});
+      console.log(otp);
+      console.log(response);
+      return response.data.data;
+    } catch (error) { 
+      const message =
+        error.response?.data?.message || "Failed to update user profile";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
 // Auth Slice
 const authSlice = createSlice({
   name: "auth",

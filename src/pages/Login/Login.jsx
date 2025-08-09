@@ -142,7 +142,7 @@ const Login = () => {
                 placeholder="Your password"
                 className="mt-1 w-full px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
-              <div className="flex justify-between items-center mb-5  text-sm">
+              <div className="flex justify-between items-center mt-5  text-sm text-[#ff9000] hover:text-blue-600">
                 {/* Toggle Switch */}
                 {/* <label className="flex items-center cursor-pointer">
                   <div className="relative">
@@ -154,7 +154,7 @@ const Login = () => {
                 </label> */}
                 <span
                   onClick={handleForgotPassword}
-                  className="cursor-pointer hover:underline hidden"
+                  className="cursor-pointer hover:underline "
                 >
                   Forgot password?
                 </span>
