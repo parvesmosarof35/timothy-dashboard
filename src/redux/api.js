@@ -1,7 +1,8 @@
 // src/api.js
 import axios from 'axios';
 
-const baseURL = 'https://timothy-backend.vercel.app/api/v1'; // <-- easily replaceable
+// const baseURL = 'https://timothy-backend.onrender.com/api/v1'; // <-- easily replaceable
+const baseURL = import.meta.env.VITE_BASE_URL; // <-- easily replaceable
 
 export const api = axios.create({
   baseURL,

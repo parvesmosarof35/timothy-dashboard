@@ -5,9 +5,18 @@ import api from "../../api";
 // Async thunk to get all partners
 export const getAllPartners = createAsyncThunk(
   "getAllPartners/fetch",
-  async ({ page = 1, limit = 10 }, { rejectWithValue }) => {
+  async ({ page = 1, limit = 10, searchTerm = "", country = "", timeRange = "" }, { rejectWithValue }) => {
     try {
-      const res = await api.get(`/users/business-partners?page=${page}&limit=${limit}`);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      
+      if (searchTerm) params.append('searchTerm', searchTerm);
+      if (country) params.append('country', country);
+      if (timeRange) params.append('timeRange', timeRange);
+      
+      const res = await api.get(`/users/business-partners?${params.toString()}`);
       return res.data; // Assumes response = { data: [...], total: number }
     } catch (err) {
       return rejectWithValue(err.response?.data || "Something went wrong");

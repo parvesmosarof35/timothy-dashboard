@@ -10,33 +10,35 @@ import {
   Tooltip,
 } from "recharts";
 import { LuUsers } from "react-icons/lu";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { useGetPaymentUserAnalysisQuery } from "../../redux/api/statistics/paymentAndUserAnalisys";
 
 const UserAnalytics = ({
-  chartData = [],
-  peakValue = 200.3,
-  partnersCount = 1009123,
-  usersCount = 1009123,
   title = "User Analytics",
   subtitle = "User Growth",
 }) => {
-  const defaultData = [
-    { name: "Jan", users: 10, partners: 8 },
-    { name: "Feb", users: 20, partners: 15 },
-    { name: "Mar", users: 35, partners: 25 },
-    { name: "Apr", users: 45, partners: 35 },
-    { name: "May", users: 180, partners: 140 },
-    { name: "Jun", users: 200, partners: 160 },
-    { name: "Jul", users: 190, partners: 150 },
-    { name: "Aug", users: 160, partners: 130 },
-    { name: "Sep", users: 140, partners: 110 },
-    { name: "Oct", users: 120, partners: 95 },
-    { name: "Nov", users: 100, partners: 80 },
-    { name: "Dec", users: 85, partners: 70 },
-  ];
+  // Generate year options (current year and previous 4-5 years)
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [];
+  for (let i = 0; i < 5; i++) {
+    yearOptions.push((currentYear - i).toString());
+  }
 
-  const data = chartData.length > 0 ? chartData : defaultData;
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  const [selectedPartnerYear, setSelectedPartnerYear] = useState(currentYear.toString());
+  
+  // Fetch data from API
+  const { data: apiData, isLoading, error } = useGetPaymentUserAnalysisQuery(selectedYear);
+  
+  // Transform API data for charts
+  const transformedData = apiData?.data?.userMonthsData?.map(item => ({
+    name: item.month.substring(0, 3), // Convert "January" to "Jan"
+    users: item.userCount,
+    partners: item.partnerCount
+  })) || [];
+  
+  const usersCount = apiData?.data?.totalUsers || 0;
+  const partnersCount = apiData?.data?.totalPartners || 0;
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -49,29 +51,19 @@ const UserAnalytics = ({
     return null;
   };
 
-
-
-  const [selectedPartner, setSelectedPartner] = useState("Today");
   const [isOpenPartner, setIsOpenPartner] = useState(false);
-
-  // dropdown 
-  const options = ["Today", "This Week", "This Month", "This Year"];
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Today");
   
-  const handleSelectPartner = (option) => {
-    setSelectedPartner(option);
-    console.log("Selected:", option);
+  const handleSelectPartner = (year) => {
+    setSelectedYear(year);
     setIsOpenPartner(false);
   }; 
 
 
-    const handleSelect = (option) => {
-    setSelected(option);
-    console.log("Selected:", option);
+  const handleSelect = (year) => {
+    setSelectedPartnerYear(year);
     setIsOpen(false);
   }; 
-
 
 
   return (
@@ -93,34 +85,33 @@ const UserAnalytics = ({
               </div>
             </div>
 
-
             {/* dropdown  */}
 
             <div className="relative inline-block text-left">
-      {/* Trigger */}
-      <div
-        onClick={() => setIsOpenPartner(!isOpenPartner)}
-        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
-      >
-        {selectedPartner}
-        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
-      </div>
+              {/* Trigger */}
+              <div
+                onClick={() => setIsOpenPartner(!isOpenPartner)}
+                className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+              >
+                {selectedYear}
+                <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+              </div>
 
-      {/* Dropdown Options */}
-      {isOpenPartner && (
-        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
-          {options.map((option) => (
-            <div
-              key={option}
-              onClick={() => handleSelectPartner(option)}
-              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-            >
-              {option}
+              {/* Dropdown Options */}
+              {isOpenPartner && (
+                <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+                  {yearOptions.map((year) => (
+                    <div
+                      key={year}
+                      onClick={() => handleSelectPartner(year)}
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {year}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-    </div>
           </div>
 
           {/* Stats */}
@@ -129,10 +120,10 @@ const UserAnalytics = ({
               <p className="text-2xl font-bold text-gray-800">
                 {usersCount.toLocaleString()}
               </p>
-              <div className="flex items-center text-green-600 text-sm">
+              {/* <div className="flex items-center text-green-600 text-sm">
                 <TrendingUp className="w-4 h-4 mr-1" />
                 <span>12.5%</span>
-              </div>
+              </div> */}
             </div>
             <p className="text-xs text-gray-500 mt-1">Total active users</p>
           </div>
@@ -141,7 +132,7 @@ const UserAnalytics = ({
           <div className="h-48 px-6 pb-6">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
-                data={data}
+                data={transformedData}
                 margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
               >
                 <defs>
@@ -196,36 +187,33 @@ const UserAnalytics = ({
               </div>
             </div>
 
-
             {/* Dropdown  */}
 
-<div className="relative inline-block text-left">
-      {/* Trigger */}
-      <div
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
-      >
-        {selected}
-        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
-      </div>
+            <div className="relative inline-block text-left">
+              {/* Trigger */}
+              <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+              >
+                {selectedPartnerYear}
+                <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+              </div>
 
-      {/* Dropdown Options */}
-      {isOpen && (
-        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
-          {options.map((option) => (
-            <div
-              key={option}
-              onClick={() => handleSelect(option)}
-              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-            >
-              {option}
+              {/* Dropdown Options */}
+              {isOpen && (
+                <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+                  {yearOptions.map((year) => (
+                    <div
+                      key={year}
+                      onClick={() => handleSelect(year)}
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {year}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-    </div>
-
-
           </div>
 
           {/* Stats */}
@@ -234,10 +222,10 @@ const UserAnalytics = ({
               <p className="text-2xl font-bold text-gray-800">
                 {partnersCount.toLocaleString()}
               </p>
-              <div className="flex items-center text-green-600 text-sm">
+              {/* <div className="flex items-center text-green-600 text-sm">
                 <TrendingUp className="w-4 h-4 mr-1" />
                 <span>8.2%</span>
-              </div>
+              </div> */}
             </div>
             <p className="text-xs text-gray-500 mt-1">Total active partners</p>
           </div>
@@ -246,7 +234,7 @@ const UserAnalytics = ({
           <div className="h-48 px-6 pb-6">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
-                data={data}
+                data={transformedData}
                 margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
               >
                 <defs>
@@ -292,10 +280,6 @@ const UserAnalytics = ({
 };
 
 UserAnalytics.defaultProps = {
-  chartData: [],
-  peakValue: 200.3,
-  partnersCount: 1009123,
-  usersCount: 1009123,
   title: "User Analytics",
   subtitle: "User Growth",
 };

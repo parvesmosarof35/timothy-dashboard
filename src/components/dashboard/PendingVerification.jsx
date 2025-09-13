@@ -2,11 +2,12 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { FaArrowRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { Spin } from "antd";
 
-const PendingVerification = () => {
+const PendingVerification = ( {isLoading, overviewData}) => {
   const navigate = useNavigate();
-  const total = 2420;
-  const pending = 968;
+  const total = overviewData?.data?.totalPartners || 0;
+  const pending = overviewData?.data?.totalPendingPartners || 0;
   const completed = total - pending;
 
   const data = [
@@ -15,6 +16,14 @@ const PendingVerification = () => {
   ];
 
   const COLORS = ["#FF9900", "#FFCC66"]; // Adjusted to match the reference image
+
+  if (isLoading || !overviewData?.data) {
+    return (
+      <div className="bg-white shadow-lg border rounded-xl p-6 w-full max-w-lg mx-auto h-[22rem] md:h-[24rem] flex items-center justify-center">
+        <Spin size="large" tip="Loading verification data..." />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white shadow-lg border rounded-xl p-6  w-full max-w-lg mx-auto h-[22rem] md:h-[24rem]">
@@ -26,7 +35,7 @@ const PendingVerification = () => {
             Pending Verification
           </h2>
             <p className="text-xl semibold  text-darkGray mb-1">
-            Total
+            Total (partners)
           </p>
           <p className="text-3xl font-bold text-darkGray mb-4">
             {total.toLocaleString()}

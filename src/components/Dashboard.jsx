@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useGetOverviewQuery } from "../redux/api/statistics/getOverviewApi";
+import { Spin } from "antd";
 // import OverviewCard from "./dashboard/OverviewCard";
 // import PaymentChart from "@/components/dashboard/PaymentChart";
 // import PendingVerification from "@/components/dashboard/PendingVerification";
@@ -15,6 +17,17 @@ import ContractManagement from "./dashboard/CircularProgress";
 import CommAndverification from "../pages/dashboard/CommunicationAndVerify/CommAndverification";
 
 const Dashboard = () => {
+  const { data: overviewData, error, isLoading } = useGetOverviewQuery();
+
+  useEffect(() => {
+    if (overviewData) {
+      // console.log('Statistics Overview Data:', overviewData);
+    }
+    if (error) {
+      console.error('Error fetching statistics:', error);
+    }
+  }, [overviewData, error]);
+
   return (
     <div className="md:px-6 px-1 bg-grayLightBg min-h-screen font-sans">
       <h1 className="text-2xl font-semibold mb-6 text-darkGray">Overview</h1>
@@ -22,18 +35,30 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-6">
         <div className="col-span-1 md:col-span-10 rounded-lg space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <OverviewCard title="Total Users" value="2,420" trend="↑ 20%" />
+            <OverviewCard 
+              title="Total Users" 
+              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalUsers} 
+              trend="↑ 20%" 
+            />
             <OverviewCard
               title="Total Service Providers"
-              value="2,420"
+              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalPartners}
               trend="↑ 20%"
             />
-            <OverviewCard title="Active Contracts" value="1,209" trend="↓ 5%" />
-            <OverviewCard title="Admin Earnings" value="1,209" trend="↑ 5%" />
+            <OverviewCard 
+              title="Total Contracts" 
+              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalContracts} 
+              trend="↓ 5%" 
+            />
+            <OverviewCard 
+              title="Admin Earnings" 
+              value={isLoading ? <Spin size="small" /> : `$${overviewData?.data?.adminEarnings}`} 
+              trend="↑ 5%" 
+            />
           </div>
 
           
-            <CommAndverification></CommAndverification>
+            <CommAndverification isLoading={isLoading} overviewData={overviewData}></CommAndverification>
 
           {/* payment and verification section */}
           <div className="w-full grid grid-cols-6 gap-6">

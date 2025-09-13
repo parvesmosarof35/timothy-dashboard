@@ -6,6 +6,7 @@ import { Table } from "antd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const UsersTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,11 +20,14 @@ const UsersTable = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
+  
+  // Debounce search term with 500ms delay
+  const debouncedSearchTerms = useDebounce(searchTerms, 500);
 
   // Auto filter trigger
   useEffect(() => {
     handleSelect();
-  }, [selectedTime, selectedCountry, searchTerms]);
+  }, [selectedTime, selectedCountry, debouncedSearchTerms]);
 
   // Fetch users when page changes or component mounts
   useEffect(() => {
@@ -31,12 +35,12 @@ const UsersTable = () => {
       getAllUsers({
         page: currentPage,
         limit: usersPerPage,
-        search: searchTerms,
-        time: selectedTime,
+        searchTerm: debouncedSearchTerms,
+        timeRange: selectedTime,
         country: selectedCountry,
       })
     );
-  }, [currentPage, selectedTime, selectedCountry, searchTerms]);
+  }, [currentPage, selectedTime, selectedCountry, debouncedSearchTerms]);
 
   const handleSelect = () => {
     // Reset to first page when filters change
@@ -98,10 +102,9 @@ const UsersTable = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
             <option value="">All Time</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
+            <option value="THIS_WEEK">This Week</option>
+            <option value="THIS_MONTH">This Month</option>
+            <option value="THIS_YEAR">This Year</option>
           </select>
 
           {/* Country Filter */}
@@ -111,12 +114,12 @@ const UsersTable = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
             <option value="">All Countries</option>
-            <option value="us">United States</option>
-            <option value="uk">United Kingdom</option>
-            <option value="ae">United Arab Emirates</option>
-            <option value="pt">Portugal</option>
-            <option value="fr">France</option>
-            <option value="es">Spain</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
           </select>
 
           {/* Search Input */}

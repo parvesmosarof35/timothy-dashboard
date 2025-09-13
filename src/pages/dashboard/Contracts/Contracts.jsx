@@ -231,6 +231,7 @@ const Contracts = () => {
                 onChange={(e) => setSelectedTime(e.target.value)}
                 className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
               >
+                
                 <option value="today">Today</option>
                 <option value="week">This Week</option>
                 <option value="month">This Month</option>

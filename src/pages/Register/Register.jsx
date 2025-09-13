@@ -52,7 +52,9 @@ const handleRegister = (e) => {
   console.log("Registration attempt:", { name, email, password });
   const role = "ADMIN";
   let fullName = name;
-  dispatch(createUser({ email, password, role, fullName }));
+  let status = "INACTIVE";
+  // Dispatch the createUser action
+  dispatch(createUser({ email, password, role, fullName, status }));
 };
 
 

@@ -18,7 +18,6 @@ import UserDetails from "../pages/dashboard/UserDetails";
 import SettingsTab from "../pages/dashboard/SettingsTab/SettingsTabs";
 import AprouvePartners from "../pages/dashboard/ApprovePartners/AprouvePartners";
 import SendReport from "../pages/SendReport/SendReport";
-import Notification from "../pages/dashboard/Notification/notification";
 import NewContractDetails from "../pages/dashboard/NewcontractDetails/NewContractDetails";
 import ProfileSettings from "../components/ProfileSetting";
 import ApprovePartnerDetails from "../pages/dashboard/ApprovePartners/ApprovePartnerDetails";
@@ -26,6 +25,10 @@ import RoleDetails from "../pages/dashboard/Role/RoleDetails";
 import FinancialPaymentDetails from "../pages/dashboard/FinancialPayments/FinancialPaymentDetails";
 import RoleDetailsReadOnly from "../pages/dashboard/Role/RoleDetailsReadOnly";
 import AllMessage from "../pages/dashboard/AllMessage/AllMessage";
+import Notification from "../pages/dashboard/Notification/Notification";
+import TermsAndConditions from "../components/TermsAndConditions";
+import PrivacyPolicy from "../components/PrivacyPolicy";
+import PromoCodesManagement from "../components/PromoCodesManagement";
 
 
 const router = createBrowserRouter([
@@ -71,7 +74,9 @@ const router = createBrowserRouter([
     // { path: 'send-report', element: <SendReport></SendReport> },
     { path: 'send-report', element: <SendReport></SendReport> },
     { path: 'notification', element: <Notification></Notification> },
-  //   { path: 'settings/terms', element: <TermsPage /> },
+    { path: 'terms-conditions', element: <TermsAndConditions></TermsAndConditions> },
+    { path: 'privacy-policy', element: <PrivacyPolicy></PrivacyPolicy> },
+    { path: 'promo-codes', element: <PromoCodesManagement></PromoCodesManagement> },
   //   { path: 'settings/privacy', element: <Privacypage /> },
    ]
 }

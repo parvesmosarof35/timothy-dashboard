@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Table } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllPartners } from "../../../redux/features/user/getPartnersSlice";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const ServiceProvider = () => {
   const navigate = useNavigate();
@@ -14,6 +15,9 @@ const ServiceProvider = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search term with 500ms delay
+  const debouncedSearchTerms = useDebounce(searchTerms, 500);
 
   const { users, total, loading } = useSelector((state) => state.getAllPartners);
 
@@ -25,17 +29,17 @@ const ServiceProvider = () => {
       getAllPartners({
         page: currentPage,
         limit: usersPerPage,
-        search: searchTerms,
-        time: selectedTime,
+        searchTerm: debouncedSearchTerms,
+        timeRange: selectedTime,
         country: selectedCountry,
       })
     );
-  }, [currentPage, selectedTime, selectedCountry, searchTerms]);
+  }, [currentPage, selectedTime, selectedCountry, debouncedSearchTerms]);
 
   // Trigger re-fetch on filters
   useEffect(() => {
     setCurrentPage(1); // Reset page
-  }, [selectedTime, selectedCountry, searchTerms]);
+  }, [selectedTime, selectedCountry, debouncedSearchTerms]);
 
   // Transform API data to table-friendly format
   const tableData = Array.isArray(users?.data)
@@ -72,7 +76,6 @@ const ServiceProvider = () => {
     { title: "Status", dataIndex: "status", key: "status" },
     { title: "Level", dataIndex: "level", key: "level" },
     { title: "Role", dataIndex: "role", key: "role" },
-    { title: "Earnings", dataIndex: "earnings", key: "earnings" },
     {
       title: "Actions",
       key: "actions",
@@ -103,10 +106,9 @@ const ServiceProvider = () => {
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
             >
               <option value="">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-              <option value="year">This Year</option>
+              <option value="THIS_WEEK">This Week</option>
+              <option value="THIS_MONTH">This Month</option>
+              <option value="THIS_YEAR">This Year</option>
             </select>
 
             <select
@@ -115,12 +117,12 @@ const ServiceProvider = () => {
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
             >
               <option value="">All Countries</option>
-              <option value="us">United States</option>
-              <option value="uk">United Kingdom</option>
-              <option value="ae">United Arab Emirates</option>
-              <option value="pt">Portugal</option>
-              <option value="fr">France</option>
-              <option value="es">Spain</option>
+              <option value="United States">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="Portugal">Portugal</option>
+              <option value="France">France</option>
+              <option value="Spain">Spain</option>
             </select>
 
             <input

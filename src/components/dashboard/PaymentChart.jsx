@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   LineChart,
   Line,
@@ -9,28 +9,9 @@ import {
   ResponsiveContainer,
   Area,
 } from "recharts";
+import { IoIosArrowDown } from "react-icons/io";
+import { useGetPaymentUserAnalysisQuery } from "../../redux/api/statistics/paymentAndUserAnalisys";
 
-// Chart data
-const data = [
-  { name: "Jan", payments: 4000 },
-  { name: "Feb", payments: 3000 },
-  { name: "Mar", payments: 2000 },
-  { name: "Apr", payments: 2780 },
-  { name: "May", payments: 1890 },
-  { name: "Jun", payments: 2390 },
-  { name: "Jul", payments: 3490 },
-  { name: "Aug", payments: 4000 },
-  { name: "Sep", payments: 3000 },
-  { name: "Oct", payments: 2000 },
-  { name: "Nov", payments: 2780 },
-  { name: "Dec", payments: 1890 },
-];
-
-// Shadow line
-const shadowData = data.map(item => ({
-  ...item,
-  payments: item.payments - 100,
-}));
 
 // Custom tooltip
 const CustomTooltip = ({ active, payload, coordinate }) => {
@@ -78,10 +59,66 @@ const CustomTooltip = ({ active, payload, coordinate }) => {
 
 // Chart component
 const PaymentChart = () => {
+  // Generate year options (current year and previous 4-5 years)
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [];
+  for (let i = 0; i < 5; i++) {
+    yearOptions.push((currentYear - i).toString());
+  }
+
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  const [isOpen, setIsOpen] = useState(false);
+  
+  // Fetch data from API
+  const { data: apiData, isLoading, error } = useGetPaymentUserAnalysisQuery(selectedYear);
+  
+  // Transform API data for chart
+  const data = apiData?.data?.paymentMonthsData?.map(item => ({
+    name: item.month.substring(0, 3), // Convert "January" to "Jan"
+    payments: item.totalAmount
+  })) || [];
+
+  // Shadow line
+  const shadowData = data.map(item => ({
+    ...item,
+    payments: item.payments - 100,
+  }));
+
+  const handleSelect = (year) => {
+    setSelectedYear(year);
+    setIsOpen(false);
+  };
+
 return (
   <div className=" col-span-6">
-    <h1 className="text-2xl font-semibold mb-6 text-darkGray">Payment</h1>
+    <div className="flex justify-between items-center mb-6">
+      <h1 className="text-2xl font-semibold text-darkGray">Payment</h1>
+      
+      {/* Year Filter Dropdown */}
+      <div className="relative inline-block text-left">
+        <div
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+        >
+          {selectedYear}
+          <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+        </div>
 
+        {isOpen && (
+          <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg right-0">
+            {yearOptions.map((year) => (
+              <div
+                key={year}
+                onClick={() => handleSelect(year)}
+                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+              >
+                {year}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
 
   <div className="rounded-lg col-span-4 p-12 bg-white shadow">
 

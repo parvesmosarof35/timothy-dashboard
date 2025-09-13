@@ -12,21 +12,8 @@ import {
 import { TrendingUp, TrendingDown, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { useGetFinancialMetricsQuery } from "../../redux/api/statistics/getOverviewApi";
 
-const data = [
-  { name: "Jan", partners: 28, users: 10 },
-  { name: "Feb", partners: 36, users: 22 },
-  { name: "Mar", partners: 32, users: 24 },
-  { name: "Apr", partners: 30, users: 15 },
-  { name: "May", partners: 38, users: 18 },
-  { name: "Jun", partners: 49, users: 39 },
-  { name: "Jul", partners: 39, users: 50 },
-  { name: "Aug", partners: 26, users: 48 },
-  { name: "Sep", partners: 14, users: 38 },
-  { name: "Oct", partners: 27, users: 44 },
-  { name: "Nov", partners: 29, users: 32 },
-  { name: "Dec", partners: 48, users: 30 },
-];
 
 const MetricCard = ({ title, value, trend, icon: Icon, trendColor }) => (
   <div className="bg-white flex-row-reverse p-2 md:p-6 rounded-lg flex items-center justify-start gap-2">
@@ -63,17 +50,31 @@ const LegendItem = ({ color, label }) => (
 
 
 const FinancialDashboard = () => {
+  // Generate year options (current year and previous 4-5 years)
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [];
+  for (let i = 0; i < 5; i++) {
+    yearOptions.push((currentYear - i).toString());
+  }
 
-
-  
-// dropdown 
-  const options = ["Today", "This Week", "This Month", "This Year"];
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Today");
+  
+  // Fetch data from API
+  const { data: apiData, isLoading, error } = useGetFinancialMetricsQuery();
+  
+  // Transform API data for chart
+  const data = apiData?.data?.paymentMonthsData?.map(item => ({
+    name: item.month.substring(0, 3), // Convert "January" to "Jan"
+    adminEarnings: item.adminEarnings / 1000, // Convert to thousands for better display
+    serviceEarnings: item.serviceEarnings / 1000
+  })) || [];
+  
+  const adminEarnings = apiData?.data?.adminEarnings || 0;
+  const serviceEarnings = apiData?.data?.serviceEarnings || 0;
 
-  const handleSelect = (option) => {
-    setSelected(option);
-    console.log("Selected:", option);
+  const handleSelect = (year) => {
+    setSelectedYear(year);
     setIsOpen(false);
   };
 
@@ -93,8 +94,8 @@ const FinancialDashboard = () => {
           </h2>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">
-              <LegendItem color="#c3720b" label="Partners" />
-              <LegendItem color="#FFC983" label="Users" />
+              <LegendItem color="#c3720b" label="Admin Earnings" />
+              <LegendItem color="#FFC983" label="Service Earnings" />
             </div>
 
 
@@ -106,20 +107,20 @@ const FinancialDashboard = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
       >
-        {selected}
+        {selectedYear}
         <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
       </div>
 
       {/* Dropdown Options */}
       {isOpen && (
         <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
-          {options.map((option) => (
+          {yearOptions.map((year) => (
             <div
-              key={option}
-              onClick={() => handleSelect(option)}
+              key={year}
+              onClick={() => handleSelect(year)}
               className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
             >
-              {option}
+              {year}
             </div>
           ))}
         </div>
@@ -131,15 +132,15 @@ const FinancialDashboard = () => {
         {/* Metric Cards */}
         <div className="flex mb-8 justify-start gap-2">
           <MetricCard
-            title="Admin"
-            value={1009123}
+            title="Admin Earnings"
+            value={adminEarnings}
             trend="up"
             icon={TrendingUp}
             trendColor="green"
           />
           <MetricCard
-            title="Partners"
-            value={1009123}
+            title="Service Earnings"
+            value={serviceEarnings}
             trend="up"
             icon={TrendingUp}
             trendColor="green"
@@ -190,7 +191,7 @@ const FinancialDashboard = () => {
               />
               <Line
                 type="monotone"
-                dataKey="partners"
+                dataKey="adminEarnings"
                 stroke="#c3720b"
                 strokeWidth={3}
                 dot={{ fill: "#c3720b", strokeWidth: 0, r: 4 }}
@@ -203,7 +204,7 @@ const FinancialDashboard = () => {
               />
               <Line
                 type="monotone"
-                dataKey="users"
+                dataKey="serviceEarnings"
                 stroke="#FFC983"
                 strokeWidth={3}
                 dot={{ fill: "#FFC983", strokeWidth: 0, r: 4 }}

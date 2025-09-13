@@ -1,116 +1,70 @@
 import { useState } from "react";
-import {
-  MoreHorizontal,
-} from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useEffect } from "react";
-import { Pagination, Table } from "antd";
+import { Table } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useGetFinancesQuery } from "../../../redux/api/finances/financesApi";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const FinancialPayments = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+  const [pageSize] = useState(10);
   const navigate = useNavigate();
 
-  // Mock data for payments
-  const payments = [
-    {
-      id: "198184926223",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-    {
-      id: "1981849262",
-      description:
-        "Lorem ipsum dolor sit amet consectetur. Vestibulum mauris est in commodo.",
-      paymentType: "Incoming",
-      date: "12 Dec 2023",
-      user: "John Doe",
-      partner: "Sureman",
-      orderId: "84984948494",
-      status: "Active",
-      amount: "$260",
-    },
-  ];
+  // Debounce search term with 500ms delay
+  const debouncedSearchTerms = useDebounce(searchTerms, 500);
+
+  // API call with dynamic parameters
+  const {
+    data: financesData,
+    isLoading,
+    error,
+  } = useGetFinancesQuery({
+    searchTerm: debouncedSearchTerms,
+    timeRange: selectedTime,
+    limit: pageSize,
+    page: currentPage,
+  });
+
+  const payments = financesData?.data?.data || [];
+  const totalRecords = financesData?.data?.meta?.total || 0;
+
+  // Helper functions
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatAmount = (amount, currency) => {
+    const currencySymbols = {
+      usd: "$",
+      ngn: "₦",
+      eur: "€",
+      gbp: "£",
+    };
+    const symbol = currencySymbols[currency?.toLowerCase()] || "$";
+    return `${symbol}${(amount / 100).toLocaleString()}`;
+  };
+
+  const getStatusColor = (status) => {
+    switch (status?.toUpperCase()) {
+      case "PAID":
+        return "text-green-600 bg-green-100";
+      case "REFUNDED":
+        return "text-red-600 bg-red-100";
+      case "PENDING":
+        return "text-yellow-600 bg-yellow-100";
+      default:
+        return "text-gray-600 bg-gray-100";
+    }
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -143,59 +97,85 @@ const FinancialPayments = () => {
     return pages;
   };
 
-  const [selectedTime, setSelectedTime] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [searchTerms, setSearchTerms] = useState("");
-  const [pageSize] = useState(5);
-
   // Auto filter trigger
   useEffect(() => {
     handleSelect();
-  }, [selectedTime, selectedCountry, searchTerms]);
+  }, [selectedTime, selectedCountry, debouncedSearchTerms]);
 
   const handleSelect = () => {
-    console.log("Filter Applied:", {
-      time: selectedTime,
-      country: selectedCountry,
-      search: searchTerms,
-    });
+    // Reset to first page when filters change
+    setCurrentPage(1);
   };
 
   const columns = [
     {
-      title: "ID",
+      title: "Transaction ID",
       dataIndex: "id",
       key: "id",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      render: (text) => <span className="text-brandGray">{text}</span>,
-    },
-    {
-      title: "Payment Type",
-      dataIndex: "paymentType",
-      key: "paymentType",
-      render: (type) => (
-        <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
-          <span className="w-2 h-2 bg-brandGreen rounded-full"></span>
-          {type}
+      render: (id) => (
+        <span className="text-sm font-mono text-gray-600">
+          {id?.slice(-8) || "N/A"}
         </span>
       ),
     },
-    { title: "Date", dataIndex: "date", key: "date" },
-    { title: "User", dataIndex: "user", key: "user" },
-    { title: "Partner", dataIndex: "partner", key: "partner" },
-    { title: "Order ID", dataIndex: "orderId", key: "orderId" },
+    {
+      title: "Email",
+      dataIndex: "payable_email",
+      key: "payable_email",
+      render: (email) => (
+        <span className="text-sm text-gray-700">{email || "N/A"}</span>
+      ),
+    },
+    {
+      title: "Service Type",
+      dataIndex: "serviceType",
+      key: "serviceType",
+      render: (type) => (
+        <span className="inline-flex items-center gap-1 text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+          {type || "N/A"}
+        </span>
+      ),
+    },
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (date) => (
+        <span className="text-sm text-gray-600">{formatDate(date)}</span>
+      ),
+    },
+    {
+      title: "Payment Method",
+      dataIndex: "paymentMethod",
+      key: "paymentMethod",
+      render: (method) => (
+        <span className="text-sm capitalize text-gray-700">
+          {method || "N/A"}
+        </span>
+      ),
+    },
+    {
+      title: "Provider",
+      dataIndex: "provider",
+      key: "provider",
+      render: (provider) => (
+        <span className="text-sm font-medium text-purple-600">
+          {provider || "N/A"}
+        </span>
+      ),
+    },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       render: (status) => (
-        <span className="inline-flex items-center gap-1 text-sm text-brandGreen">
-          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-          {status}
+        <span
+          className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full ${getStatusColor(
+            status
+          )}`}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+          {status || "N/A"}
         </span>
       ),
     },
@@ -203,110 +183,115 @@ const FinancialPayments = () => {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: (amount) => (
-        <span className="text-sm font-medium text-darkGray">{amount}</span>
+      render: (amount, record) => (
+        <span className="text-sm font-semibold text-gray-800">
+          {formatAmount(amount, record.currency)}
+        </span>
       ),
     },
-   {
-  title: "Action",
-  key: "action",
-  render: (_, record) => (
-    <button
-      onClick={() => {
-        navigate(`details/${record.id}`);
-      }}
-      className="text-brandGray hover:text-brandGray"
-    >
-      <MoreHorizontal className="w-5 h-5" />
-    </button>
-  ),
-},
-
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <button
+          onClick={() => {
+            navigate(`details/${record.id}`);
+          }}
+          className="text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
+      ),
+    },
   ];
 
   return (
-    <div className="px-0 sm:px-6  bg-grayLightBg min-h-screen font-sans">
+    <div className="px-0 sm:px-6 bg-grayLightBg min-h-screen font-sans">
       <AdminProfile headingText={`Financial Management`}></AdminProfile>
+      
+      <div className="md:p-6 p-2 sm:p-6 bg-grayLightBg md:min-h-screen font-sans w-full">
+        {/* Header + Filters */}
+        <div className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center mb-6">
+          <h2 className="text-xl sm:text-2xl font-semibold">
+            Payments
+          </h2>
 
-      <div className="min-h-screen bg-grayLightBg p-6">
-        <div className=" mx-auto">
-          {/* Header */}
-          <div className="mb-6 flex flex-col md:flex-row md:justify-between gap-4 md:gap-0">
-            <h1 className="text-xl sm:text-2xl font-semibold text-darkGray">
-              Payments
-            </h1>
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+          {/* Time Filter */}
+          <select
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="">All Time</option>
+            <option value="THIS_WEEK">This Week</option>
+            <option value="THIS_MONTH">This Month</option>
+            <option value="THIS_YEAR">This Year</option>
+          </select>
 
-            {/* Filters */}
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full md:w-auto">
-              {/* Time Filter */}
-              <select
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-                className="border w-full sm:w-auto px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
-              </select>
+          {/* Country Filter */}
+          <select
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          >
+            <option value="">All Countries</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
+          </select>
 
-              {/* Country Filter */}
-              <select
-                value={selectedCountry}
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                className="border w-full sm:w-auto px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="" disabled>
-                  Select Country
-                </option>
-                <option value="us">United States</option>
-                <option value="uk">United Kingdom</option>
-                <option value="ae">United Arab Emirates</option>
-                <option value="pt">Portugal</option>
-                <option value="fr">France</option>
-                <option value="es">Spain</option>
-              </select>
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+          />
+        </div>
+      </div>
 
-              {/* Search Input */}
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerms}
-                onChange={(e) => setSearchTerms(e.target.value)}
-                className="border w-full sm:w-auto px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          {/* Filters and Actions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 pb-6">
-            {/* Table */}
-            <div className="overflow-x-scroll overflow-y-hidden w-[20rem] md:w-full mx-auto">
+      {/* Table */}
+      <div className="w-[20rem] md:w-full mx-auto sm:overflow-scroll md:overflow-auto">
+        <div className="w-full flex justify-center">
+          <div className="w-full overflow-x-auto border rounded-lg bg-white">
+            <div className="">
               <Table
                 columns={columns}
-                dataSource={payments.slice(
-                  (currentPage - 1) * pageSize,
-                  currentPage * pageSize
-                )}
-                pagination={false}
+                dataSource={Array.isArray(payments) ? payments : []}
                 rowKey="id"
+                loading={isLoading}
+                scroll={{ x: true }}
+                pagination={{
+                  position: ["bottomCenter"],
+                  current: currentPage,
+                  pageSize: pageSize,
+                  total: totalRecords,
+                  onChange: (page) => setCurrentPage(page),
+                  showSizeChanger: false,
+                }}
+                locale={{
+                  emptyText: (
+                    <div className="py-8">
+                      <div className="text-gray-500 mb-2">
+                        No payments found
+                      </div>
+                      <div className="text-gray-400 text-sm">
+                        Try adjusting your filters
+                      </div>
+                    </div>
+                  ),
+                }}
               />
-
-              <div className="mt-4 text-center">
-                <Pagination
-                  current={currentPage}
-                  total={payments.length}
-                  pageSize={pageSize}
-                  onChange={(page) => setCurrentPage(page)}
-                  showSizeChanger={false}
-                  align="center"
-                />
-              </div>
             </div>
-
-            {/* Pagination */}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

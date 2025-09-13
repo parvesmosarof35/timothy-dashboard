@@ -5,7 +5,7 @@ const OverviewCard = ({ title, value, trend }) => {
       <h3 className="text-brandGray text-sm font-medium">{title}</h3>
       <div className="flex justify-between items-end mt-2">
         <span className="text-2xl font-bold text-darkGray">{value}</span>
-        <span
+        {/* <span
           className={`text-sm ${
             isPositive
               ? "text-brandGreen bg-greenMutedBg p-2 rounded-lg"
@@ -13,7 +13,7 @@ const OverviewCard = ({ title, value, trend }) => {
           }`}
         >
           {trend}
-        </span>
+        </span> */}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { TbUserCog, TbUserHexagon } from "react-icons/tb";
 import { MdOutlinePayments, MdOutlineSupportAgent } from "react-icons/md";
 import { LiaFileContractSolid } from "react-icons/lia";
 import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
+import { FiFileText, FiPercent } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { AuthContext } from "../providers/AuthProvider";
 import { LuUsers } from "react-icons/lu";
@@ -174,6 +175,30 @@ export default function DashboardLayout() {
       </NavLink>
 
       <NavLink
+        to="/dashboard/terms-conditions"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <FiFileText className="text-lg" />
+        Terms & Conditions
+      </NavLink>
+
+      <NavLink
+        to="/dashboard/privacy-policy"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <FiFileText className="text-lg" />
+        Privacy Policy
+      </NavLink>
+
+      <NavLink
+        to="/dashboard/promo-codes"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <FiPercent className="text-lg" />
+        Promo Codes
+      </NavLink>
+
+      <NavLink
         to="/dashboard/settings"
         className={({ isActive }) => linkClass(isActive)}
       >
@@ -214,7 +239,7 @@ export default function DashboardLayout() {
       </button>
 
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex fixed left-0 top-0 w-64 h-screen bg-white shadow-lg flex-col justify-between z-40 z-100 overflow-visible">
+      <aside className="hidden md:flex fixed left-0 top-0 w-64 h-screen bg-white shadow-lg flex-col justify-between z-40 z-100 overflow-visible overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-center mb-4">
             {/* <Link to="/">

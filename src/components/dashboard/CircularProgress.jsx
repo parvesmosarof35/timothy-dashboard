@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown, TrendingUp } from "lucide-react";
+import { IoIosArrowDown } from "react-icons/io";
+import { useGetCancelRefundStatsQuery } from "../../redux/api/statistics/cancelRefundApi";
 
 /* -------- CircularProgress (unchanged) -------- */
 const CircularProgress = ({ percentage, size = 80 }) => {
@@ -47,9 +49,16 @@ const ContractCard = ({
   percentage,
   value,
   growth,
-  defaultFilter = "This Month",
+  selectedYear,
+  onYearChange,
+  yearOptions,
 }) => {
-  const [filter, setFilter] = useState(defaultFilter);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSelect = (year) => {
+    onYearChange(year);
+    setIsOpen(false);
+  };
 
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-200">
@@ -57,19 +66,29 @@ const ContractCard = ({
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-darkGray font-medium text-sm">{title}</h3>
 
-        {/* Filter dropdown */}
-        <div className="relative">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="bg-transparent text-xs text-brandGray pr-4 cursor-pointer appearance-none focus:outline-none"
+        {/* Year Filter dropdown */}
+        <div className="relative inline-block text-left">
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
           >
-            <option value="Today">Today</option>
-            <option value="This Week">This Week</option>
-            <option value="This Month">This Month</option>
-            <option value="This Year">This Year</option>
-          </select>
-          <ChevronDown className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-brandGray" />
+            {selectedYear}
+            <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+          </div>
+
+          {isOpen && (
+            <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg right-0">
+              {yearOptions.map((year) => (
+                <div
+                  key={year}
+                  onClick={() => handleSelect(year)}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                >
+                  {year}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -93,39 +112,71 @@ const ContractCard = ({
 };
 
 /* -------- Page component -------- */
-const ContractManagement = () => (
-  <div className="bg-grayLightBg">
-    <h1 className="text-2xl font-semibold text-darkGray mb-6">
-      Contract Management
-    </h1>
+const ContractManagement = () => {
+  // Generate year options (current year and previous 4-5 years)
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [];
+  for (let i = 0; i < 5; i++) {
+    yearOptions.push((currentYear - i).toString());
+  }
 
-    <div className="bg-white rounded-2xl p-6 shadow-sm">
-      <h2 className="text-brandGray font-medium mb-6">Contract Status</h2>
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  
+  // Fetch data from API
+  const { data: apiData, isLoading, error } = useGetCancelRefundStatsQuery(selectedYear);
+  
+  const totalContracts = apiData?.data?.totalContracts || 0;
+  const totalPending = apiData?.data?.totalPending || 0;
+  const totalConfirmed = apiData?.data?.totalConfirmed || 0;
+  const pendingRate = apiData?.data?.pendingRate || 0;
+  const confirmedRate = apiData?.data?.confirmedRate || 0;
+  const cancelRate = apiData?.data?.cancelRate || 0;
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ContractCard
-          title="Active Contracts"
-          percentage={81}
-          value={2420}
-          growth="20%"
-        />
-        <ContractCard
-          title="Completed"
-          percentage={61}
-          value={1280}
-          growth="12%"
-          defaultFilter="This Week"
-        />
-        <ContractCard
-          title="Pending"
-          percentage={43}
-          value={350}
-          growth="8%"
-          defaultFilter="Today"
-        />
+  const handleYearChange = (year) => {
+    setSelectedYear(year);
+  };
+
+  return (
+    <div className="bg-grayLightBg">
+      <h1 className="text-2xl font-semibold text-darkGray mb-6">
+        Contract Management
+      </h1>
+
+      <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <h2 className="text-brandGray font-medium mb-6">Contract Status</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <ContractCard
+            title="Total Contracts"
+            percentage={100}
+            value={totalContracts}
+            growth={`${totalContracts > 0 ? '+' : ''}${totalContracts}`}
+            selectedYear={selectedYear}
+            onYearChange={handleYearChange}
+            yearOptions={yearOptions}
+          />
+          <ContractCard
+            title="Confirmed"
+            percentage={Math.round(confirmedRate)}
+            value={totalConfirmed}
+            growth={`${confirmedRate.toFixed(1)}%`}
+            selectedYear={selectedYear}
+            onYearChange={handleYearChange}
+            yearOptions={yearOptions}
+          />
+          <ContractCard
+            title="Pending"
+            percentage={Math.round(pendingRate)}
+            value={totalPending}
+            growth={`${pendingRate.toFixed(1)}%`}
+            selectedYear={selectedYear}
+            onYearChange={handleYearChange}
+            yearOptions={yearOptions}
+          />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default ContractManagement;
