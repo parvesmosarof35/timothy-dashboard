@@ -19,149 +19,92 @@ import {
 import AdminProfile from "../components/AdminProfile";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  useGetApprovedPartnersQuery,
+  useUpdatePartnerStatusActiveMutation,
+  useUpdatePartnerStatusRejectMutation
+} from "../../../redux/api/userApi";
 
 const { Search } = Input;
 
 const ApprovePartners = () => {
   const [searchTerm, setSearchTerm] = useState("");
-   const navigate = useNavigate();
-  const [partners, setPartners] = useState([
-    {
-      id: "1981849262",
-      name: "John Doe",
-      appliedDate: "12 Dec 2023",
-      role: "Business Partner",
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849263",
-      name: "Jane Smith",
-      appliedDate: "15 Dec 2023",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849264",
-      name: "Robert Johnson",
-      appliedDate: "18 Dec 2023",
-      role: "Business Partner",
-      image: "https://randomuser.me/api/portraits/men/65.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849265",
-      name: "Alice Brown",
-      appliedDate: "20 Dec 2023",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/55.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849266",
-      name: "Michael Lee",
-      appliedDate: "22 Dec 2023",
-      role: "Business Partner",
-      image: "https://randomuser.me/api/portraits/men/72.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849267",
-      name: "Sarah Wilson",
-      appliedDate: "25 Dec 2023",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/32.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849268",
-      name: "David Martinez",
-      appliedDate: "28 Dec 2023",
-      role: "Business Partner",
-      image: "https://randomuser.me/api/portraits/men/45.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849269",
-      name: "Emily Davis",
-      appliedDate: "30 Dec 2023",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/28.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849270",
-      name: "Chris Anderson",
-      appliedDate: "02 Jan 2024",
-      role: "Business Partner",
-      image: "https://randomuser.me/api/portraits/men/56.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981849271",
-      name: "Lisa Taylor",
-      appliedDate: "05 Jan 2024",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/41.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "198231849271",
-      name: "Lisa Taylor",
-      appliedDate: "05 Jan 2024",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/41.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-    {
-      id: "1981823449271",
-      name: "Lisa Taylor",
-      appliedDate: "05 Jan 2024",
-      role: "Service Provider",
-      image: "https://randomuser.me/api/portraits/women/41.jpg",
-      email: "asdf@asdf.com",
-      status: "pending",
-    },
-  ]);
+  const navigate = useNavigate();
+  
+  // Filter states
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+  
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  
+  // API hooks
+  const { data: partnersData, isLoading, error, refetch } = useGetApprovedPartnersQuery({
+    page: pagination.current,
+    limit: pagination.pageSize,
+    search: searchTerms,
+    country: selectedCountry,
+    time: selectedTime,
+  });
+  
+  const [updatePartnerStatusActive, { isLoading: isApproving }] = useUpdatePartnerStatusActiveMutation();
+  const [updatePartnerStatusReject, { isLoading: isRejecting }] = useUpdatePartnerStatusRejectMutation();
+  
+  const partners = partnersData?.data?.data || [];
+  const meta = partnersData?.data?.meta || {};
+  
+  // Update pagination total when data changes
+  useEffect(() => {
+    if (meta.total) {
+      setPagination(prev => ({
+        ...prev,
+        total: meta.total
+      }));
+    }
+  }, [meta.total]);
 
-  const handleApprove = (partnerId, partnerName) => {
-    setPartners(
-      partners.map((partner) =>
-        partner.id === partnerId ? { ...partner, status: "approved" } : partner
-      )
-    );
-    message.success(`${partnerName} has been approved as a business partner!`);
+
+  const handleApprove = async (partnerId, partnerName) => {
+    try {
+      const response = await updatePartnerStatusActive(partnerId);
+      
+      if (response.data?.success) {
+        message.success(response.data.message || `${partnerName} has been approved as a business partner!`);
+        refetch();
+      } else {
+        const errorMessage = response.error?.data?.message || response.data?.message || 'Failed to approve partner';
+        message.error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to approve partner';
+      message.error(errorMessage);
+    }
   };
 
-  const handleReject = (partnerId, partnerName) => {
-    setPartners(
-      partners.map((partner) =>
-        partner.id === partnerId ? { ...partner, status: "rejected" } : partner
-      )
-    );
-    message.error(
-      `${partnerName}'s partnership application has been rejected.`
-    );
+  const handleReject = async (partnerId, partnerName) => {
+    try {
+      const response = await updatePartnerStatusReject(partnerId);
+      
+      if (response.data?.success) {
+        message.success(response.data.message || `${partnerName}'s partnership application has been rejected.`);
+        refetch();
+      } else {
+        const errorMessage = response.error?.data?.message || response.data?.message || 'Failed to reject partner';
+        message.error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to reject partner';
+      message.error(errorMessage);
+    }
   };
 
-  const filteredPartners = partners.filter(
-    (partner) =>
-      partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      partner.id.includes(searchTerm) ||
-      partner.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Remove old filtering logic since API handles filtering
+  const filteredPartners = partners;
 
   const columns = [
     {
@@ -175,12 +118,12 @@ const ApprovePartners = () => {
     },
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "fullName",
+      key: "fullName",
       render: (text, record) => (
         <div className="flex items-center gap-3">
-          <Avatar src={record.image} icon={<UserOutlined />} size={40} />
-          <span className="font-medium text-gray-800">{text}</span>
+          <Avatar src={record.profileImage} icon={<UserOutlined />} size={40} />
+          <span className="font-medium text-gray-800">{text || 'N/A'}</span>
         </div>
       ),
     },
@@ -191,10 +134,24 @@ const ApprovePartners = () => {
       render: (text) => <span className="text-gray-600">{text}</span>,
     },
     {
-      title: "Applied Date",
-      dataIndex: "appliedDate",
-      key: "appliedDate",
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
       render: (text) => <span className="text-gray-600">{text}</span>,
+    },
+    {
+      title: "Applied Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (text) => (
+        <span className="text-gray-600">
+          {new Date(text).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          })}
+        </span>
+      ),
     },
     {
       title: "Role",
@@ -202,7 +159,7 @@ const ApprovePartners = () => {
       key: "role",
       render: (text) => (
         <Tag color="#ffc983" className="border-none text-gray-700 font-medium">
-          {text}
+          {text.replace('_', ' ')}
         </Tag>
       ),
     },
@@ -212,16 +169,16 @@ const ApprovePartners = () => {
       key: "status",
       render: (status) => {
         const statusConfig = {
-          pending: { color: "#ffc983", text: "Pending" },
-          approved: { color: "#52c41a", text: "Approved" },
-          rejected: { color: "#ff4d4f", text: "Rejected" },
+          INACTIVE: { color: "#ffc983", text: "Pending" },
+          ACTIVE: { color: "#52c41a", text: "Active" },
+          REJECTED: { color: "#ff4d4f", text: "Rejected" },
         };
         return (
           <Tag
-            color={statusConfig[status].color}
+            color={statusConfig[status]?.color || "#ffc983"}
             className="border-none font-medium"
           >
-            {statusConfig[status].text}
+            {statusConfig[status]?.text || status}
           </Tag>
         );
       },
@@ -232,12 +189,12 @@ const ApprovePartners = () => {
       width: 200,
       render: (_, record) => (
         <Space size="small">
-          {record.status === "pending" && (
+          {record.status === "INACTIVE" && (
             <>
               <Popconfirm
                 title="Approve Partner"
-                description={`Are you sure you want to approve ${record.name} as a business partner?`}
-                onConfirm={() => handleApprove(record.id, record.name)}
+                description={`Are you sure you want to approve ${record.fullName || record.email} as a business partner?`}
+                onConfirm={() => handleApprove(record.id, record.fullName || record.email)}
                 okText="Yes, Approve"
                 cancelText="Cancel"
                 okButtonProps={{
@@ -250,6 +207,7 @@ const ApprovePartners = () => {
                   size="small"
                   icon={<CheckOutlined />}
                   style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+                  loading={isApproving}
                 >
                   Approve
                 </Button>
@@ -257,8 +215,8 @@ const ApprovePartners = () => {
 
               <Popconfirm
                 title="Reject Partner"
-                description={`Are you sure you want to reject ${record.name}'s partnership application?`}
-                onConfirm={() => handleReject(record.id, record.name)}
+                description={`Are you sure you want to reject ${record.fullName || record.email}'s partnership application?`}
+                onConfirm={() => handleReject(record.id, record.fullName || record.email)}
                 okText="Yes, Reject"
                 cancelText="Cancel"
                 okButtonProps={{
@@ -271,6 +229,7 @@ const ApprovePartners = () => {
                   size="small"
                   danger
                   icon={<CloseOutlined />}
+                  loading={isRejecting}
                 >
                   Reject
                 </Button>
@@ -283,17 +242,17 @@ const ApprovePartners = () => {
             type="default"
             size="small"
             icon={<InfoCircleOutlined />}
-            onClick={() => navigate(`approve-details/${record.id}`)}  // Navigate to details page with the partner id
+            onClick={() => navigate(`approve-details/${record.id}`)}
           >
             Info
           </Button>
 
-          {record.status === "approved" && (
+          {record.status === "ACTIVE" && (
             <Tag color="#52c41a" className="border-none font-medium">
-              <CheckOutlined /> Approved
+              <CheckOutlined /> Active
             </Tag>
           )}
-          {record.status === "rejected" && (
+          {record.status === "REJECTED" && (
             <Tag color="#ff4d4f" className="border-none font-medium">
               <CloseOutlined /> Rejected
             </Tag>
@@ -302,10 +261,6 @@ const ApprovePartners = () => {
       ),
     },
   ];
-
-  const [selectedTime, setSelectedTime] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [searchTerms, setSearchTerms] = useState("");
 
   // Auto filter trigger
   useEffect(() => {
@@ -320,16 +275,12 @@ const ApprovePartners = () => {
     });
   };
 
-  // pegination fucn
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: 0,
-  });
-
-  const handleTableChange = (pagination) => {
-    console.log(pagination);
-    console.log(pagination.current, pagination.pageSize);
+  const handleTableChange = (paginationInfo) => {
+    setPagination({
+      current: paginationInfo.current,
+      pageSize: paginationInfo.pageSize,
+      total: pagination.total,
+    });
   };
 
   return (
@@ -350,6 +301,7 @@ const ApprovePartners = () => {
             onChange={(e) => setSelectedTime(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
+            <option value="">All Time</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
             <option value="month">This Month</option>
@@ -362,15 +314,14 @@ const ApprovePartners = () => {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="" disabled>
-              Select Country
-            </option>
-            <option value="us">United States</option>
-            <option value="uk">United Kingdom</option>
-            <option value="ae">United Arab Emirates</option>
-            <option value="pt">Portugal</option>
-            <option value="fr">France</option>
-            <option value="es">Spain</option>
+            <option value="">All Countries</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
           </select>
 
           {/* Search Input */}
@@ -391,6 +342,7 @@ const ApprovePartners = () => {
             columns={columns}
             dataSource={filteredPartners}
             rowKey="id"
+            loading={isLoading}
             pagination={{
               ...pagination,
               position: ["bottomCenter"],

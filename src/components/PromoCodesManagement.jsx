@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Table, Button, Tag, Modal, Form, Input, Select, DatePicker, InputNumber, message } from "antd";
-import { Plus, Calendar, Percent, DollarSign, Users, Clock } from "lucide-react";
-import { useGetPromoCodesQuery, useCreatePromoCodeMutation } from "../redux/api/promoCodes/promoCodesApi";
+import { Plus, Calendar, Percent, DollarSign, Users, Clock, Trash2 } from "lucide-react";
+import { useGetPromoCodesQuery, useCreatePromoCodeMutation, useDeletePromoCodeMutation } from "../redux/api/promoCodes/promoCodesApi";
 import AdminProfile from "../pages/dashboard/components/AdminProfile";
 import dayjs from "dayjs";
 
@@ -14,6 +14,7 @@ const PromoCodesManagement = () => {
   
   const { data: promoCodesData, isLoading, error, refetch } = useGetPromoCodesQuery();
   const [createPromoCode, { isLoading: isCreating }] = useCreatePromoCodeMutation();
+  const [deletePromoCode, { isLoading: isDeleting }] = useDeletePromoCodeMutation();
 
   const promoCodes = promoCodesData?.data || [];
 
@@ -67,18 +68,47 @@ const PromoCodesManagement = () => {
         minimumAmount: values.minimumAmount * 100, // Convert to cents
       };
 
-      await createPromoCode(promoCodeData).unwrap();
-      message.success('Promo code created successfully!');
-      setIsModalVisible(false);
-      form.resetFields();
-      refetch();
-    } catch (error) {
-      if (error?.data?.message) {
-        message.error(error.data.message);
+      const response = await createPromoCode(promoCodeData);
+      
+      // Check if the response indicates success
+      if (response.data?.success || response.data?.message?.includes('successfully')) {
+        message.success('Promo code created successfully!');
+        setIsModalVisible(false);
+        form.resetFields();
+        refetch();
       } else {
-        message.error('Failed to create promo code. Please try again.');
+        // Handle API error response
+        const errorMessage = response.data?.message || response.error?.data?.message || 'Failed to create promo code. Please try again.';
+        message.error(errorMessage);
       }
+    } catch (error) {
+      // Handle network or other errors
+      const errorMessage = error?.data?.message || error?.message || 'Failed to create promo code. Please try again.';
+      message.error(errorMessage);
     }
+  };
+
+  const handleDeletePromoCode = async (id, code) => {
+    Modal.confirm({
+      title: 'Delete Promo Code',
+      content: `Are you sure you want to delete the promo code "${code}"? This action cannot be undone.`,
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: async () => {
+        try {
+          await deletePromoCode(id).unwrap();
+          message.success('Promo code deleted successfully!');
+          refetch();
+        } catch (error) {
+          if (error?.data?.message) {
+            message.error(error.data.message);
+          } else {
+            message.error('Failed to delete promo code. Please try again.');
+          }
+        }
+      },
+    });
   };
 
   const columns = [
@@ -142,6 +172,25 @@ const PromoCodesManagement = () => {
         </Tag>
       ),
     },
+    {
+      title: "Actions",
+      key: "actions",
+      width: 100,
+      render: (_, record) => (
+        <div className="flex items-center gap-2">
+          <Button
+            type="text"
+            danger
+            size="small"
+            icon={<Trash2 className="w-4 h-4" />}
+            onClick={() => handleDeletePromoCode(record.id, record.code)}
+            loading={isDeleting}
+            className="flex items-center justify-center hover:bg-red-50"
+            title="Delete promo code"
+          />
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -159,7 +208,7 @@ const PromoCodesManagement = () => {
             type="primary"
             icon={<Plus className="w-4 h-4" />}
             onClick={() => setIsModalVisible(true)}
-            className="bg-orangePrimary border-orangePrimary hover:bg-orange-600"
+            className="bg-orangePrimary text-gray-900 border-orangePrimary hover:bg-orange-600"
           >
             Create Promo Code
           </Button>
@@ -241,19 +290,23 @@ const PromoCodesManagement = () => {
               label="Discount Type"
               name="discountType"
               rules={[{ required: true, message: 'Please select discount type' }]}
+              initialValue="PERCENTAGE"
             >
-              <Select placeholder="Select discount type">
+              <Select 
+                placeholder="Select discount type"
+                disabled
+              >
                 <Option value="PERCENTAGE">Percentage (%)</Option>
-                <Option value="FIXED">Fixed Amount ($)</Option>
               </Select>
             </Form.Item>
 
             <Form.Item
-              label="Discount Value"
+              label="Discount Value (%)"
               name="discountValue"
               rules={[
                 { required: true, message: 'Please enter discount value' },
                 { type: 'number', min: 1, message: 'Value must be greater than 0' },
+                { type: 'number', max: 100, message: 'Percentage cannot exceed 100%' },
               ]}
             >
               <InputNumber
@@ -261,6 +314,8 @@ const PromoCodesManagement = () => {
                 className="w-full"
                 min={1}
                 max={100}
+                step={1}
+                precision={0}
               />
             </Form.Item>
           </div>

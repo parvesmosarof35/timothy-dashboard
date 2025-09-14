@@ -30,7 +30,14 @@ export const promoCodesApi = createApi({
       }),
       invalidatesTags: ['PromoCodes'],
     }),
+    deletePromoCode: builder.mutation({
+      query: (id) => ({
+        url: `/promo-codes/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['PromoCodes'],
+    }),
   }),
 });
 
-export const { useGetPromoCodesQuery, useCreatePromoCodeMutation } = promoCodesApi;
+export const { useGetPromoCodesQuery, useCreatePromoCodeMutation, useDeletePromoCodeMutation } = promoCodesApi;

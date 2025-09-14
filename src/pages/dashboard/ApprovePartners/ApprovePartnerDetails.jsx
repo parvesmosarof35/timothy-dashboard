@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Descriptions, Button, message, Row, Col, Avatar, Modal } from "antd";
+import { Card, Descriptions, Button, message, Row, Col, Avatar, Modal, Spin, Alert } from "antd";
 import {
   CheckOutlined,
   CloseOutlined,
@@ -9,9 +9,15 @@ import {
   MailOutlined,
   CalendarOutlined,
   IdcardOutlined,
-  ArrowLeftOutlined
+  ArrowLeftOutlined,
+  EnvironmentOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { 
+  useGetInactivePartnerQuery, 
+  useUpdatePartnerStatusActiveMutation, 
+  useUpdatePartnerStatusRejectMutation 
+} from "../../../redux/api/userApi";
 
 const ApprovePartnerDetails = () => {
   const { id } = useParams();
@@ -19,20 +25,43 @@ const ApprovePartnerDetails = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [modal, modalContextHolder] = Modal.useModal();
   
-  // Mock data - replace with actual API call
-  const partnerDetails = {
-    id: id,
-    registrationNumber: "REG-123456",
-    companyName: "Grand Hotel",
-    businessType: "Hotel",
-    address: "123 Main Street, Cityville",
-    ownerName: "John Doe",
-    phone: "+1 234 567 890",
-    email: "john.doe@grandhotel.com",
-    requestDate: "2023-05-15T10:30:00Z",
-    status: "Pending",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg"
-  };
+  // API hooks
+  const { data: partnerData, isLoading, error } = useGetInactivePartnerQuery(id);
+  const [updatePartnerStatusActive, { isLoading: isApproving }] = useUpdatePartnerStatusActiveMutation();
+  const [updatePartnerStatusReject, { isLoading: isRejecting }] = useUpdatePartnerStatusRejectMutation();
+  
+  const partner = partnerData?.data;
+  
+  if (isLoading) {
+    return (
+      <div style={{ padding: "24px" }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+          <Spin size="large" />
+        </div>
+      </div>
+    );
+  }
+  
+  if (error || !partner) {
+    return (
+      <div style={{ padding: "24px" }}>
+        <Button 
+          type="text" 
+          icon={<ArrowLeftOutlined />} 
+          onClick={() => navigate(-1)}
+          style={{ marginBottom: 16 }}
+        >
+          Back to List
+        </Button>
+        <Alert
+          message="Error"
+          description={error?.data?.message || "Partner not found"}
+          type="error"
+          showIcon
+        />
+      </div>
+    );
+  }
 
   const handleGoBack = () => {
     navigate(-1); // Go back to previous page
@@ -45,10 +74,10 @@ const ApprovePartnerDetails = () => {
         <div>
           <p>Are you sure you want to approve this partner?</p>
           <div style={{ display: 'flex', alignItems: 'center', marginTop: 16 }}>
-            <Avatar src={partnerDetails.avatar} size={64} />
+            <Avatar src={partner.profileImage} size={64} />
             <div style={{ marginLeft: 16 }}>
-              <p><strong>{partnerDetails.ownerName}</strong></p>
-              <p>{partnerDetails.email}</p>
+              <p><strong>{partner.fullName}</strong></p>
+              <p>{partner.email}</p>
             </div>
           </div>
         </div>
@@ -66,10 +95,10 @@ const ApprovePartnerDetails = () => {
         <div>
           <p>Are you sure you want to reject this partner?</p>
           <div style={{ display: 'flex', alignItems: 'center', marginTop: 16 }}>
-            <Avatar src={partnerDetails.avatar} size={64} />
+            <Avatar src={partner.profileImage} size={64} />
             <div style={{ marginLeft: 16 }}>
-              <p><strong>{partnerDetails.ownerName}</strong></p>
-              <p>{partnerDetails.email}</p>
+              <p><strong>{partner.fullName}</strong></p>
+              <p>{partner.email}</p>
             </div>
           </div>
         </div>
@@ -81,38 +110,50 @@ const ApprovePartnerDetails = () => {
     });
   };
 
-  const handleApprove = () => {
-    return new Promise((resolve) => {
-      // Add your approval logic here (API call)
-      console.log(`Approving partner with ID: ${id}`);
+  const handleApprove = async () => {
+    try {
+      const response = await updatePartnerStatusActive(id);
       
-      messageApi.success({
-        content: `${partnerDetails.ownerName}'s request has been approved!`,
-        duration: 3,
-      });
-      
-      setTimeout(() => {
-        navigate(-1); // Go back after 3 seconds
-        resolve();
-      }, 3000);
-    });
+      if (response.data?.success) {
+        messageApi.success({
+          content: response.data.message || `${partner.fullName}'s request has been approved!`,
+          duration: 3,
+        });
+        
+        setTimeout(() => {
+          navigate(-1);
+        }, 3000);
+      } else {
+        const errorMessage = response.error?.data?.message || response.data?.message || 'Failed to approve partner';
+        messageApi.error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to approve partner';
+      messageApi.error(errorMessage);
+    }
   };
 
-  const handleReject = () => {
-    return new Promise((resolve) => {
-      // Add your rejection logic here (API call)
-      console.log(`Rejecting partner with ID: ${id}`);
+  const handleReject = async () => {
+    try {
+      const response = await updatePartnerStatusReject(id);
       
-      messageApi.error({
-        content: `${partnerDetails.ownerName}'s request has been rejected.`,
-        duration: 3,
-      });
-      
-      setTimeout(() => {
-        navigate(-1); // Go back after 3 seconds
-        resolve();
-      }, 3000);
-    });
+      if (response.data?.success) {
+        messageApi.success({
+          content: response.data.message || `${partner.fullName}'s request has been rejected.`,
+          duration: 3,
+        });
+        
+        setTimeout(() => {
+          navigate(-1);
+        }, 3000);
+      } else {
+        const errorMessage = response.error?.data?.message || response.data?.message || 'Failed to reject partner';
+        messageApi.error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to reject partner';
+      messageApi.error(errorMessage);
+    }
   };
 
   return (
@@ -132,7 +173,7 @@ const ApprovePartnerDetails = () => {
       <Card
         title={
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar src={partnerDetails.avatar} size={40} style={{ marginRight: 12 }} />
+            <Avatar src={partner.profileImage} size={40} style={{ marginRight: 12 }} />
             <span>Partner Approval Details</span>
           </div>
         }
@@ -141,66 +182,70 @@ const ApprovePartnerDetails = () => {
       >
         <Descriptions bordered column={1}>
           <Descriptions.Item label={<><IdcardOutlined /> ID</>}>
-            {partnerDetails.id}
+            {partner.id}
           </Descriptions.Item>
-          <Descriptions.Item label={<><IdcardOutlined /> Registration Number</>}>
-            {partnerDetails.registrationNumber}
-          </Descriptions.Item>
-          <Descriptions.Item label={<><ShopOutlined /> Company Name</>}>
-            {partnerDetails.companyName}
-          </Descriptions.Item>
-          <Descriptions.Item label={<><ShopOutlined /> Business Type</>}>
-            {partnerDetails.businessType}
-          </Descriptions.Item>
-          <Descriptions.Item label={<><ShopOutlined /> Address</>}>
-            {partnerDetails.address}
-          </Descriptions.Item>
-          <Descriptions.Item label={<><UserOutlined /> Owner</>}>
+          <Descriptions.Item label={<><UserOutlined /> Full Name</>}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar src={partnerDetails.avatar} size={24} style={{ marginRight: 8 }} />
-              {partnerDetails.ownerName}
+              <Avatar src={partner.profileImage} size={24} style={{ marginRight: 8 }} />
+              {partner.fullName || 'N/A'}
             </div>
           </Descriptions.Item>
-          <Descriptions.Item label={<><PhoneOutlined /> Phone</>}>
-            {partnerDetails.phone}
-          </Descriptions.Item>
           <Descriptions.Item label={<><MailOutlined /> Email</>}>
-            {partnerDetails.email}
+            {partner.email}
           </Descriptions.Item>
-          <Descriptions.Item label={<><CalendarOutlined /> Request Date</>}>
-            {dayjs(partnerDetails.requestDate).format("DD MMM YYYY, hh:mm A")}
+          <Descriptions.Item label={<><PhoneOutlined /> Contact Number</>}>
+            {partner.contactNumber || 'Not provided'}
+          </Descriptions.Item>
+          <Descriptions.Item label={<><EnvironmentOutlined /> Address</>}>
+            {partner.address || 'Not provided'}
+          </Descriptions.Item>
+          <Descriptions.Item label={<><EnvironmentOutlined /> Country</>}>
+            {partner.country || 'Not specified'}
+          </Descriptions.Item>
+          <Descriptions.Item label={<><ShopOutlined /> Role</>}>
+            {partner.role === 'BUSINESS_PARTNER' ? 'Business Partner' : partner.role === 'SERVICE_PROVIDER' ? 'Service Provider' : partner.role}
+          </Descriptions.Item>
+          <Descriptions.Item label={<><CalendarOutlined /> Applied Date</>}>
+            {dayjs(partner.createdAt).format("DD MMM YYYY, hh:mm A")}
+          </Descriptions.Item>
+          <Descriptions.Item label={<><CalendarOutlined /> Last Updated</>}>
+            {dayjs(partner.updatedAt).format("DD MMM YYYY, hh:mm A")}
           </Descriptions.Item>
           <Descriptions.Item label="Status">
-            <span style={{ color: partnerDetails.status === "Pending" ? "orange" : 
-                          partnerDetails.status === "Approved" ? "green" : "red" }}>
-              {partnerDetails.status}
+            <span style={{ color: partner.status === "INACTIVE" ? "orange" : 
+                          partner.status === "ACTIVE" ? "green" : "red" }}>
+              {partner.status === 'INACTIVE' ? 'Pending' : partner.status === 'ACTIVE' ? 'Active' : partner.status === 'REJECTED' ? 'Rejected' : partner.status}
             </span>
           </Descriptions.Item>
         </Descriptions>
 
-        <Row justify="center" gutter={16} style={{ marginTop: "24px" }}>
-          <Col>
-            <Button
-              type="primary"
-              icon={<CheckOutlined />}
-              size="large"
-              onClick={showApproveConfirm}
-              style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-            >
-              Approve
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              danger
-              icon={<CloseOutlined />}
-              size="large"
-              onClick={showRejectConfirm}
-            >
-              Reject
-            </Button>
-          </Col>
-        </Row>
+        {partner.status === "INACTIVE" && (
+          <Row justify="center" gutter={16} style={{ marginTop: "24px" }}>
+            <Col>
+              <Button
+                type="primary"
+                icon={<CheckOutlined />}
+                size="large"
+                onClick={showApproveConfirm}
+                loading={isApproving}
+                style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+              >
+                Approve
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                danger
+                icon={<CloseOutlined />}
+                size="large"
+                onClick={showRejectConfirm}
+                loading={isRejecting}
+              >
+                Reject
+              </Button>
+            </Col>
+          </Row>
+        )}
       </Card>
     </div>
   );

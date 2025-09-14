@@ -12,7 +12,7 @@ import { termsConditionsApi } from './api/termsConditions/termsConditionsApi';
 import { privacyPolicyApi } from './api/privacyPolicy/privacyPolicyApi';
 import { financesApi } from './api/finances/financesApi';
 import { promoCodesApi } from './api/promoCodes/promoCodesApi';
-// import { userApi } from './api/userApi'; // if using RTK Query
+import { userApi } from './api/userApi';
 
 export const store = configureStore({
   reducer: {
@@ -29,7 +29,7 @@ export const store = configureStore({
     [privacyPolicyApi.reducerPath]: privacyPolicyApi.reducer,
     [financesApi.reducerPath]: financesApi.reducer,
     [promoCodesApi.reducerPath]: promoCodesApi.reducer,
-    // [userApi.reducerPath]: userApi.reducer, // if using RTK Query
+    [userApi.reducerPath]: userApi.reducer,
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware()
@@ -39,6 +39,6 @@ export const store = configureStore({
       .concat(termsConditionsApi.middleware)
       .concat(privacyPolicyApi.middleware)
       .concat(financesApi.middleware)
-      .concat(promoCodesApi.middleware),
-  // .concat(userApi.middleware), // if using RTK Query
+      .concat(promoCodesApi.middleware)
+      .concat(userApi.middleware),
 });

@@ -3,6 +3,7 @@ import {
   Table,
   Button,
   Modal,
+  Popconfirm,
   Input,
   Space,
   Avatar,
@@ -12,6 +13,8 @@ import {
   Descriptions,
   Typography,
   Card,
+  Spin,
+  Alert,
 } from "antd";
 import {
   InfoCircleOutlined,
@@ -23,6 +26,7 @@ import {
 } from "@ant-design/icons";
 import { useEffect } from "react";
 import AdminProfile from "../dashboard/components/AdminProfile";
+import { useGetServiceProvidersQuery, useSendReportServiceProviderMutation } from "../../redux/api/userApi";
 
 const { Search } = Input;
 const { TextArea } = Input;
@@ -32,91 +36,22 @@ const SendReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState(null);
   const [detailsVisible, setDetailsVisible] = useState(false);
-  const [emailVisible, setEmailVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const partners = [
-    {
-      id: "1981849262",
-      name: "John Doe",
-      email: "john.doe@email.com",
-      phone: "+1 (555) 123-4567",
-      joinedDate: "12 Dec 2023",
-      role: "Business Partner",
-      status: "Active",
-      earnings: "$24,500",
-      level: "Premium",
-      location: "New York, USA",
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
-      totalProjects: 15,
-      completionRate: "98%",
-      rating: 4.9,
-    },
-    {
-      id: "1981849263",
-      name: "Jane Smith",
-      email: "jane.smith@email.com",
-      phone: "+1 (555) 234-5678",
-      joinedDate: "15 Dec 2023",
-      role: "Service Provider",
-      status: "Active",
-      earnings: "$18,750",
-      level: "Standard",
-      location: "Los Angeles, USA",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
-      totalProjects: 12,
-      completionRate: "95%",
-      rating: 4.7,
-    },
-    {
-      id: "1981849264",
-      name: "Robert Johnson",
-      email: "robert.johnson@email.com",
-      phone: "+1 (555) 345-6789",
-      joinedDate: "18 Dec 2023",
-      role: "Business Partner",
-      status: "Active",
-      earnings: "$32,100",
-      level: "Premium",
-      location: "Chicago, USA",
-      image: "https://randomuser.me/api/portraits/men/65.jpg",
-      totalProjects: 20,
-      completionRate: "97%",
-      rating: 4.8,
-    },
-    {
-      id: "1981849265",
-      name: "Alice Brown",
-      email: "alice.brown@email.com",
-      phone: "+1 (555) 456-7890",
-      joinedDate: "20 Dec 2023",
-      role: "Service Provider",
-      status: "Inactive",
-      earnings: "$12,300",
-      level: "Basic",
-      location: "Houston, USA",
-      image: "https://randomuser.me/api/portraits/women/55.jpg",
-      totalProjects: 8,
-      completionRate: "92%",
-      rating: 4.5,
-    },
-    {
-      id: "1981849266",
-      name: "Michael Lee",
-      email: "michael.lee@email.com",
-      phone: "+1 (555) 567-8901",
-      joinedDate: "22 Dec 2023",
-      role: "Business Partner",
-      status: "Active",
-      earnings: "$28,900",
-      level: "Premium",
-      location: "Miami, USA",
-      image: "https://randomuser.me/api/portraits/men/72.jpg",
-      totalProjects: 18,
-      completionRate: "99%",
-      rating: 5.0,
-    },
-  ];
+  
+  // Filter states
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchTerms, setSearchTerms] = useState("");
+  
+  // API hooks
+  const { data: serviceProvidersData, isLoading, error } = useGetServiceProvidersQuery({
+    time: selectedTime,
+    country: selectedCountry,
+    search: searchTerms,
+  });
+  
+  const [sendReportServiceProvider, { isLoading: isSendingReport }] = useSendReportServiceProviderMutation();
+  
+  const partners = serviceProvidersData?.data?.partnerEarnings || [];
 
   const handleViewDetails = (partner) => {
     setSelectedPartner(partner);
@@ -155,28 +90,26 @@ const SendReport = () => {
     message.success("Report sent to printer!");
   };
 
-  const handleSendEmail = (partner) => {
-    setSelectedPartner(partner);
-    setEmailVisible(true);
-  };
-
-  const handleEmailSubmit = async () => {
-    setLoading(true);
+  const handleSendEmail = async (partner) => {
     try {
-      // Simulate email sending
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      message.success(`Report sent successfully to ${selectedPartner?.email}!`);
-      setEmailVisible(false);
+      const response = await sendReportServiceProvider(partner.id);
+      
+      if (response.data?.success) {
+        message.success(response.data.message || `Earning report sent successfully to ${partner.email}!`);
+      } else {
+        const errorMessage = response.error?.data?.message || response.data?.message || 'Failed to send report';
+        message.error(errorMessage);
+      }
     } catch (error) {
-      message.error("Failed to send email. Please try again.");
-    } finally {
-      setLoading(false);
+      const errorMessage = error?.data?.message || error?.message || 'Failed to send report';
+      message.error(errorMessage);
     }
   };
 
+  // Filter partners based on search term (client-side filtering for additional search)
   const filteredPartners = partners.filter(
     (partner) =>
-      partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (partner.fullName && partner.fullName.toLowerCase().includes(searchTerm.toLowerCase())) ||
       partner.id.includes(searchTerm) ||
       partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       partner.role.toLowerCase().includes(searchTerm.toLowerCase())
@@ -196,13 +129,13 @@ const SendReport = () => {
     },
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "fullName",
+      key: "fullName",
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Avatar src={record.image} icon={<UserOutlined />} size={40} />
+          <Avatar src={record.profileImage} icon={<UserOutlined />} size={40} />
           <div>
-            <div style={{ fontWeight: 600, color: "#0d0d0d" }}>{text}</div>
+            <div style={{ fontWeight: 600, color: "#0d0d0d" }}>{text || 'N/A'}</div>
             <div style={{ fontSize: "12px", color: "#6b7280" }}>
               {record.email}
             </div>
@@ -234,22 +167,24 @@ const SendReport = () => {
       render: (status) => (
         <Tag
           style={{
-            backgroundColor: status === "Active" ? "#dcfce7" : "#fef2f2",
-            color: status === "Active" ? "#009106" : "#ef4444",
+            backgroundColor: status === "ACTIVE" ? "#dcfce7" : "#fef2f2",
+            color: status === "ACTIVE" ? "#009106" : "#ef4444",
             border: "none",
             fontWeight: 500,
           }}
         >
-          {status}
+          {status === 'ACTIVE' ? 'Active' : status === 'INACTIVE' ? 'Inactive' : status}
         </Tag>
       ),
     },
     {
-      title: "Earnings",
-      dataIndex: "earnings",
-      key: "earnings",
-      render: (text) => (
-        <span style={{ fontWeight: 600, color: "#0d0d0d" }}>{text}</span>
+      title: "Service Fee",
+      dataIndex: "service_fee",
+      key: "service_fee",
+      render: (fee) => (
+        <span style={{ fontWeight: 600, color: "#0d0d0d" }}>
+          ${fee ? fee.toLocaleString() : '0'}
+        </span>
       ),
     },
     {
@@ -274,22 +209,30 @@ const SendReport = () => {
           >
             Print
           </Button>
-          <Button
-            type="text"
-            icon={<MailOutlined />}
-            onClick={() => handleSendEmail(record)}
-            style={{ color: "#ea580c" }}
+          <Popconfirm
+            title="Send Earning Report"
+            description={`Are you sure you want to send the earning report to ${record.email}?`}
+            onConfirm={() => handleSendEmail(record)}
+            okText="Yes, Send"
+            cancelText="Cancel"
+            okButtonProps={{
+              loading: isSendingReport,
+              style: { backgroundColor: "#ea580c", borderColor: "#ea580c" }
+            }}
           >
-            Email
-          </Button>
+            <Button
+              type="text"
+              icon={<MailOutlined />}
+              style={{ color: "#ea580c" }}
+              loading={isSendingReport}
+            >
+              Email
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
   ];
-
-  const [selectedTime, setSelectedTime] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [searchTerms, setSearchTerms] = useState("");
 
   // Auto filter trigger
   useEffect(() => {
@@ -303,6 +246,32 @@ const SendReport = () => {
       search: searchTerms,
     });
   };
+  
+  if (isLoading) {
+    return (
+      <div className="px-0 md:px-6">
+        <AdminProfile headingText="Send Report" />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+          <Spin size="large" />
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="px-0 md:px-6">
+        <AdminProfile headingText="Send Report" />
+        <Alert
+          message="Error"
+          description={error?.data?.message || "Failed to load service providers"}
+          type="error"
+          showIcon
+          style={{ margin: '20px 0' }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="px-0 md:px-6">
@@ -325,7 +294,7 @@ const SendReport = () => {
           </div>
 
           <div>
-
+ 
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
@@ -335,6 +304,7 @@ const SendReport = () => {
             onChange={(e) => setSelectedTime(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
+            <option value="">All Time</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
             <option value="month">This Month</option>
@@ -347,15 +317,14 @@ const SendReport = () => {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="" disabled>
-              Select Country
-            </option>
-            <option value="us">United States</option>
-            <option value="uk">United Kingdom</option>
-            <option value="ae">United Arab Emirates</option>
-            <option value="pt">Portugal</option>
-            <option value="fr">France</option>
-            <option value="es">Spain</option>
+            <option value="">All Countries</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
           </select>
 
           {/* Search Input */}
@@ -524,123 +493,35 @@ const SendReport = () => {
                   >
                     Print Report
                   </Button>
-                  <Button
-                    type="primary"
-                    icon={<MailOutlined />}
-                    onClick={() => handleSendEmail(selectedPartner)}
-                    style={{
-                      backgroundColor: "#ea580c",
-                      borderColor: "#ea580c",
+                  <Popconfirm
+                    title="Send Earning Report"
+                    description={`Are you sure you want to send the earning report to ${selectedPartner.email}?`}
+                    onConfirm={() => handleSendEmail(selectedPartner)}
+                    okText="Yes, Send"
+                    cancelText="Cancel"
+                    okButtonProps={{
+                      loading: isSendingReport,
+                      style: { backgroundColor: "#ea580c", borderColor: "#ea580c" }
                     }}
                   >
-                    Send Email
-                  </Button>
+                    <Button
+                      type="primary"
+                      icon={<MailOutlined />}
+                      style={{
+                        backgroundColor: "#ea580c",
+                        borderColor: "#ea580c",
+                      }}
+                      loading={isSendingReport}
+                    >
+                      Send Email
+                    </Button>
+                  </Popconfirm>
                 </Space>
               </div>
             </div>
           )}
         </Drawer>
 
-        {/* Email Modal */}
-        <Modal
-          title={
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <MailOutlined style={{ color: "#ea580c" }} />
-              <span>Send Report Email</span>
-            </div>
-          }
-          open={emailVisible}
-          onCancel={() => setEmailVisible(false)}
-          footer={null}
-          width={600}
-        >
-          <div>
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: 500,
-                }}
-              >
-                Recipient Email
-              </label>
-              <Input
-                prefix={<MailOutlined />}
-                placeholder="Enter recipient email"
-                defaultValue={selectedPartner?.email}
-              />
-            </div>
-
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: 500,
-                }}
-              >
-                Subject
-              </label>
-              <Input
-                placeholder="Enter email subject"
-                defaultValue={`Partner Report - ${selectedPartner?.name}`}
-              />
-            </div>
-
-            <div style={{ marginBottom: "24px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: 500,
-                }}
-              >
-                Message
-              </label>
-              <TextArea
-                rows={8}
-                placeholder="Enter your message here..."
-                defaultValue={
-                  selectedPartner
-                    ? `Dear ${selectedPartner.name},
-
-Please find your partner report details below:
-
-Partner ID: ${selectedPartner.id}
-Status: ${selectedPartner.status}
-Level: ${selectedPartner.level}
-Earnings: ${selectedPartner.earnings}
-Total Projects: ${selectedPartner.totalProjects}
-Completion Rate: ${selectedPartner.completionRate}
-Rating: ${selectedPartner.rating}/5
-
-Best regards,
-Admin Team`
-                    : ""
-                }
-              />
-            </div>
-
-            <div style={{ textAlign: "right", marginBottom: 0 }}>
-              <Space>
-                <Button onClick={() => setEmailVisible(false)}>Cancel</Button>
-                <Button
-                  type="primary"
-                  loading={loading}
-                  icon={<SendOutlined />}
-                  onClick={() => handleEmailSubmit()}
-                  style={{
-                    backgroundColor: "#ea580c",
-                    borderColor: "#ea580c",
-                  }}
-                >
-                  Send Email
-                </Button>
-              </Space>
-            </div>
-          </div>
-        </Modal>
       </div>
     </div>
   );
