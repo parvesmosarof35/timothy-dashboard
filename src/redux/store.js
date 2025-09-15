@@ -13,6 +13,9 @@ import { privacyPolicyApi } from './api/privacyPolicy/privacyPolicyApi';
 import { financesApi } from './api/finances/financesApi';
 import { promoCodesApi } from './api/promoCodes/promoCodesApi';
 import { userApi } from './api/userApi';
+import { channelsApi } from './api/chat/getChannelsByIdApi';
+import { messagesApi } from './api/chat/getAllMSGApi';
+import { adminChannelsApi } from './api/chat/getAllChannelsForAdminApi';
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +33,9 @@ export const store = configureStore({
     [financesApi.reducerPath]: financesApi.reducer,
     [promoCodesApi.reducerPath]: promoCodesApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [channelsApi.reducerPath]: channelsApi.reducer,
+    [messagesApi.reducerPath]: messagesApi.reducer,
+    [adminChannelsApi.reducerPath]: adminChannelsApi.reducer,
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware()
@@ -40,5 +46,8 @@ export const store = configureStore({
       .concat(privacyPolicyApi.middleware)
       .concat(financesApi.middleware)
       .concat(promoCodesApi.middleware)
-      .concat(userApi.middleware),
+      .concat(userApi.middleware)
+      .concat(channelsApi.middleware)
+      .concat(messagesApi.middleware)
+      .concat(adminChannelsApi.middleware),
 });

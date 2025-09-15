@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  MoreHorizontal,
+  MessageCircle,
   User,
   Calendar,
   DollarSign,
@@ -300,8 +300,8 @@ const UserSupport = () => {
                       </span>
                     </td>
                     <td className="py-4 px-2 text-sm">
-                      <button className="text-brandGray hover:text-brandGray">
-                        <MoreHorizontal className="w-5 h-5" />
+                      <button className="text-brandGray hover:text-brandBlue transition-colors">
+                        <MessageCircle className="w-5 h-5" />
                       </button>
                     </td>
                   </tr>
