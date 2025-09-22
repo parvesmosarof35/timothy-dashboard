@@ -34,7 +34,15 @@ const UserChannels = ({ userId, userName }) => {
     );
   }
 
-  const channels = channelsData?.data || [];
+  // Normalize channels array to support both shapes:
+  // 1) { success, message, data: [ ... ] }
+  // 2) { success, message, data: { meta, data: [ ... ] } }
+  const channelsRaw = channelsData?.data;
+  const channels = Array.isArray(channelsRaw)
+    ? channelsRaw
+    : Array.isArray(channelsRaw?.data)
+    ? channelsRaw.data
+    : [];
 
   if (channels.length === 0) {
     return (
@@ -109,7 +117,7 @@ const UserChannels = ({ userId, userName }) => {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-1">
                   <h4 className="text-base font-medium text-darkGray truncate">
-                    {channel.receiverUser?.fullName || 'Unknown User'}
+                    {channel.receiverUser?.fullName || channel.receiverUser?.email || 'Unknown User'}
                   </h4>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(

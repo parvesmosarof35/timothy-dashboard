@@ -8,10 +8,11 @@ export const financesApi = createApi({
   tagTypes: ['Finances'],
   endpoints: (builder) => ({
     getFinances: builder.query({
-      query: ({ searchTerm = '', timeRange = '', limit = 10, page = 1 } = {}) => {
+      query: ({ searchTerm = '', timeRange = '', country = '', limit = 10, page = 1 } = {}) => {
         const params = new URLSearchParams();
         if (searchTerm) params.append('searchTerm', searchTerm);
         if (timeRange) params.append('timeRange', timeRange);
+        if (country) params.append('country', country);
         if (limit) params.append('limit', limit.toString());
         if (page) params.append('page', page.toString());
         

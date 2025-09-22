@@ -16,7 +16,7 @@ const MetricCard = ({ title, value, percentage, dropdown = true, selectedYear, o
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-brandGray text-sm font-medium">{title}</h3>
 
-        {dropdown && (
+{/* {dropdown && (
           <div className="relative inline-block text-left">
             <div
               onClick={() => setIsOpen(!isOpen)}
@@ -40,7 +40,7 @@ const MetricCard = ({ title, value, percentage, dropdown = true, selectedYear, o
               </div>
             )}
           </div>
-        )}
+        )} */}
       </div>
 
       <div className="flex items-end justify-between">

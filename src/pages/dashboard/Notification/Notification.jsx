@@ -1,130 +1,48 @@
 import { useState, useEffect } from 'react';
-import { Bell, Check, User, DollarSign, Settings, Shield } from 'lucide-react';
+import { Bell, Check } from 'lucide-react';
 import AdminProfile from '../components/AdminProfile';
+import { useGetAllNotificationsQuery, useMarkNotificationAsReadMutation, notificationManageApi } from '../../../redux/api/notifications/notificationManageApi';
+import { useDispatch } from 'react-redux';
 
 const Notification = () => {
-  const [notifications, setNotifications] = useState([]);
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data, isLoading, isFetching } = useGetAllNotificationsQuery({ page, limit });
+  const [markNotificationAsRead] = useMarkNotificationAsReadMutation();
 
-  // Sample notifications data
-  useEffect(() => {
-    const sampleNotifications = [
-      {
-        id: 1,
-        type: 'success',
-        title: 'Payment Successful',
-        message: 'Your payment of $299.99 has been processed successfully.',
-        time: '2 minutes ago',
-        read: false,
-        icon: 'dollar'
-      },
-      {
-        id: 2,
-        type: 'error',
-        title: 'Login Failed',
-        message: 'Multiple failed login attempts detected. Please check your credentials.',
-        time: '5 minutes ago',
-        read: false,
-        icon: 'shield'
-      },
-      {
-        id: 3,
-        type: 'info',
-        title: 'New Feature Available',
-        message: 'Dark mode is now available in your settings. Try it out!',
-        time: '1 hour ago',
-        read: true,
-        icon: 'settings'
-      },
-      {
-        id: 4,
-        type: 'warning',
-        title: 'Storage Almost Full',
-        message: 'You have used 95% of your storage space. Consider upgrading your plan.',
-        time: '2 hours ago',
-        read: false,
-        icon: 'settings'
-      },
-      {
-        id: 5,
-        type: 'info',
-        title: 'Welcome to Dashboard',
-        message: 'Complete your profile to get personalized recommendations.',
-        time: '1 day ago',
-        read: true,
-        icon: 'user'
-      },
-      {
-        id: 6,
-        type: 'success',
-        title: 'Profile Updated',
-        message: 'Your profile information has been updated successfully.',
-        time: '2 days ago',
-        read: false,
-        icon: 'user'
-      },
-      {
-        id: 7,
-        type: 'warning',
-        title: 'Password Expires Soon',
-        message: 'Your password will expire in 3 days. Please update it to maintain security.',
-        time: '3 days ago',
-        read: true,
-        icon: 'shield'
-      },
-      {
-        id: 8,
-        type: 'error',
-        title: 'Server Maintenance',
-        message: 'Scheduled maintenance will occur tomorrow from 2 AM to 4 AM UTC.',
-        time: '1 week ago',
-        read: false,
-        icon: 'settings'
-      }
-    ];
-    
-    setNotifications(sampleNotifications);
-  }, []);
+  const notifications = Array.isArray(data?.data?.data) ? data.data.data : [];
+  const total = data?.data?.meta?.total ?? 0;
+  const hasMore = notifications.length < total;
 
-  const markAsRead = (id) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, read: true } : notif
-      )
-    );
-  };
-
-  const markAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(notif => ({ ...notif, read: true }))
-    );
-  };
-
-  const getIcon = (iconType) => {
-    switch (iconType) {
-      case 'dollar':
-        return <DollarSign className="w-4 h-4" />;
-      case 'user':
-        return <User className="w-4 h-4" />;
-      case 'settings':
-        return <Settings className="w-4 h-4" />;
-      case 'shield':
-        return <Shield className="w-4 h-4" />;
-      default:
-        return <Bell className="w-4 h-4" />;
+  const formatTime = (isoString) => {
+    try {
+      return new Date(isoString).toLocaleString();
+    } catch {
+      return '';
     }
   };
 
-  const getAvatarColor = (type) => {
-    switch (type) {
-      case 'success':
-        return 'bg-green-500';
-      case 'error':
-        return 'bg-red-500';
-      case 'warning':
-        return 'bg-orange-500';
-      case 'info':
-      default:
-        return 'bg-blue-500';
+  const markAsRead = async (id) => {
+    try {
+      // optimistic cache update
+      dispatch(
+        notificationManageApi.util.updateQueryData(
+          'getAllNotifications',
+          { page, limit },
+          (draft) => {
+            if (Array.isArray(draft?.data?.data)) {
+              draft.data.data = draft.data.data.map((n) =>
+                n.id === id ? { ...n, read: true } : n
+              );
+            }
+          }
+        )
+      );
+      await markNotificationAsRead(id).unwrap();
+    } catch (e) {
+      // On failure, let next refetch correct it implicitly if needed
+      // Optionally, add a toast here
     }
   };
 
@@ -155,10 +73,10 @@ const Notification = () => {
             
             {unreadCount > 0 && (
               <button
-                onClick={markAllAsRead}
+                onClick={() => markAllAsRead()}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors duration-200"
               >
-                <CheckCheck className="w-4 h-4" />
+                <Check className="w-4 h-4" />
                 <span className="hidden sm:inline">Mark all as read</span>
                 <span className="sm:hidden">Mark all</span>
               </button>
@@ -233,8 +151,8 @@ const Notification = () => {
                 >
                   {/* Avatar */}
                   <div className="flex-shrink-0">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${getAvatarColor(notification.type)}`}>
-                      {getIcon(notification.icon)}
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white bg-blue-500`}>
+                      <Bell className="w-4 h-4" />
                     </div>
                   </div>
                   
@@ -252,13 +170,11 @@ const Notification = () => {
                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           )}
                         </div>
-                        <p className={`text-sm ${
-                          !notification.read ? 'text-gray-800' : 'text-gray-600'
-                        }`}>
-                          {notification.message}
+                        <p className={`text-sm ${!notification.read ? 'text-gray-800' : 'text-gray-600'}`}>
+                          {notification.body}
                         </p>
                         <p className="text-xs text-gray-500 mt-2">
-                          {notification.time}
+                          {formatTime(notification.createdAt)}
                         </p>
                       </div>
                       
@@ -277,6 +193,18 @@ const Notification = () => {
                   </div>
                 </div>
               ))}
+              {/* Load more */}
+              <div className="p-4 text-center">
+                {hasMore && (
+                  <button
+                    onClick={() => setPage((p) => p + 1)}
+                    disabled={isFetching}
+                    className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md disabled:opacity-50"
+                  >
+                    {isFetching ? 'Loading...' : 'Load more'}
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>

@@ -1,42 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
-import { logout } from "../redux/features/auth/authSlice";
 
-
-
-const PrivateRoute = ({ children }) => {
+const SuperAdminRoute = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const { token } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
-      try {
+    setIsLoading(true);
+    try {
+      if (token) {
         const decoded = jwtDecode(token);
-        if (decoded.role === "ADMIN" || decoded.role === "SUPER_ADMIN") {
+        if (decoded?.role === "SUPER_ADMIN") {
           setIsAuthorized(true);
         } else {
           setIsAuthorized(false);
-          try {
-            // Clear all local storage and redux auth state
-            localStorage.clear();
-          } catch (_) {}
-          dispatch(logout());
           Swal.fire({
             icon: "error",
             title: "Access Denied",
-            text: "Only admin or super admin can login.",
+            text: "Only SUPER_ADMIN can access this page.",
           });
         }
-      } catch (error) {
-        console.error("Invalid token", error);
+      } else {
+        setIsAuthorized(false);
       }
+    } catch (e) {
+      setIsAuthorized(false);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, [token]);
 
   if (isLoading) {
@@ -50,11 +45,4 @@ const PrivateRoute = ({ children }) => {
   return isAuthorized ? children : <Navigate to="/login" />;
 };
 
-export default PrivateRoute;
-
-
-
-
- 
-
-
+export default SuperAdminRoute;

@@ -5,14 +5,25 @@ import { TrendingUp } from "lucide-react";
 import { HiArrowTrendingDown } from "react-icons/hi2";
 import { useState } from "react";
 
-const CommunicationSupport = () => {
+const CommunicationSupport = ({ supportData }) => {
+  // Extract support data with fallback values
+  const {
+    totalSupports = 0,
+    totalPendingSupport = 0,
+    Critical = 0,
+    High = 0,
+    Medium = 0,
+    Low = 0
+  } = supportData || {};
+
   // Pie chart data with updated colors to match the image
+  // Filter out entries with 0 values for better chart rendering
   const severityData = [
-    { name: "Critical", value: 410, color: "#8B4513" }, // Brown
-    { name: "High", value: 142, color: "#FF8C00" }, // Orange
-    { name: "Medium", value: 340, color: "#FFD700" }, // Light orange/yellow
-    { name: "Low", value: 590, color: "#FFA500" }, // Orange
-  ];
+    { name: "Critical", value: Critical, color: "#8B4513" }, // Brown
+    { name: "High", value: High, color: "#FF8C00" }, // Orange
+    { name: "Medium", value: Medium, color: "#FFD700" }, // Light orange/yellow
+    { name: "Low", value: Low, color: "#FFA500" }, // Orange
+  ].filter(item => item.value > 0);
 
   const options = ["Today", "This Week", "This Month", "This Year"];
   const [isOpen, setIsOpen] = useState(false);
@@ -39,8 +50,7 @@ const CommunicationSupport = () => {
             </div>
 
             {/* Date Selector */}
-            <div className="relative inline-block text-left">
-              {/* Trigger */}
+            {/* <div className="relative inline-block text-left">
               <div
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
@@ -49,7 +59,6 @@ const CommunicationSupport = () => {
                 <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
               </div>
 
-              {/* Dropdown Options */}
               {isOpen && (
                 <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
                   {options.map((option) => (
@@ -63,7 +72,7 @@ const CommunicationSupport = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
 
           <div className="divider-vertical border-b"></div>
@@ -81,7 +90,7 @@ const CommunicationSupport = () => {
                       Critical
                     </span>
                   </div>
-                  <span className="text-sm font-bold text-darkGray">410</span>
+                  <span className="text-sm font-bold text-darkGray">{Critical}</span>
                 </div>
 
                 <div className="flex justify-between items-center flex-1">
@@ -91,7 +100,7 @@ const CommunicationSupport = () => {
                       High
                     </span>
                   </div>
-                  <span className="text-sm font-bold text-darkGray">142</span>
+                  <span className="text-sm font-bold text-darkGray">{High}</span>
                 </div>
               </div>
 
@@ -104,7 +113,7 @@ const CommunicationSupport = () => {
                       Medium
                     </span>
                   </div>
-                  <span className="text-sm font-bold text-darkGray">340</span>
+                  <span className="text-sm font-bold text-darkGray">{Medium}</span>
                 </div>
 
                 <div className="flex justify-between items-center flex-1">
@@ -114,7 +123,7 @@ const CommunicationSupport = () => {
                       Low
                     </span>
                   </div>
-                  <span className="text-sm font-bold text-darkGray">590</span>
+                  <span className="text-sm font-bold text-darkGray">{Low}</span>
                 </div>
               </div>
             </div>
@@ -129,14 +138,14 @@ const CommunicationSupport = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={severityData}
+                    data={severityData.length > 0 ? severityData : [{ name: "No Data", value: 1, color: "#E5E7EB" }]}
                     cx="50%"
                     cy="50%"
                     outerRadius="90%" // Let it fill the container nicely
                     dataKey="value"
                     stroke="none"
                   >
-                    {severityData.map((entry, index) => (
+                    {(severityData.length > 0 ? severityData : [{ name: "No Data", value: 1, color: "#E5E7EB" }]).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -154,7 +163,7 @@ const CommunicationSupport = () => {
               </div>
               <div>
                 <p className="text-sm text-brandGray">Total Issues</p>
-                <p className="text-lg font-bold text-darkGray">120</p>
+                <p className="text-lg font-bold text-darkGray">{totalSupports}</p>
               </div>
             </div>
 
@@ -165,7 +174,7 @@ const CommunicationSupport = () => {
               </div>
               <div>
                 <p className="text-sm text-brandGray">Pending Issues</p>
-                <p className="text-lg font-bold text-darkGray">1,009,123</p>
+                <p className="text-lg font-bold text-darkGray">{totalPendingSupport}</p>
               </div>
             </div>
           </div>

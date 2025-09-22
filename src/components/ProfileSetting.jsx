@@ -11,6 +11,7 @@ import {
   changePassword,
   getUserProfile,
   updateUserProfile,
+  updateProfileImage,
 } from "../redux/features/auth/authSlice";
 import { useEffect } from "react";
 
@@ -98,7 +99,16 @@ useEffect(() => {
           })
           .catch((error) => {
             console.error("Update failed:", error);
-            Swal.fire("Error", error || "Update failed", "error");
+            const errMsg =
+              error?.response?.data?.message ||
+              (Array.isArray(error?.response?.data?.errorMessages) && error.response.data.errorMessages[0]?.message) ||
+              error?.errorMessages?.[0]?.message ||
+              (typeof error === "string" ? error : error?.message) ||
+              "Update failed";
+            const friendlyMsg = /password is incorrect/i.test(errMsg)
+              ? "Old password is incorrect"
+              : errMsg;
+            Swal.fire("Error", friendlyMsg, "error");
           });
       } else {
         console.log("Profile update cancelled");
@@ -175,12 +185,13 @@ const handleUpdatePassword = async (e) => {
 };
 
 
-  const handleProfileImageChange = (newImageUrl) => {
-    console.log(newImageUrl);
-
-    dispatch(updateUserProfile({ profileImage: newImageUrl }))
+  const handleProfileImageChange = (file) => {
+    if (!(file instanceof File)) return;
+    dispatch(updateProfileImage(file))
       .unwrap()
       .then(() => {
+        // Refetch profile to sync latest data
+        dispatch(getUserProfile());
         Swal.fire({
           title: "Profile Updated",
           text: "Profile image updated successfully.",
@@ -315,11 +326,13 @@ const handleUpdatePassword = async (e) => {
                     onChange={handleProfileChange}
                     className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
-                    <option value="">Select Country</option>
-                    <option value="Australia">Australia</option>
-                    <option value="United States">United States</option>
-                    <option value="Canada">Canada</option>
-                    <option value="United Kingdom">United Kingdom</option>
+              <option value="">All Countries</option>
+            <option value="United_States">United States</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
                   </select>
                 </div>
               </div>

@@ -1,280 +1,377 @@
-import React from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import AdminProfile from "../components/AdminProfile";
-import { useState } from "react";
-import { Search, MessageCircle } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
+import { useSelector } from "react-redux";
 import { useGetAllChannelsForAdminQuery } from "../../../redux/api/chat/getAllChannelsForAdminApi";
-import { useGetMessagesByChannelNameQuery } from "../../../redux/api/chat/getAllMSGApi";
+import {
+  useGetMessagesByChannelNameQuery,
+  useSendMessageWithImageMutation,
+} from "../../../redux/api/chat/getAllMSGApi";
+import useChatSocket from "../../../hooks/useChatSocket";
+import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
+
+// Import components
+import ChannelSidebar from "./allMSGComponents/ChannelSidebar";
+import ChatHeader from "./allMSGComponents/ChatHeader";
+import MessageList from "./allMSGComponents/MessageList";
+import MessageInput from "./allMSGComponents/MessageInput";
+import TopBar from "./allMSGComponents/TopBar";
 
 const AllMessage = () => {
+  const { channelName: routeChannelName } = useParams();
   const [selectedChannel, setSelectedChannel] = useState(null);
-  
-  const { data: channelsData, isLoading: channelsLoading, error: channelsError } = useGetAllChannelsForAdminQuery();
-  const { data: messagesData, isLoading: messagesLoading } = useGetMessagesByChannelNameQuery(
-    selectedChannel?.channelName,
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
+  const [file, setFile] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // kept for compatibility with child props
+  const [limit, setLimit] = useState(20);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadingImageUrl, setUploadingImageUrl] = useState(null);
+  const [isChannelLoading, setIsChannelLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const listRef = useRef(null);
+  // Search term for filtering channels
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  // Debounce search input to limit API calls
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearchTerm(searchTerm.trim()), 300);
+    return () => clearTimeout(id);
+  }, [searchTerm]);
+
+  // Get admin user data from Redux
+  const { userId: currentAdminId, user } = useSelector((state) => state.auth);
+
+  const {
+    data: channelsData,
+    isLoading: channelsLoading,
+    error: channelsError,
+  } = useGetAllChannelsForAdminQuery({ searchTerm: debouncedSearchTerm });
+  const {
+    data: messagesData,
+    isLoading: messagesLoading,
+    refetch,
+  } = useGetMessagesByChannelNameQuery(
+    { channelName: selectedChannel?.channelName, page: 1, limit },
     { skip: !selectedChannel }
   );
+  const [sendMessageWithImage] = useSendMessageWithImageMutation();
 
-  const channels = channelsData?.data || [];
-  const messages = messagesData?.data?.[0]?.messages || [];
+  // Ensure channels is always an array per API shape: { data: { meta, data: [] } }
+  const channels = channelsData?.data?.data || [];
+  const apiMessages = messagesData?.data?.data?.[0]?.messages || [];
 
-  // Get current admin user ID from localStorage token using jwt-decode
-  const getCurrentAdminId = () => {
+  // Auto-select channel based on route param when channels are loaded
+  useEffect(() => {
+    if (!routeChannelName || !channels?.length) return;
+    const found = channels.find((c) => c?.channelName === routeChannelName);
+    if (found && selectedChannel?.channelName !== found.channelName) {
+      setSelectedChannel(found);
+    }
+  }, [routeChannelName, channels]);
+
+  // Socket hook for real-time messaging
+  const { messages: socketMessages, sendMessage } = useChatSocket(
+    selectedChannel?.channelName,
+    currentAdminId
+  );
+  const lastSocketIndexRef = useRef(0);
+  // Track recently sent text messages to avoid echo duplicates from WS
+  const recentlySentRef = useRef(new Set());
+
+  // Sort messages by creation time
+  const sortByCreatedAtAsc = (arr) =>
+    [...arr].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+  // Detect control messages (not for display)
+  const isControlMessage = (msg) => {
+    if (!msg || typeof msg.message !== "string") return false;
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return null;
-      
-      const decoded = jwtDecode(token);
-      return decoded.id;
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return null;
+      const parsed = JSON.parse(msg.message);
+      return parsed?.type === "refetch-img";
+    } catch (_) {
+      return false;
     }
   };
 
-  const currentAdminId = getCurrentAdminId();
-
   const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.abs(now - date) / 36e5;
-    
-    if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)}h`;
-    } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return new Date(dateString).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Track last channel to prevent cross-channel merges
+  const lastChannelNameRef = useRef(null);
+
+  // Load API messages
+  useEffect(() => {
+    if (apiMessages && apiMessages.length > 0) {
+      // Filter out control messages like {"type":"refetch-img"}
+      const displayable = apiMessages.filter((m) => !isControlMessage(m));
+      const sorted = sortByCreatedAtAsc(displayable);
+      // Replace with freshly fetched channel messages, but KEEP optimistic temp messages
+      setMessages((prev) => {
+        const byId = new Map();
+        for (const m of sorted) byId.set(m.id, m);
+        // keep optimistic temp messages until server confirms
+        for (const m of prev) {
+          if (
+            typeof m.id === "string" &&
+            m.id.startsWith("temp-") &&
+            !byId.has(m.id)
+          ) {
+            byId.set(m.id, m);
+          }
+        }
+        return sortByCreatedAtAsc(Array.from(byId.values()));
+      });
+
+      // Check if there are more messages to load
+      const total = messagesData?.data?.meta?.total || 0;
+      setHasMoreMessages(sorted.length < total);
+      // End channel-loading state once we have data
+      if (isChannelLoading) setIsChannelLoading(false);
+    } else if (!selectedChannel) {
+      // Only reset if something is actually different to avoid redundant updates
+      if (messages.length > 0) setMessages([]);
+      if (currentPage !== 1) setCurrentPage(1);
+      if (limit !== 20) setLimit(20);
+      if (!hasMoreMessages) setHasMoreMessages(true);
+      if (isChannelLoading) setIsChannelLoading(false);
+    } else if (selectedChannel && messagesLoading) {
+      // While fetching for a selected channel, ensure loading is shown
+      if (!isChannelLoading) setIsChannelLoading(true);
     }
+  }, [
+    apiMessages,
+    selectedChannel,
+    messages.length,
+    currentPage,
+    hasMoreMessages,
+    limit,
+    messagesData?.data?.meta?.total,
+    messagesLoading,
+    isChannelLoading,
+  ]);
+
+  // Reset pagination when channel changes
+  useEffect(() => {
+    if (selectedChannel) {
+      // Clear current messages so the new channel's messages show without mixing
+      setMessages([]);
+      setIsChannelLoading(true);
+      setCurrentPage(1);
+      setLimit(20);
+      setHasMoreMessages(true);
+      // reset socket processing index for the new channel
+      lastSocketIndexRef.current = 0;
+      // clear any recently sent markers when switching channels
+      try { recentlySentRef.current.clear(); } catch (_) {}
+      // trigger a refetch explicitly to ensure freshest data
+      try { refetch && refetch(); } catch (_) {}
+    }
+  }, [selectedChannel?.channelName]);
+
+  // Load more messages function
+  const handleLoadMore = () => {
+    if (hasMoreMessages && !messagesLoading) {
+      setLimit((prev) => prev + 20);
+    }
+  };
+
+  // Handle socket messages (process only new items)
+  useEffect(() => {
+    if (!socketMessages || socketMessages.length === 0) return;
+    const start = lastSocketIndexRef.current || 0;
+    const newItems = socketMessages.slice(start);
+    if (newItems.length === 0) return;
+
+    newItems.forEach((m) => {
+      // Check for refetch signals
+      if (typeof m.message === "string") {
+        try {
+          const parsed = JSON.parse(m.message);
+          if (parsed.type === "refetch-img") {
+            refetch();
+            return;
+          }
+        } catch (err) {
+          // Normal message
+        }
+      }
+
+      // If this is an echo of our own recently sent text, ignore it to avoid duplicates
+      if (
+        typeof m.message === "string" &&
+        m.senderId === currentAdminId &&
+        recentlySentRef.current.has(m.message)
+      ) {
+        // consume once
+        recentlySentRef.current.delete(m.message);
+        return;
+      }
+
+      // Add new messages
+      setMessages((prev) => {
+        const seen = new Set(prev.map((msg) => msg.id));
+        if (seen.has(m.id)) return prev;
+        return [...prev, m].sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+      });
+    });
+    lastSocketIndexRef.current = socketMessages.length;
+  }, [socketMessages]);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    if (!listRef.current) return;
+    const el = listRef.current;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [messages]);
+
+  // Send message handler
+  const handleSend = async () => {
+    if (!newMessage.trim() && !file) return;
+    if (!selectedChannel) return;
+
+    // For images, do NOT add an optimistic bubble to avoid duplicates.
+    // We'll rely on the server response/refetch to render the final message.
+    // For text-only messages, add an optimistic bubble for instant feedback.
+
+    if (file) {
+      // Show uploading placeholder in UI
+      try {
+        const previewUrl = URL.createObjectURL(file);
+        setUploadingImageUrl(previewUrl);
+        setIsUploadingImage(true);
+      } catch (_) {}
+
+      const formData = new FormData();
+      // Backend expects: messageImages (file) and data (JSON string with { message })
+      formData.append("data", JSON.stringify({ message: newMessage || "" }));
+      formData.append("messageImages", file);
+
+      // derive the receiver userId from channel participants
+      const receiverId =
+        selectedChannel?.person1?.id === currentAdminId
+          ? selectedChannel?.person2?.id
+          : selectedChannel?.person1?.id;
+
+      if (!receiverId) {
+        console.error("Could not determine receiverId from selectedChannel");
+        Swal.fire("Error", "Unable to determine recipient.", "error");
+        return;
+      }
+
+      try {
+        await sendMessageWithImage({ userId: receiverId, formData }).unwrap();
+
+        // Notify other clients to refetch
+        sendMessage(JSON.stringify({ type: "refetch-img" }));
+      } catch (err) {
+        console.error("Image message failed", err);
+        Swal.fire("Error", "Failed to send image message.", "error");
+      }
+
+      setFile(null);
+      // Clear the underlying input so the same file can be selected again
+      if (fileInputRef.current) {
+        try {
+          fileInputRef.current.value = "";
+        } catch (_) {}
+      }
+      // Hide uploading placeholder (actual image will appear from API/socket)
+      setIsUploadingImage(false);
+      setUploadingImageUrl(null);
+    } else {
+      // Text-only: add an optimistic bubble for instant feedback,
+      // and rely on socket echo (filtered) without API refetch.
+      const tempMessage = {
+        id: `temp-${Date.now()}`,
+        message: newMessage || "",
+        senderId: currentAdminId,
+        createdAt: new Date().toISOString(),
+        files: [],
+      };
+      setMessages((prev) => [...prev, tempMessage]);
+      // Track this message to skip the immediate echo from WS
+      if (newMessage) {
+        recentlySentRef.current.add(newMessage);
+        // Auto-expire the marker after a few seconds to avoid suppressing future identical texts
+        setTimeout(() => {
+          try { recentlySentRef.current.delete(newMessage); } catch (_) {}
+        }, 5000);
+      }
+      sendMessage(newMessage);
+    }
+
+    setNewMessage("");
   };
 
   const getLastMessage = (channel) => {
-    // This would ideally come from the API, but for now we'll show a placeholder
     return "Click to view messages";
   };
 
   return (
-    <div className="space-y-6 bg-grayLightBg min-h-screen md:px-6 font-sans">
+    <div className="flex flex-col h-screen bg-white font-sans">
       <AdminProfile headingText="All Messages" />
 
-      <div className="flex flex-col w-full h-full justify-center md:flex-row bg-gray-100">
-        {/* Sidebar */}
-        <div className="md:w-80 w-full h-full bg-white border-r border-gray-200 flex flex-col">
-          {/* Header */}
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Messages
-            </h2>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder={`All Conversations ${channels.length}`}
-                className="w-full pr-10 p-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <Search className="absolute right-3 top-2.5 h-5 w-5 text-brandGray" />
-            </div>
-          </div>
+      <TopBar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
 
-          {/* Conversations List */}
-          <div className="flex-1 overflow-y-auto">
-            {channelsLoading ? (
-              <div className="flex justify-center items-center h-32">
-                <div className="text-sm text-gray-500">Loading channels...</div>
-              </div>
-            ) : channelsError ? (
-              <div className="flex justify-center items-center h-32">
-                <div className="text-sm text-red-500">Error loading channels</div>
-              </div>
-            ) : channels.length === 0 ? (
-              <div className="flex justify-center items-center h-32">
-                <div className="text-sm text-gray-500">No channels found</div>
-              </div>
-            ) : (
-              channels.map((channel) => {
-                const isActive = selectedChannel?.id === channel.id;
-                const person1 = channel.person1;
-                const person2 = channel.person2;
-                
-                // Determine which person is NOT the admin
-                const otherPerson = person1?.id === currentAdminId ? person2 : person1;
-                
-                return (
-                  <div
-                    key={channel.id}
-                    onClick={() => setSelectedChannel(channel)}
-                    className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer ${
-                      isActive
-                        ? "bg-orangePrimary border-r-4 border-orangeAction hover:bg-orangePrimary"
-                        : ""
-                    }`}
-                  >
-                    <div className="relative">
-                      <img
-                        src={otherPerson?.profileImage || "https://i.pravatar.cc/150?img=1"}
-                        alt={otherPerson?.fullName || "User"}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    </div>
-                    <div className="ml-3 flex-1">
-                      <div className="flex justify-between items-center">
-                        <h3 className="text-sm font-medium text-darkGray">
-                          {otherPerson?.fullName || "Unknown User"}
-                        </h3>
-                        <span className="text-xs text-brandGray">
-                          {formatTime(channel.createdAt)}
-                        </span>
-                      </div>
-                      <p className="text-sm text-brandGray truncate mt-1">
-                        {getLastMessage(channel)}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
+      <div className="flex h-screen overflow-hidden">
+        <ChannelSidebar
+          channels={channels}
+          selectedChannel={selectedChannel}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+          setSelectedChannel={setSelectedChannel}
+          channelsLoading={channelsLoading}
+          channelsError={channelsError}
+          currentAdminId={currentAdminId}
+          getLastMessage={getLastMessage}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
 
-        {/* Main Chat Area */}
+        {/* Chat Window */}
         <div className="flex-1 flex flex-col">
-          {/* Chat Header */}
-          <div className="bg-white p-4 border-b border-gray-200 flex items-center justify-between">
-            {selectedChannel ? (
-              <div className="flex items-center">
-                {(() => {
-                  const otherPerson = selectedChannel.person1?.id === currentAdminId 
-                    ? selectedChannel.person2 
-                    : selectedChannel.person1;
-                  
-                  return (
-                    <>
-                      <div className="relative">
-                        <img
-                          src={otherPerson?.profileImage || "https://i.pravatar.cc/150?img=1"}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <h3 className="font-medium text-darkGray">
-                          {otherPerson?.fullName || "Unknown User"}
-                        </h3>
-                        <p className="text-sm text-brandGray">
-                          {otherPerson?.role || "User"}
-                        </p>
-                      </div>
-                    </>
-                  );
-                })()}
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <MessageCircle className="w-10 h-10 text-gray-400" />
-                <div className="ml-3">
-                  <h3 className="font-medium text-darkGray">Select a conversation</h3>
-                  <p className="text-sm text-brandGray">Choose a channel to view messages</p>
-                </div>
-              </div>
-            )}
-          </div>
+          <ChatHeader
+            selectedChannel={selectedChannel}
+            currentAdminId={currentAdminId}
+          />
 
-          {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {!selectedChannel ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-500 mb-2">No conversation selected</h3>
-                  <p className="text-gray-400">Choose a channel from the sidebar to view messages</p>
-                </div>
-              </div>
-            ) : messagesLoading ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-                  <p className="text-gray-500">Loading messages...</p>
-                </div>
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-500 mb-2">No messages yet</h3>
-                  <p className="text-gray-400">This conversation doesn't have any messages</p>
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="flex justify-center">
-                  <span className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm">
-                    {new Date(messages[0]?.createdAt).toLocaleDateString('en-US', { 
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </span>
-                </div>
+          <MessageList
+            selectedChannel={selectedChannel}
+            messages={messages}
+            messagesLoading={messagesLoading || isChannelLoading}
+            currentPage={currentPage}
+            hasMoreMessages={hasMoreMessages}
+            handleLoadMore={handleLoadMore}
+            currentAdminId={currentAdminId}
+            formatTime={formatTime}
+            listRef={listRef}
+            isUploadingImage={isUploadingImage}
+            uploadingImageUrl={uploadingImageUrl}
+          />
 
-                {messages.map((message, index) => {
-                  const isAdminMessage = message.senderId === currentAdminId;
-                  
-                  return (
-                    <div
-                      key={message.id}
-                      className={`flex ${
-                        isAdminMessage ? "justify-end" : "justify-start"
-                      }`}
-                    >
-                      <div className={`max-w-xs lg:max-w-md`}>
-                        <div className="flex items-end space-x-2">
-                          {!isAdminMessage && (
-                            <img
-                              src={message.sender?.profileImage || "https://i.pravatar.cc/150?img=1"}
-                              alt={message.sender?.fullName || "User"}
-                              className="w-6 h-6 rounded-full object-cover"
-                            />
-                          )}
-                          <div
-                            className={`px-4 py-2 rounded-2xl ${
-                              isAdminMessage
-                                ? "bg-orangePrimary text-darkGray"
-                                : "bg-white text-gray-800 border border-gray-200"
-                            }`}
-                          >
-                            <p className="text-sm">{message.message}</p>
-                            {message.files && message.files.length > 0 && (
-                              <div className="mt-2 text-xs text-gray-500">
-                                📎 {message.files.length} file(s) attached
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <p
-                          className={`text-xs text-brandGray mt-1 ${
-                            isAdminMessage ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {new Date(message.createdAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </div>
-
-          {/* Message Input - Hidden for admin view */}
-          <div className="bg-white p-4 border-t border-gray-200 hidden">
-            <div className="flex items-center justify-center">
-              <p className="text-sm text-gray-500">Admin view - Message sending disabled</p>
-            </div>
-          </div>
-
-
+          <MessageInput
+            selectedChannel={selectedChannel}
+            file={file}
+            setFile={setFile}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            handleSend={handleSend}
+            fileInputRef={fileInputRef}
+            isUploadingImage={isUploadingImage}
+          />
         </div>
-
       </div>
     </div>
   );

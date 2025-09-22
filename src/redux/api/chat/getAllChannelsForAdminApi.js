@@ -7,7 +7,12 @@ export const adminChannelsApi = createApi({
   tagTypes: ['AdminChannels'],
   endpoints: (builder) => ({
     getAllChannelsForAdmin: builder.query({
-      query: () => '/messages/channels',
+      query: ({ searchTerm } = {}) => ({
+        url: '/messages/channels',
+        params: {
+          ...(searchTerm ? { searchTerm } : {}),
+        },
+      }),
       providesTags: ['AdminChannels'],
     }),
   }),

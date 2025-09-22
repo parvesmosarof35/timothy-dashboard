@@ -38,7 +38,7 @@ const handleResetPassword = async (e) => {
       showConfirmButton: false,
     });
 
-    navigate("/checkemail"); // ✅ only if API was successful
+    navigate(`/checkemail?email=${encodeURIComponent(email)}`); // ✅ pass email to checkemail page
   } catch (error) {
     toast.error(error || "Something went wrong", {
       position: "top-center",

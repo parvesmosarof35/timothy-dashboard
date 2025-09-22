@@ -113,10 +113,10 @@ const UsersTable = () => {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="">All Countries</option>
-            <option value="United States">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="">All Countries</option>
+            <option value="United_States">United States</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
             <option value="Portugal">Portugal</option>
             <option value="France">France</option>
             <option value="Spain">Spain</option>

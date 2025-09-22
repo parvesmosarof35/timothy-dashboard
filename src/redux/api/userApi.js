@@ -15,13 +15,13 @@ export const userApi = createApi({
       }),
     }),
     getApprovedPartners: builder.query({
-      query: ({ page = 1, limit = 10, search = '', country = '', time = '' } = {}) => {
+      query: ({ page = 1, limit = 10, searchTerm = '', country = '', timeRange = '' } = {}) => {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
-          ...(search && { search }),
+          ...(searchTerm && { searchTerm }),
           ...(country && { country }),
-          ...(time && { time }),
+          ...(timeRange && { timeRange }),
         });
         return `/users/approved-partners?${params}`;
       },
@@ -46,13 +46,15 @@ export const userApi = createApi({
       providesTags: (result, error, partnerId) => [{ type: 'Partners', id: partnerId }],
     }),
     getServiceProviders: builder.query({
-      query: ({ time = '', country = '', search = '' } = {}) => {
+      query: ({ searchTerm = '', country = '', timeRange = '', page = 1, limit = 10 } = {}) => {
         const params = new URLSearchParams({
-          ...(time && { time }),
+          ...(searchTerm && { searchTerm }),
           ...(country && { country }),
-          ...(search && { search }),
+          ...(timeRange && { timeRange }),
+          page: page.toString(),
+          limit: limit.toString(),
         });
-        return `/statistics/service-providers${params.toString() ? `?${params}` : ''}`;
+        return `/statistics/service-providers?${params}`;
       },
       providesTags: ['ServiceProviders'],
     }),
@@ -63,12 +65,13 @@ export const userApi = createApi({
       }),
     }),
     getContracts: builder.query({
-      query: ({ searchTerm = '', limit = 10, page = 1, timeRange = '' } = {}) => {
+      query: ({ searchTerm = '', limit = 10, page = 1, timeRange = '', country = '' } = {}) => {
         const params = new URLSearchParams({
           ...(searchTerm && { searchTerm }),
           limit: limit.toString(),
           page: page.toString(),
           ...(timeRange && { timeRange }),
+          ...(country && { country }),
         });
         return `/contracts?${params}`;
       },

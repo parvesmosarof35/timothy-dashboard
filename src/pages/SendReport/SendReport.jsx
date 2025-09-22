@@ -27,31 +27,38 @@ import {
 import { useEffect } from "react";
 import AdminProfile from "../dashboard/components/AdminProfile";
 import { useGetServiceProvidersQuery, useSendReportServiceProviderMutation } from "../../redux/api/userApi";
+import { useDebounce } from "../../hooks/useDebounce";
 
-const { Search } = Input;
-const { TextArea } = Input;
+
 const { Title, Text } = Typography;
 
 const SendReport = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState(null);
   const [detailsVisible, setDetailsVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(10);
+  const [sendingId, setSendingId] = useState(null); // track row-level loading for email send
   
   // Filter states
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
+  const debouncedSearch = useDebounce(searchTerms, 500);
   
   // API hooks
   const { data: serviceProvidersData, isLoading, error } = useGetServiceProvidersQuery({
-    time: selectedTime,
+    timeRange: selectedTime,
     country: selectedCountry,
-    search: searchTerms,
+    searchTerm: debouncedSearch,
+    page: currentPage,
+    limit,
   });
   
   const [sendReportServiceProvider, { isLoading: isSendingReport }] = useSendReportServiceProviderMutation();
   
-  const partners = serviceProvidersData?.data?.partnerEarnings || [];
+  // The API returns the list under data.data (with meta alongside)
+  const partners = serviceProvidersData?.data?.data || [];
 
   const handleViewDetails = (partner) => {
     setSelectedPartner(partner);
@@ -63,21 +70,17 @@ const SendReport = () => {
       <div style="font-family: Arial, sans-serif; padding: 20px;">
         <h2 style="color: #ea580c; margin-bottom: 20px;">Partner Report</h2>
         <div style="border: 1px solid #d1d5db; padding: 20px; border-radius: 8px;">
-          <h3>${partner.name}</h3>
+          <h3>${partner.fullName || 'N/A'}</h3>
           <p><strong>Partner ID:</strong> ${partner.id}</p>
           <p><strong>Email:</strong> ${partner.email}</p>
-          <p><strong>Phone:</strong> ${partner.phone}</p>
+          <p><strong>Phone:</strong> ${partner.contactNumber || 'N/A'}</p>
           <p><strong>Role:</strong> ${partner.role}</p>
           <p><strong>Status:</strong> ${partner.status}</p>
-          <p><strong>Level:</strong> ${partner.level}</p>
-          <p><strong>Earnings:</strong> ${partner.earnings}</p>
-          <p><strong>Location:</strong> ${partner.location}</p>
-          <p><strong>Joined Date:</strong> ${partner.joinedDate}</p>
-          <p><strong>Total Projects:</strong> ${partner.totalProjects}</p>
-          <p><strong>Completion Rate:</strong> ${partner.completionRate}</p>
-          <p><strong>Rating:</strong> ${partner.rating}/5</p>
+          <p><strong>Address:</strong> ${partner.address || 'N/A'}</p>
+          <p><strong>Joined Date:</strong> ${partner.createdAt}</p>
+          <p><strong>Service Fee:</strong> ${typeof partner.service_fee === 'number' ? partner.service_fee.toLocaleString() : '0'}</p>
         </div>
-        <p style="margin-top: 20px; color: #6b7280; font-size: 12px;">
+        <p style="margin-top: 20px, color: #6b7280; font-size: 12px;">
           Generated on: ${new Date().toLocaleString()}
         </p>
       </div>
@@ -92,6 +95,7 @@ const SendReport = () => {
 
   const handleSendEmail = async (partner) => {
     try {
+      setSendingId(partner.id);
       const response = await sendReportServiceProvider(partner.id);
       
       if (response.data?.success) {
@@ -103,6 +107,8 @@ const SendReport = () => {
     } catch (error) {
       const errorMessage = error?.data?.message || error?.message || 'Failed to send report';
       message.error(errorMessage);
+    } finally {
+      setSendingId(null);
     }
   };
 
@@ -216,7 +222,7 @@ const SendReport = () => {
             okText="Yes, Send"
             cancelText="Cancel"
             okButtonProps={{
-              loading: isSendingReport,
+              loading: sendingId === record.id && isSendingReport,
               style: { backgroundColor: "#ea580c", borderColor: "#ea580c" }
             }}
           >
@@ -224,7 +230,7 @@ const SendReport = () => {
               type="text"
               icon={<MailOutlined />}
               style={{ color: "#ea580c" }}
-              loading={isSendingReport}
+              loading={sendingId === record.id && isSendingReport}
             >
               Email
             </Button>
@@ -237,14 +243,11 @@ const SendReport = () => {
   // Auto filter trigger
   useEffect(() => {
     handleSelect();
-  }, [selectedTime, selectedCountry, searchTerms]);
+  }, [selectedTime, selectedCountry, debouncedSearch]);
 
   const handleSelect = () => {
-    console.log("Filter Applied:", {
-      time: selectedTime,
-      country: selectedCountry,
-      search: searchTerms,
-    });
+    // Reset pagination to page 1 when filters/search change
+    setCurrentPage(1);
   };
   
   if (isLoading) {
@@ -305,27 +308,25 @@ const SendReport = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
             <option value="">All Time</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
+            <option value="THIS_WEEK">This Week</option>
+            <option value="THIS_MONTH">This Month</option>
+            <option value="THIS_YEAR">This Year</option>
           </select>
 
           {/* Country Filter */}
-          <select
+          {/* <select
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="">All Countries</option>
-            <option value="Bangladesh">Bangladesh</option>
-            <option value="United States">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="">All Countries</option>
+            <option value="United_States">United States</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
             <option value="Portugal">Portugal</option>
             <option value="France">France</option>
             <option value="Spain">Spain</option>
-          </select>
+          </select> */}
 
           {/* Search Input */}
           <input
@@ -355,11 +356,14 @@ const SendReport = () => {
         dataSource={filteredPartners}
         rowKey="id"
         pagination={{
-          pageSize: 10,
+          current: currentPage,
+          pageSize: limit,
+          // If backend returns total, replace 100 with meta.total
+          total: serviceProvidersData?.data?.meta?.total || filteredPartners.length,
+          onChange: (page) => setCurrentPage(page),
           showSizeChanger: false,
           showQuickJumper: false,
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} partners`,
+          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} partners`,
         }}
         style={{ backgroundColor: "white" }}
       />
@@ -378,13 +382,13 @@ const SendReport = () => {
           title={
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <Avatar
-                src={selectedPartner?.image}
+                src={selectedPartner?.profileImage}
                 icon={<UserOutlined />}
                 size={40}
               />
               <div>
                 <div style={{ fontWeight: 600, color: "#0d0d0d" }}>
-                  {selectedPartner?.name}
+                  {selectedPartner?.fullName || 'N/A'}
                 </div>
                 <div style={{ fontSize: "12px", color: "#6b7280" }}>
                   Partner Details
@@ -412,7 +416,7 @@ const SendReport = () => {
                 </Descriptions.Item>
                 <Descriptions.Item label="Phone">
                   <span style={{ color: "#0d0d0d" }}>
-                    {selectedPartner.phone}
+                    {selectedPartner.contactNumber || 'N/A'}
                   </span>
                 </Descriptions.Item>
                 <Descriptions.Item label="Role">
@@ -430,11 +434,11 @@ const SendReport = () => {
                   <Tag
                     style={{
                       backgroundColor:
-                        selectedPartner.status === "Active"
+                        selectedPartner.status === "ACTIVE"
                           ? "#dcfce7"
                           : "#fef2f2",
                       color:
-                        selectedPartner.status === "Active"
+                        selectedPartner.status === "ACTIVE"
                           ? "#009106"
                           : "#ef4444",
                       border: "none",
@@ -443,39 +447,15 @@ const SendReport = () => {
                     {selectedPartner.status}
                   </Tag>
                 </Descriptions.Item>
-                <Descriptions.Item label="Level">
-                  <Tag
-                    style={{
-                      backgroundColor: "#dbeafe",
-                      color: "#1e40af",
-                      border: "none",
-                    }}
-                  >
-                    {selectedPartner.level}
-                  </Tag>
-                </Descriptions.Item>
-                <Descriptions.Item label="Location">
-                  {selectedPartner.location}
+                <Descriptions.Item label="Address">
+                  {selectedPartner.address || 'N/A'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Joined Date">
-                  {selectedPartner.joinedDate}
+                  {selectedPartner.createdAt}
                 </Descriptions.Item>
-                <Descriptions.Item label="Earnings">
+                <Descriptions.Item label="Service Fee">
                   <span style={{ fontWeight: 600, color: "#009106" }}>
-                    {selectedPartner.earnings}
-                  </span>
-                </Descriptions.Item>
-                <Descriptions.Item label="Total Projects">
-                  {selectedPartner.totalProjects}
-                </Descriptions.Item>
-                <Descriptions.Item label="Completion Rate">
-                  <span style={{ color: "#009106" }}>
-                    {selectedPartner.completionRate}
-                  </span>
-                </Descriptions.Item>
-                <Descriptions.Item label="Rating">
-                  <span style={{ color: "#ea580c", fontWeight: 600 }}>
-                    {selectedPartner.rating}/5
+                    {typeof selectedPartner.service_fee === 'number' ? `$${selectedPartner.service_fee.toLocaleString()}` : '$0'}
                   </span>
                 </Descriptions.Item>
               </Descriptions>

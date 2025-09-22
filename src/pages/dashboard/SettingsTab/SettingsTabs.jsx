@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiSettings, FiBell } from "react-icons/fi";
 import Swal from "sweetalert2";
 import AdminProfile from "../components/AdminProfile";
 import LanguageSelect from "../../../components/dashboard/LanguageSelect";
 import { SlArrowDown } from "react-icons/sl";
+import api from "../../../redux/api";
 
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("general");
@@ -19,16 +20,74 @@ const SettingsTab = () => {
     timeFormat: "24 Hours",
   });
 
-  // Notification settings state
+  // Notification settings state (UI keys)
   const [notificationSettings, setNotificationSettings] = useState({
-    messageNotifications: false,
-    transactionNotifications: false,
-    emailNotifications: false,
+    messageNotifications: false, // maps to supportNotification
+    transactionNotifications: false, // maps to paymentNotification
+    emailNotifications: false, // maps to emailNotification
   });
+  const [notifLoading, setNotifLoading] = useState(false);
 
   const handleGeneralSettingsChange = (e) => {
     const { name, value } = e.target;
     setGeneralSettings((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Fetch current notification settings when tab becomes active
+  useEffect(() => {
+    const fetchNotificationSettings = async () => {
+      setNotifLoading(true);
+      try {
+        // PATCH with empty body as per API contract to get current/last values
+        const res = await api.patch("/settings/notification-settings", {});
+        const server = res?.data?.data || {};
+        setNotificationSettings({
+          messageNotifications: !!server.supportNotification,
+          transactionNotifications: !!server.paymentNotification,
+          emailNotifications: !!server.emailNotification,
+        });
+      } catch (error) {
+        console.error("Load notification settings failed", error);
+        // Keep defaults but inform user
+        Swal.fire("Error", error?.response?.data?.message || "Failed to load notification settings", "error");
+      } finally {
+        setNotifLoading(false);
+      }
+    };
+    if (activeTab === "notification") {
+      fetchNotificationSettings();
+    }
+  }, [activeTab]);
+
+  const handleSaveNotificationSettings = async () => {
+    setNotifLoading(true);
+    try {
+      // Map UI state to API keys
+      const payload = {
+        supportNotification: notificationSettings.messageNotifications,
+        paymentNotification: notificationSettings.transactionNotifications,
+        emailNotification: notificationSettings.emailNotifications,
+      };
+      const res = await api.patch("/settings/notification-settings", payload);
+      const server = res?.data?.data || {};
+      // Normalize back to UI state
+      setNotificationSettings({
+        messageNotifications: !!server.supportNotification,
+        transactionNotifications: !!server.paymentNotification,
+        emailNotifications: !!server.emailNotification,
+      });
+      Swal.fire({
+        title: "Saved!",
+        text: "Notification settings updated.",
+        icon: "success",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      Swal.fire("Error", error?.response?.data?.message || "Failed to update notification settings", "error");
+    } finally {
+      setNotifLoading(false);
+    }
   };
 
   const handleNotificationToggle = (settingName) => {
@@ -139,7 +198,7 @@ const SettingsTab = () => {
                     </label>
                     <input
                       type="text"
-                      value="English (Default)"
+                      value="USD (Default)"
                      disabled
                       className="w-full px-4 py-2 border text-brandGray rounded-md   cursor-not-allowed"
                     />
@@ -291,7 +350,7 @@ const SettingsTab = () => {
                     onToggle={() =>
                       handleNotificationToggle("messageNotifications")
                     }
-                    label="Message Notifications"
+                    label="Support Notification"
                   />
                   <div className="border-t border-gray-200 my-1"></div>
 
@@ -300,7 +359,7 @@ const SettingsTab = () => {
                     onToggle={() =>
                       handleNotificationToggle("transactionNotifications")
                     }
-                    label="Transaction Info Notifications"
+                    label="PaymentNotification"
                   />
                   <div className="border-t border-gray-200 my-1"></div>
 
@@ -309,8 +368,20 @@ const SettingsTab = () => {
                     onToggle={() =>
                       handleNotificationToggle("emailNotifications")
                     }
-                    label="Email Notifications"
+                    label="EmailNotification"
                   />
+                  <div className="flex justify-start mt-6">
+                    <button
+                      type="button"
+                      onClick={handleSaveNotificationSettings}
+                      disabled={notifLoading}
+                      className={`px-6 py-2 rounded-md text-white font-semibold transition-colors ${
+                        notifLoading ? "bg-gray-300 cursor-not-allowed" : "bg-orangeAction hover:bg-yellow-600"
+                      }`}
+                    >
+                      {notifLoading ? "Loading..." : "Save Notification Settings"}
+                    </button>
+                  </div>
                 </div>
 
                 {/* <div className="text-center text-sm text-brandGray mt-4">

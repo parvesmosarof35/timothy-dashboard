@@ -101,8 +101,7 @@ const FinancialDashboard = () => {
 
             {/* dropdown  */}
 
-            <div className="relative inline-block text-left">
-      {/* Trigger */}
+            {/* <div className="relative inline-block text-left">
       <div
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
@@ -111,7 +110,6 @@ const FinancialDashboard = () => {
         <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
       </div>
 
-      {/* Dropdown Options */}
       {isOpen && (
         <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
           {yearOptions.map((year) => (
@@ -125,7 +123,7 @@ const FinancialDashboard = () => {
           ))}
         </div>
       )}
-    </div>
+    </div> */}
           </div>
         </div>
 

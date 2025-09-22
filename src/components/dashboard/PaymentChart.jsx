@@ -95,7 +95,7 @@ return (
       <h1 className="text-2xl font-semibold text-darkGray">Payment</h1>
       
       {/* Year Filter Dropdown */}
-      <div className="relative inline-block text-left">
+      {/* <div className="relative inline-block text-left">
         <div
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
@@ -117,7 +117,7 @@ return (
             ))}
           </div>
         )}
-      </div>
+      </div> */}
     </div>
 
   <div className="rounded-lg col-span-4 p-12 bg-white shadow">

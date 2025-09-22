@@ -1,17 +1,20 @@
-import { Modal, Spin, Alert, Avatar, Empty } from "antd";
+import { Modal, Spin, Alert, Avatar, Empty, Image } from "antd";
 import { MessageCircle, User, Clock } from "lucide-react";
 import { useGetMessagesByChannelNameQuery } from "../../redux/api/chat/getAllMSGApi";
+import { useSelector } from "react-redux";
 
 const MessageModal = ({ isOpen, onClose, channelName, receiverUser }) => {
+  const { userId: currentAdminId } = useSelector((state) => state.auth);
   const { 
     data: messagesData, 
     isLoading, 
     error 
-  } = useGetMessagesByChannelNameQuery(channelName, {
-    skip: !channelName || !isOpen
-  });
-
-  const messages = messagesData?.data?.[0]?.messages || [];
+  } = useGetMessagesByChannelNameQuery(
+    { channelName, page: 1, limit: 100 },
+    { skip: !channelName || !isOpen }
+  );
+  // Normalize API data shape similar to AllMessage.jsx
+  const messages = messagesData?.data?.data?.[0]?.messages || [];
 
   const formatTime = (dateString) => {
     return new Date(dateString).toLocaleString('en-US', {
@@ -56,41 +59,77 @@ const MessageModal = ({ isOpen, onClose, channelName, receiverUser }) => {
     }
 
     return (
-      <div className="space-y-4 max-h-96 overflow-y-auto">
-        {messages.map((message) => (
-          <div key={message.id} className="flex items-start space-x-3">
-            <Avatar
-              size={32}
-              src={message.sender?.profileImage}
-              icon={<User />}
-              className="flex-shrink-0"
-            />
-            
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2 mb-1">
-                <span className="text-sm font-medium text-darkGray">
-                  {message.sender?.fullName || 'Unknown User'}
-                </span>
-                <span className="text-xs text-gray-500 flex items-center">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {formatTime(message.createdAt)}
-                </span>
-              </div>
-              
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-sm text-darkGray">{message.message}</p>
-                
-                {message.files && message.files.length > 0 && (
-                  <div className="mt-2">
-                    <span className="text-xs text-gray-500">
-                      {message.files.length} file(s) attached
+      <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
+        {messages.map((message) => {
+          const isOwn = message?.senderId === currentAdminId;
+          const hasImages = Array.isArray(message?.files) && message.files.length > 0;
+          return (
+            <div
+              key={message.id}
+              className={`flex items-end ${isOwn ? 'justify-end' : 'justify-start'}`}
+            >
+              {!isOwn && (
+                <Avatar
+                  size={32}
+                  src={message.sender?.profileImage}
+                  icon={<User />}
+                  className="mr-2"
+                />
+              )}
+
+              <div className={`max-w-[75%] ${isOwn ? 'text-right' : 'text-left'}`}>
+                <div
+                  className={`${
+                    isOwn
+                      ? 'bg-orange-100 text-gray-900'
+                      : 'bg-gray-100 text-gray-900'
+                  } rounded-2xl px-4 py-2 shadow-sm`}
+                >
+                  {/* Sender name and time */}
+                  <div className={`flex items-center ${isOwn ? 'justify-end' : 'justify-start'} gap-2 mb-1`}>
+                    <span className="text-xs font-medium text-gray-700">
+                      {message.sender?.fullName || 'Unknown User'}
+                    </span>
+                    <span className="text-[10px] text-gray-500 flex items-center">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {formatTime(message.createdAt)}
                     </span>
                   </div>
-                )}
+
+                  {/* Message text */}
+                  {message?.message && (
+                    <p className="text-sm whitespace-pre-wrap break-words">{message.message}</p>
+                  )}
+
+                  {/* Image attachments */}
+                  {hasImages && (
+                    <div className={`mt-2 grid ${message.files.length > 1 ? 'grid-cols-2 gap-2' : 'grid-cols-1'} rounded-md`}>
+                      {message.files.map((file) => (
+                        <div key={file?.id || file?.url} className="overflow-hidden rounded-lg">
+                          <Image
+                            src={file?.url || file}
+                            alt="attachment"
+                            className="rounded-lg object-cover"
+                            placeholder
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {isOwn && (
+                <Avatar
+                  size={32}
+                  src={message.sender?.profileImage}
+                  icon={<User />}
+                  className="ml-2"
+                />
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   };
@@ -117,7 +156,7 @@ const MessageModal = ({ isOpen, onClose, channelName, receiverUser }) => {
       open={isOpen}
       onCancel={onClose}
       footer={null}
-      width={600}
+      width={720}
       className="message-modal"
     >
       {renderContent()}

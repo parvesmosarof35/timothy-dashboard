@@ -67,7 +67,7 @@ const ContractCard = ({
         <h3 className="text-darkGray font-medium text-sm">{title}</h3>
 
         {/* Year Filter dropdown */}
-        <div className="relative inline-block text-left">
+        {/* <div className="relative inline-block text-left">
           <div
             onClick={() => setIsOpen(!isOpen)}
             className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
@@ -89,7 +89,7 @@ const ContractCard = ({
               ))}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Circular progress */}

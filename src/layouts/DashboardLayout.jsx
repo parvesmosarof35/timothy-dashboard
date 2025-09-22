@@ -13,8 +13,9 @@ import { AuthContext } from "../providers/AuthProvider";
 import { LuUsers } from "react-icons/lu";
 import { CiMail } from "react-icons/ci";
 import { TiMessages } from "react-icons/ti";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/auth/authSlice";
+import { jwtDecode } from "jwt-decode";
 
 
 export default function DashboardLayout() {
@@ -25,6 +26,7 @@ export default function DashboardLayout() {
   const submenuRef = useRef(null);
   const isSettingsActive = location.pathname.startsWith("/dashboard/settings");
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
 
 
   const { user, logOut } = useContext(AuthContext);
@@ -97,6 +99,15 @@ export default function DashboardLayout() {
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
+  const decoded = (() => {
+    try {
+      return token ? jwtDecode(token) : null;
+    } catch (e) {
+      return null;
+    }
+  })();
+  const isSuperAdmin = decoded?.role === "SUPER_ADMIN";
+
   const renderNavLinks = () => (
     <>
       <NavLink
@@ -166,13 +177,15 @@ export default function DashboardLayout() {
         User Support
       </NavLink>
 
-      <NavLink
-        to="/dashboard/role"
-        className={({ isActive }) => linkClass(isActive)}
-      >
-        <LuUsers className="text-lg" />
-        Role
-      </NavLink>
+      {isSuperAdmin && (
+        <NavLink
+          to="/dashboard/role"
+          className={({ isActive }) => linkClass(isActive)}
+        >
+          <LuUsers className="text-lg" />
+          Role
+        </NavLink>
+      )}
 
       <NavLink
         to="/dashboard/terms-conditions"

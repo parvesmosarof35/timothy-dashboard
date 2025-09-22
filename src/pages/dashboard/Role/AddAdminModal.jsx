@@ -2,7 +2,7 @@ import { Modal, Form, Input, Select, message } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createUser,
+  createAdminBySuperAdmin,
   resetUserState,
 } from "../../../redux/features/user/userSlice";
 
@@ -14,7 +14,7 @@ const AddAdminModal = ({ open, onClose, refetchAdmins }) => {
 
   const handleSubmit = (values) => {
     const { name: fullName, email, password, userType: role } = values;
-    dispatch(createUser({ email, password, role, fullName }));
+    dispatch(createAdminBySuperAdmin({ email, password, role, fullName }));
   };
 
   // Show success message and close modal
