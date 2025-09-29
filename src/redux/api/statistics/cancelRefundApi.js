@@ -8,7 +8,7 @@ export const cancelRefundApi = createApi({
   tagTypes: ['CancelRefund'],
   endpoints: (builder) => ({
     getCancelRefundStats: builder.query({
-      query: (yearRange = '2025') => `/statistics/cancel-refund-contracts?yearRange=${yearRange}`,
+      query: (timeRange = 'THIS_MONTH') => `/statistics/cancel-refund-contracts?timeRange=${timeRange}`,
       providesTags: ['CancelRefund'],
     }),
   }),

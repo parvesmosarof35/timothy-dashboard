@@ -50,18 +50,19 @@ const LegendItem = ({ color, label }) => (
 
 
 const FinancialDashboard = () => {
-  // Generate year options (current year and previous 4-5 years)
-  const currentYear = new Date().getFullYear();
-  const yearOptions = [];
-  for (let i = 0; i < 5; i++) {
-    yearOptions.push((currentYear - i).toString());
-  }
-
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  // Time range options
+  const timeOptions = ["Today", "This Week", "This Month", "This Year"];
+  const [selectedTime, setSelectedTime] = useState("This Year");
   const [isOpen, setIsOpen] = useState(false);
+  const timeParamMap = {
+    "Today": "TODAY",
+    "This Week": "THIS_WEEK",
+    "This Month": "THIS_MONTH",
+    "This Year": "THIS_YEAR",
+  };
   
-  // Fetch data from API
-  const { data: apiData, isLoading, error } = useGetFinancialMetricsQuery();
+  // Fetch data from API with timeRange
+  const { data: apiData, isLoading, error } = useGetFinancialMetricsQuery(timeParamMap[selectedTime]);
   
   // Transform API data for chart
   const data = apiData?.data?.paymentMonthsData?.map(item => ({
@@ -73,8 +74,8 @@ const FinancialDashboard = () => {
   const adminEarnings = apiData?.data?.adminEarnings || 0;
   const serviceEarnings = apiData?.data?.serviceEarnings || 0;
 
-  const handleSelect = (year) => {
-    setSelectedYear(year);
+  const handleSelect = (option) => {
+    setSelectedTime(option);
     setIsOpen(false);
   };
 
@@ -94,62 +95,61 @@ const FinancialDashboard = () => {
           </h2>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">
-              <LegendItem color="#c3720b" label="Admin Earnings" />
-              <LegendItem color="#FFC983" label="Service Earnings" />
+              <LegendItem color="#c3720b" label="Partners" />
+              <LegendItem color="#FFC983" label="Users" />
             </div>
 
 
-            {/* dropdown  */}
+            {/* Time range dropdown */}
+            <div className="relative inline-block text-left">
+              <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+              >
+                {selectedTime}
+                <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+              </div>
 
-            {/* <div className="relative inline-block text-left">
-      <div
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
-      >
-        {selectedYear}
-        <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
-      </div>
-
-      {isOpen && (
-        <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
-          {yearOptions.map((year) => (
-            <div
-              key={year}
-              onClick={() => handleSelect(year)}
-              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-            >
-              {year}
+              {isOpen && (
+                <div className="absolute z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+                  {timeOptions.map((option) => (
+                    <div
+                      key={option}
+                      onClick={() => handleSelect(option)}
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-    </div> */}
           </div>
         </div>
 
         {/* Metric Cards */}
         <div className="flex mb-8 justify-start gap-2">
           <MetricCard
-            title="Admin Earnings"
+            title="All"
             value={adminEarnings}
             trend="up"
             icon={TrendingUp}
             trendColor="green"
           />
           <MetricCard
-            title="Service Earnings"
+            title="Contracts"
             value={serviceEarnings}
             trend="up"
             icon={TrendingUp}
             trendColor="green"
           />
-          {/* <MetricCard
+          <MetricCard
             title="Users"
             value={1009123}
             trend="down"
             icon={TrendingDown}
             trendColor="red"
-          /> */}
+          />
         </div>
 
         {/* Chart */}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetOverviewQuery } from "../redux/api/statistics/getOverviewApi";
 import { Spin } from "antd";
 import OverviewCard from "./dashboard/OverviewCard"
@@ -13,7 +13,20 @@ import UserSupportTickets from "./dashboard/UserSupportTickets";
 import UserDemographics from "./dashboard/UserDemographics";
 
 const Dashboard = () => {
-  const { data: overviewData, error, isLoading } = useGetOverviewQuery();
+  // Shared time filter for overview cards
+  const timeOptions = ["Today", "This Week", "This Month", "This Year"];
+  const [selectedTime, setSelectedTime] = useState("This Month");
+  const timeParamMap = {
+    "Today": "TODAY",
+    "This Week": "THIS_WEEK",
+    "This Month": "THIS_MONTH",
+    "This Year": "THIS_YEAR",
+  };
+
+  const { data: overviewData, error, isLoading } = useGetOverviewQuery(
+    timeParamMap[selectedTime],
+    { refetchOnMountOrArgChange: true }
+  );
 
   useEffect(() => {
     if (overviewData) {
@@ -41,12 +54,18 @@ const Dashboard = () => {
               value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalUsers?.count} 
               growth={overviewData?.data?.totalUsers?.growth}
               showDropdown
+              selectedTime={selectedTime}
+              onTimeChange={setSelectedTime}
+              timeOptions={timeOptions}
             />
             <OverviewCard 
-              title="Total Contracts" 
+              title="Active Contracts" 
               value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalContracts?.count} 
               growth={overviewData?.data?.totalContracts?.growth}
               showDropdown
+              selectedTime={selectedTime}
+              onTimeChange={setSelectedTime}
+              timeOptions={timeOptions}
             />
           </div>
 
@@ -73,7 +92,12 @@ const Dashboard = () => {
 
         {/* Right/Sidebar column */}
         <div className="col-span-1 md:col-span-4 bg-white rounded-lg p-4 shadow-sm space-y-6 md:sticky md:top-24 md:h-fit self-start max-h-[calc(100vh-2rem)] overflow-auto">
-          <CommunicationSupport supportData={supportData} />
+          <CommunicationSupport 
+            supportData={supportData}
+            selectedTime={selectedTime}
+            onTimeChange={setSelectedTime}
+            timeOptions={timeOptions}
+          />
 
           <UserSupportTickets />
         </div>

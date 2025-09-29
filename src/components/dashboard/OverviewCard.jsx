@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-const OverviewCard = ({ title, value, growth, showDropdown = false }) => {
-  // local dropdown state (optional)
-  const [selected, setSelected] = useState("Today");
+const OverviewCard = ({ title, value, growth, showDropdown = false, selectedTime = "This Month", onTimeChange, timeOptions = ["Today", "This Week", "This Month", "This Year"] }) => {
+  // local dropdown open state; selection comes from parent
   const [open, setOpen] = useState(false);
 
   const isNumber = typeof growth === "number";
@@ -25,16 +24,16 @@ const OverviewCard = ({ title, value, growth, showDropdown = false }) => {
               onClick={() => setOpen((v) => !v)}
               className="flex items-center text-xs text-brandGray bg-gray-50 px-3 py-1.5 rounded-full border"
             >
-              {selected}
+              {selectedTime}
               <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
             </button>
             {open && (
               <div className="absolute right-0 z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
-                {["Today", "This Week", "This Month", "This Year"].map((opt) => (
+                {timeOptions.map((opt) => (
                   <div
                     key={opt}
                     onClick={() => {
-                      setSelected(opt);
+                      onTimeChange && onTimeChange(opt);
                       setOpen(false);
                     }}
                     className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

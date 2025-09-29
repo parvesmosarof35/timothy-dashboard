@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { TrendingUp } from "lucide-react";
 import { HiArrowTrendingDown } from "react-icons/hi2";
 
-const CommunicationSupport = ({ supportData }) => {
+const CommunicationSupport = ({ supportData, selectedTime = "This Month", onTimeChange, timeOptions = ["Today", "This Week", "This Month", "This Year"] }) => {
+  const [open, setOpen] = useState(false);
   // Extract dynamic support data with safe fallbacks
   const {
     totalSupports = 0,
@@ -33,9 +34,28 @@ const CommunicationSupport = ({ supportData }) => {
           </h2>
           <p className="text-xl text-gray-500">Reported Issues</p>
         </div>
-        {/* Date Selector */}
-        <div className="flex items-center text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border">
-          Today <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
+        {/* Time-range filter */}
+        <div className="relative inline-block text-left">
+          <div
+            onClick={() => setOpen(!open)}
+            className="flex items-center text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border cursor-pointer"
+          >
+            {selectedTime}
+            <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
+          </div>
+          {open && (
+            <div className="absolute right-0 z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+              {timeOptions.map((opt) => (
+                <div
+                  key={opt}
+                  onClick={() => { onTimeChange && onTimeChange(opt); setOpen(false); }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                >
+                  {opt}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

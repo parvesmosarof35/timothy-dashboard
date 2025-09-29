@@ -8,11 +8,11 @@ export const statisticsApi = createApi({
   tagTypes: ['Statistics'],
   endpoints: (builder) => ({
     getOverview: builder.query({
-      query: () => '/statistics/overview',
+      query: (timeRange = 'THIS_MONTH') => `/statistics/overview?timeRange=${timeRange}`,
       providesTags: ['Statistics'],
     }),
     getFinancialMetrics: builder.query({
-      query: () => '/statistics/financial-metrics',
+      query: (timeRange = 'THIS_YEAR') => `/statistics/financial-metrics?timeRange=${timeRange}`,
       providesTags: ['Statistics'],
     }),
   }),

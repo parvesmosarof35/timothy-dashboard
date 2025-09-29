@@ -88,7 +88,7 @@ const PaymentChart = () => {
   const yDelta = values.length ? Math.max(1, Math.round(range * 0.05)) : 0;
   const shadowData = data.map(item => ({
     ...item,
-    payments: item.payments - yDelta,
+    payments: Math.max(0, item.payments - yDelta),
   }));
 
   const handleSelect = (year) => {
@@ -152,6 +152,7 @@ const PaymentChart = () => {
                 tick={{ fontSize: 12, dx: -10 }}
                 axisLine={false}
                 tickLine={false}
+                domain={[0, 'auto']}
                 tickFormatter={(value) => `${value / 1000}k`}
               />
 

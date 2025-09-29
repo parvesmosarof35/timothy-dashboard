@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { TrendingUp } from "lucide-react";
 import { HiArrowTrendingDown } from "react-icons/hi2";
@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { useState } from "react";
 import { useGetPaymentUserAnalysisQuery } from "../../redux/api/statistics/paymentAndUserAnalisys";
 
 const UserAnalytics = ({
@@ -18,20 +17,19 @@ const UserAnalytics = ({
   subtitle = "User Growth",
   showDropdown = false,
 }) => {
-  // Generate year options (current year and previous 4-5 years)
-  const currentYear = new Date().getFullYear();
-  const yearOptions = [];
-  for (let i = 0; i < 5; i++) {
-    yearOptions.push((currentYear - i).toString());
-  }
-
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
-  // Optional local dropdown state when showDropdown is enabled
-  const [selected, setSelected] = useState("Today");
+  // Time-range filter (default by year)
+  const timeOptions = ["Today", "This Week", "This Month", "This Year"];
+  const [selectedTime, setSelectedTime] = useState("This Year");
   const [open, setOpen] = useState(false);
+  const timeParamMap = {
+    "Today": "TODAY",
+    "This Week": "THIS_WEEK",
+    "This Month": "THIS_MONTH",
+    "This Year": "THIS_YEAR",
+  };
   
   // Fetch data from API
-  const { data: apiData, isLoading, error } = useGetPaymentUserAnalysisQuery(selectedYear);
+  const { data: apiData, isLoading, error } = useGetPaymentUserAnalysisQuery(timeParamMap[selectedTime]);
   
   // Transform API data for chart (single series: users)
   const transformedData = apiData?.data?.userMonthsData?.map(item => ({
@@ -53,11 +51,7 @@ const UserAnalytics = ({
     return null;
   };
 
-  const [openYear, setOpenYear] = useState(false);
-  const handleSelectYear = (year) => {
-    setSelectedYear(year);
-    setOpenYear(false);
-  };
+  // no separate year selector; using time-range only
 
 
   return (
@@ -74,16 +68,16 @@ const UserAnalytics = ({
               onClick={() => setOpen((v) => !v)}
               className="flex items-center text-xs text-brandGray bg-gray-50 px-3 py-1.5 rounded-full border"
             >
-              {selected}
+              {selectedTime}
               <IoIosArrowDown className="ml-1 text-gray-400" size={12} />
             </button>
             {open && (
               <div className="absolute right-0 z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
-                {["Today", "This Week", "This Month", "This Year"].map((opt) => (
+                {timeOptions.map((opt) => (
                   <div
                     key={opt}
                     onClick={() => {
-                      setSelected(opt);
+                      setSelectedTime(opt);
                       setOpen(false);
                     }}
                     className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

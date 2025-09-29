@@ -19,6 +19,7 @@ import { adminChannelsApi } from './api/chat/getAllChannelsForAdminApi';
 import { contractDetailsApi } from './api/contracts/contractDetailsApi';
 import { supportApi } from './api/support/supportApi';
 import { notificationManageApi } from './api/notifications/notificationManageApi';
+import { userDemographicsApi } from './api/statistics/getuserDemographics';
 
 export const store = configureStore({
   reducer: {
@@ -42,6 +43,7 @@ export const store = configureStore({
     [contractDetailsApi.reducerPath]: contractDetailsApi.reducer,
     [supportApi.reducerPath]: supportApi.reducer,
     [notificationManageApi.reducerPath]: notificationManageApi.reducer,
+    [userDemographicsApi.reducerPath]: userDemographicsApi.reducer,
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware()
@@ -58,5 +60,6 @@ export const store = configureStore({
       .concat(adminChannelsApi.middleware)
       .concat(contractDetailsApi.middleware)
       .concat(supportApi.middleware)
-      .concat(notificationManageApi.middleware),
+      .concat(notificationManageApi.middleware)
+      .concat(userDemographicsApi.middleware),
 });
