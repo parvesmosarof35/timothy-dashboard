@@ -53,7 +53,23 @@ export const deleteSingleUser = createAsyncThunk(
   "singleUser/deleteSingleUser",
   async (id, thunkAPI) => {
     try {
-      const response = await api.delete(`/users/${id}`);
+      const response = await api.delete(`/users/admin/${id}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
+
+// Async thunk for updating a single admin (super admin access update)
+export const updateSingleAdmin = createAsyncThunk(
+  "singleUser/updateSingleAdmin",
+  async ({ id, data }, thunkAPI) => {
+    try {
+      const response = await api.patch(`/users/update-super-admin-access/${id}`, data);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -140,6 +156,21 @@ const singleUserSlice = createSlice({
       .addCase(getProviderFinances.rejected, (state, action) => {
         state.financesLoading = false;
         state.financesError = action.payload;
+      })
+      // Handle updateSingleAdmin thunk
+      .addCase(updateSingleAdmin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateSingleAdmin.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload?.data) {
+          state.singleUser = action.payload;
+        }
+      })
+      .addCase(updateSingleAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

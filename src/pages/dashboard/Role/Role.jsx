@@ -7,12 +7,14 @@ import { getAdmins } from "../../../redux/features/admin/adminSlice";
 import AddAdminModal from "./AddAdminModal";
 import AdminProfile from "../components/AdminProfile";
 import { deleteSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const Role = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const debouncedSearch = useDebounce(searchTerm, 400);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,8 +27,20 @@ const Role = () => {
   }));
 
   useEffect(() => {
-    dispatch(getAdmins({ page: currentPage, limit: 10 }));
-  }, [dispatch, currentPage]);
+    dispatch(
+      getAdmins({
+        page: currentPage,
+        limit: 10,
+        status: selectedTime || "",
+        searchTerm: debouncedSearch || "",
+      })
+    );
+  }, [dispatch, currentPage, selectedTime, debouncedSearch]);
+
+  // Reset to page 1 when filters/search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTime, debouncedSearch]);
 
   const handleDelete = (id) => {
     Modal.confirm({
@@ -40,7 +54,14 @@ const Role = () => {
           .unwrap()
           .then(() => {
             message.success("User deleted successfully");
-            dispatch(getAdmins({ page: currentPage, limit: 10 }));
+            dispatch(
+              getAdmins({
+                page: currentPage,
+                limit: 10,
+                status: selectedTime || "",
+                searchTerm: debouncedSearch || "",
+              })
+            );
           })
           .catch((err) => {
             message.error("Failed to delete user");
@@ -85,6 +106,26 @@ const Role = () => {
       ),
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
+            status === "ACTIVE"
+              ? "text-green-700 bg-green-100"
+              : status === "INACTIVE"
+              ? "text-yellow-700 bg-yellow-100"
+              : status === "REJECTED"
+              ? "text-red-700 bg-red-100"
+              : "text-gray-700 bg-gray-100"
+          }`}
+        >
+          {status === "ACTIVE" ? "Active" : status === "INACTIVE" ? "Pending" : status}
+        </span>
+      ),
+    },
+    {
       title: "Action",
       key: "action",
       render: (_, admin) => (
@@ -104,7 +145,14 @@ const Role = () => {
   ];
 
   const handleRefetchAdmins = () => {
-    dispatch(getAdmins({ page: currentPage, limit: 10 }));
+    dispatch(
+      getAdmins({
+        page: currentPage,
+        limit: 10,
+        status: selectedTime || "",
+        searchTerm: debouncedSearch || "",
+      })
+    );
   };
 
   return (
@@ -127,8 +175,9 @@ const Role = () => {
             onChange={(e) => setSelectedTime(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="today">Approved</option>
-            <option value="week">Pending</option>
+            <option value="">All</option>
+            <option value="ACTIVE">Approved</option>
+            <option value="INACTIVE">Pending</option>
           </select>
           <Button
             type="primary"

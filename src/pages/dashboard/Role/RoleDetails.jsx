@@ -4,46 +4,47 @@ import {
   Form,
   Input,
   Button,
-  Select,
   message,
   Spin,
   Modal,
   Card,
   Descriptions,
   Avatar,
+  Select,
 } from "antd";
 import {
   UserOutlined,
-  MailOutlined,
   PhoneOutlined,
   HomeOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { deleteSingleUser, getSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  deleteSingleUser,
+  getSingleUser,
+  updateSingleAdmin,
+} from "../../../redux/features/user/getSIngleUserSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const RoleDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  
+
   const { singleUser, loading } = useSelector((state) => state.singleUser);
   const user = singleUser?.data;
 
-
-    useEffect(() => {
-      if (id) {
-        dispatch(getSingleUser(id));
-      }
-    }, [dispatch, id]);
+  useEffect(() => {
+    if (id) {
+      dispatch(getSingleUser(id));
+    }
+  }, [dispatch, id]);
 
   useEffect(() => {
     if (user) {
       form.setFieldsValue({
         name: user?.fullName,
-        email: user?.email,
-        role: user?.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase(),
+        status: user?.status || "INACTIVE",
         phone: user?.contactNumber || "N/A",
         address: user?.address || "N/A",
       });
@@ -60,9 +61,9 @@ const RoleDetails = () => {
           <Card bordered={false} style={{ marginTop: 16 }}>
             <Descriptions column={1}>
               <Descriptions.Item label="Name">{values.name}</Descriptions.Item>
-              <Descriptions.Item label="Email">{values.email}</Descriptions.Item>
-              <Descriptions.Item label="Role">{values.role}</Descriptions.Item>
+              <Descriptions.Item label="Status">{values.status}</Descriptions.Item>
               <Descriptions.Item label="Phone">{values.phone}</Descriptions.Item>
+              <Descriptions.Item label="Address">{values.address}</Descriptions.Item>
             </Descriptions>
           </Card>
         </div>
@@ -75,13 +76,21 @@ const RoleDetails = () => {
 
   const handleUpdate = async (values) => {
     try {
-      console.log('Update values:', values);
-      // Here you would typically dispatch an update action
-      // await dispatch(updateUser({ id, ...values }));
-      
-      message.success("Admin details updated successfully!");
+      // Build payload and call API via thunk
+      const payload = {
+        fullName: values?.name,
+        status: values?.status,
+        address: values?.address,
+        contactNumber: values?.phone,
+      };
+
+      const res = await dispatch(updateSingleAdmin({ id, data: payload })).unwrap();
+      message.success(res?.message || "Admin details updated successfully!");
+      // Refresh user data
+      dispatch(getSingleUser(id));
     } catch (error) {
-      message.error("Failed to update admin details");
+      const errMsg = error?.data?.message || error?.message || "Failed to update admin details";
+      message.error(errMsg);
     }
   };
 
@@ -93,12 +102,17 @@ const RoleDetails = () => {
         <div>
           <p>Are you sure you want to delete this admin?</p>
           <div style={{ display: "flex", alignItems: "center", marginTop: 16 }}>
-            <Avatar 
-              src={user?.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"} 
-              size={64} 
+            <Avatar
+              src={
+                user?.profileImage ||
+                "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"
+              }
+              size={64}
             />
             <div style={{ marginLeft: 16 }}>
-              <p><strong>{user?.fullName}</strong></p>
+              <p>
+                <strong>{user?.fullName}</strong>
+              </p>
               <p>{user?.email}</p>
               <p>{user?.role}</p>
             </div>
@@ -114,9 +128,9 @@ const RoleDetails = () => {
 
   const handleDelete = async () => {
     try {
-       dispatch(deleteSingleUser(id));
+      dispatch(deleteSingleUser(id));
       message.success("Admin deleted successfully!");
-      navigate('/dashboard/role');
+      navigate("/dashboard/role");
     } catch (error) {
       message.error("Failed to delete admin");
     }
@@ -124,12 +138,14 @@ const RoleDetails = () => {
 
   if (loading || !user) {
     return (
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <Spin size="large" />
       </div>
     );
@@ -149,7 +165,10 @@ const RoleDetails = () => {
         title={
           <div style={{ display: "flex", alignItems: "center" }}>
             <Avatar
-              src={user?.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"}
+              src={
+                user?.profileImage ||
+                "https://i.ibb.co/Ps9gZ8DD/Profile-image.png"
+              }
               size={40}
               style={{ marginRight: 12 }}
             />
@@ -158,11 +177,7 @@ const RoleDetails = () => {
         }
         bordered={false}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={showUpdateConfirm}
-        >
+        <Form form={form} layout="vertical" onFinish={showUpdateConfirm}>
           <Form.Item
             label="Name"
             name="name"
@@ -172,24 +187,13 @@ const RoleDetails = () => {
           </Form.Item>
 
           <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: "Please input the email!" },
-              { type: "email", message: "Please enter a valid email!" },
-            ]}
-          >
-            <Input prefix={<MailOutlined />} readOnly />
-          </Form.Item>
-
-          <Form.Item
-            label="Role"
-            name="role"
-            rules={[{ required: true, message: "Please select the role!" }]}
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Please select a status!" }]}
           >
             <Select>
-              <Select.Option value="Admin">Admin</Select.Option>
-              <Select.Option value="SuperAdmin">Super Admin</Select.Option>
+              <Select.Option value="ACTIVE">ACTIVE</Select.Option>
+              <Select.Option value="INACTIVE">INACTIVE</Select.Option>
             </Select>
           </Form.Item>
 
@@ -220,11 +224,7 @@ const RoleDetails = () => {
             >
               Update Admin
             </Button>
-            <Button 
-              danger 
-              onClick={showDeleteConfirm} 
-              loading={loading}
-            >
+            <Button danger onClick={showDeleteConfirm} loading={loading}>
               Delete Admin
             </Button>
           </Form.Item>

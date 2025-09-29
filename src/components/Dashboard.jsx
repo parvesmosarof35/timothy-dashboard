@@ -1,20 +1,16 @@
 import React, { useEffect } from "react";
 import { useGetOverviewQuery } from "../redux/api/statistics/getOverviewApi";
 import { Spin } from "antd";
-// import OverviewCard from "./dashboard/OverviewCard";
-// import PaymentChart from "@/components/dashboard/PaymentChart";
-// import PendingVerification from "@/components/dashboard/PendingVerification";
-// import CommunicationSupport from "@/components/dashboard/CommunicationSupport";
-// import UserSupportTickets from "@/components/dashboard/UserSupportTickets";
-
-// import OverviewCard from "./Dashboard/OverviewCard";
 import OverviewCard from "./dashboard/OverviewCard"
 import PaymentChart from "./dashboard/PaymentChart";
 import UserAnalytics from "./dashboard/UserAnalytics";
 import FinancialDashboard from "./dashboard/RevinueChart";
 import CancellationRefunds from "./dashboard/CancellationRefunds";
 import ContractManagement from "./dashboard/CircularProgress";
-import CommAndverification from "../pages/dashboard/CommunicationAndVerify/CommAndverification";
+import PendingVerification from "./dashboard/PendingVerification";
+import CommunicationSupport from "./dashboard/CommunicationSupport";
+import UserSupportTickets from "./dashboard/UserSupportTickets";
+import UserDemographics from "./dashboard/UserDemographics";
 
 const Dashboard = () => {
   const { data: overviewData, error, isLoading } = useGetOverviewQuery();
@@ -28,61 +24,59 @@ const Dashboard = () => {
     }
   }, [overviewData, error]);
 
+  // Match previous data path: overviewData?.data?.Supports
+  const supportData = overviewData?.data?.Supports ?? {};
+
   return (
-    <div className="md:px-6 px-1 bg-grayLightBg min-h-screen font-sans">
-      <h1 className="text-2xl font-semibold mb-6 text-darkGray">Overview</h1>
+    <div className="px-6 bg-gray-50 min-h-screen font-sans">
+      <h1 className="text-2xl font-semibold mb-6">Overview</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-6">
-        <div className="col-span-1 md:col-span-10 rounded-lg space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        {/* Left/Main column */}
+        <div className="col-span-1 md:col-span-6 rounded-lg space-y-6">
+          {/* Overview cards: 2-up */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <OverviewCard 
               title="Total Users" 
-              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalUsers} 
-              trend="↑ 20%" 
-            />
-            <OverviewCard
-              title="Total Service Providers"
-              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalPartners}
-              trend="↑ 20%"
+              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalUsers?.count} 
+              growth={overviewData?.data?.totalUsers?.growth}
+              showDropdown
             />
             <OverviewCard 
               title="Total Contracts" 
-              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalContracts} 
-              trend="↓ 5%" 
-            />
-            <OverviewCard 
-              title="Admin Earnings" 
-              value={isLoading ? <Spin size="small" /> : `$${overviewData?.data?.adminEarnings}`} 
-              trend="↑ 5%" 
+              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalContracts?.count} 
+              growth={overviewData?.data?.totalContracts?.growth}
+              showDropdown
             />
           </div>
 
-          
-            <CommAndverification isLoading={isLoading} overviewData={overviewData}></CommAndverification>
-
-          {/* payment and verification section */}
-          <div className="w-full grid grid-cols-6 gap-6">
-            <PaymentChart />
-            {/* <div className="h-full rounded-lg col-span-2">
-              <PendingVerification />
-            </div> */}
+          {/* Payment and verification section */}
+          <div className="w-full grid grid-cols-6 gap-8 md:gap-10 mb-10">
+            <div className="col-span-4">
+              <PaymentChart />
+            </div>
+            <div className="col-span-2">
+              <PendingVerification isLoading={isLoading} overviewData={overviewData} />
+            </div>
           </div>
 
+          <UserAnalytics />
 
-          <UserAnalytics></UserAnalytics>
+          <UserDemographics />
 
-          <FinancialDashboard></FinancialDashboard>
+          <FinancialDashboard />
 
-          <CancellationRefunds></CancellationRefunds>
+          <CancellationRefunds />
 
-          <ContractManagement></ContractManagement>
+          <ContractManagement />
         </div>
 
-        {/* <div className="col-span-1 md:col-span-4 bg-white rounded-lg p-4 shadow-sm space-y-6">
-          <CommunicationSupport />
+        {/* Right/Sidebar column */}
+        <div className="col-span-1 md:col-span-4 bg-white rounded-lg p-4 shadow-sm space-y-6 md:sticky md:top-24 md:h-fit self-start max-h-[calc(100vh-2rem)] overflow-auto">
+          <CommunicationSupport supportData={supportData} />
 
           <UserSupportTickets />
-        </div> */}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
