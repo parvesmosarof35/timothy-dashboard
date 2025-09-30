@@ -127,7 +127,7 @@ export default function UserDemographics() {
         </div>
 
         {/* Right-side Tabs */}
-        <div className="col-span-12 md:col-span-3 border-l md:pl-6 pl-0">
+        <div className="col-span-12 md:col-span-3 md:border-l md:pl-6 pl-0">
           <ul className="space-y-3 md:space-y-4 text-sm">
             {/* <li className="text-orange-500 font-medium">Total Users: {totalUsers}</li>
             <li className="text-gray-600">Total Partners: {totalPartners}</li> */}

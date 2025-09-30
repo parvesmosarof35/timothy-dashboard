@@ -23,9 +23,7 @@ const MetricCard = ({ title, value, trend, icon: Icon, trendColor }) => (
         {value.toLocaleString()}
       </p>
     </div>
-    <div
-      className={`p-2 rounded-lg border-2 border-[#f4ece1]`}
-    >
+    <div className={`p-2 rounded-lg border-2 border-[#f4ece1]`}>
       <Icon
         className={`w-10 h-10 ${
           trendColor === "green" ? "text-brandGreen" : "text-red-600"
@@ -89,12 +87,12 @@ const FinancialDashboard = () => {
       {/* Chart Section */}
       <div className="bg-white rounded-2xl p-2 md:p-6 shadow-sm">
         {/* Chart Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <h2 className="text-xl font-semibold text-brandGray">
             Revenue Overview
           </h2>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
+            <div className="flex items-center gap-3 sm:gap-4">
               <LegendItem color="#c3720b" label="Partners" />
               <LegendItem color="#FFC983" label="Users" />
             </div>
@@ -128,7 +126,7 @@ const FinancialDashboard = () => {
         </div>
 
         {/* Metric Cards */}
-        <div className="flex mb-8 justify-start gap-2">
+        <div className="flex flex-col sm:flex-row mb-8 justify-start items-start gap-2 md:gap-4">
           <MetricCard
             title="All"
             value={adminEarnings}
@@ -153,7 +151,7 @@ const FinancialDashboard = () => {
         </div>
 
         {/* Chart */}
-        <div className="h-80">
+        <div className="h-64 md:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={data}

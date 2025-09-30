@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { TrendingUp } from "lucide-react";
@@ -24,8 +24,20 @@ const CommunicationSupport = ({ supportData, selectedTime = "This Month", onTime
     { name: "Low", value: Low, color: "#FFA500" }, // Orange
   ];
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 480px)');
+    const handler = (e) => setIsMobile(e.matches);
+    handler(mq);
+    mq.addEventListener ? mq.addEventListener('change', handler) : mq.addListener(handler);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener('change', handler) : mq.removeListener(handler);
+    };
+  }, []);
+
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100  mx-auto">
+    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
@@ -61,10 +73,10 @@ const CommunicationSupport = ({ supportData, selectedTime = "This Month", onTime
 
       {/* Main Content Layout */}
       <div className="space-y-6">
-        <div className="flex justify-center gap-6 md:gap-10">
+        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-10">
           {/* Pie Chart */}
-          <div className="flex justify-center">
-            <div className="w-48 h-48">
+          <div className="flex justify-center md:justify-start w-full md:w-auto overflow-visible">
+            <div className="w-40 h-40 md:w-48 md:h-48 overflow-visible">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -72,7 +84,7 @@ const CommunicationSupport = ({ supportData, selectedTime = "This Month", onTime
                     cx="50%"
                     cy="50%"
                     innerRadius={0}
-                    outerRadius={90}
+                    outerRadius={isMobile ? 70 : 90}
                     paddingAngle={0}
                     dataKey="value"
                     stroke="none"
@@ -87,7 +99,7 @@ const CommunicationSupport = ({ supportData, selectedTime = "This Month", onTime
           </div>
 
           {/* Stats Row */}
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-4 w-full">
             <div className="flex flex-col space-y-6">
               {/* Total Issues */}
               <div className="flex items-center space-x-2">

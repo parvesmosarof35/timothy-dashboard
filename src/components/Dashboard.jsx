@@ -30,7 +30,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (overviewData) {
-      // console.log('Statistics Overview Data:', overviewData);
     }
     if (error) {
       console.error('Error fetching statistics:', error);
@@ -70,11 +69,11 @@ const Dashboard = () => {
           </div>
 
           {/* Payment and verification section */}
-          <div className="w-full grid grid-cols-6 gap-8 md:gap-10 mb-10">
-            <div className="col-span-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-6 gap-6 md:gap-10 mb-10">
+            <div className="md:col-span-4">
               <PaymentChart />
             </div>
-            <div className="col-span-2">
+            <div className="md:col-span-2">
               <PendingVerification isLoading={isLoading} overviewData={overviewData} />
             </div>
           </div>
@@ -91,7 +90,7 @@ const Dashboard = () => {
         </div>
 
         {/* Right/Sidebar column */}
-        <div className="col-span-1 md:col-span-4 bg-white rounded-lg p-4 shadow-sm space-y-6 md:sticky md:top-24 md:h-fit self-start max-h-[calc(100vh-2rem)] overflow-auto">
+        <div className="col-span-1 md:col-span-4 bg-white rounded-lg p-4 shadow-sm space-y-6 md:sticky md:top-24 md:h-fit min-h-fit md:min-h-0 self-start max-h-[calc(100vh-2rem)] overflow-auto">
           <CommunicationSupport 
             supportData={supportData}
             selectedTime={selectedTime}
