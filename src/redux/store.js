@@ -20,6 +20,7 @@ import { contractDetailsApi } from './api/contracts/contractDetailsApi';
 import { supportApi } from './api/support/supportApi';
 import { notificationManageApi } from './api/notifications/notificationManageApi';
 import { userDemographicsApi } from './api/statistics/getuserDemographics';
+import { userSupportTicketsApi } from './api/statistics/userSupportTicketsApi';
 
 export const store = configureStore({
   reducer: {
@@ -44,6 +45,7 @@ export const store = configureStore({
     [supportApi.reducerPath]: supportApi.reducer,
     [notificationManageApi.reducerPath]: notificationManageApi.reducer,
     [userDemographicsApi.reducerPath]: userDemographicsApi.reducer,
+    [userSupportTicketsApi.reducerPath]: userSupportTicketsApi.reducer,
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware()
@@ -61,5 +63,6 @@ export const store = configureStore({
       .concat(contractDetailsApi.middleware)
       .concat(supportApi.middleware)
       .concat(notificationManageApi.middleware)
-      .concat(userDemographicsApi.middleware),
+      .concat(userDemographicsApi.middleware)
+      .concat(userSupportTicketsApi.middleware),
 });

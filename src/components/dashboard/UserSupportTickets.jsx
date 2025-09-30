@@ -1,17 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { LuTicket } from "react-icons/lu";
 import { BsArrowUp, BsArrowDown } from "react-icons/bs";
+import { useGetUserSupportTicketsQuery } from "../../redux/api/statistics/userSupportTicketsApi";
 
-const UserSupportTickets = ({
-  totalTickets = 2420,
-  pendingTickets = 2420,
-  totalPercentage = 20,
-  pendingPercentage = 20,
-  totalTrend = "up", // "up" or "down"
-  pendingTrend = "up", // "up" or "down"
-  title = "User Support Tickets",
-}) => {
+const UserSupportTickets = ({ title = "User Support Tickets" }) => {
+  // Time filter (same options)
+  const timeOptions = ["Today", "This Week", "This Month", "This Year"];
+  const [selectedTime, setSelectedTime] = useState("This Month");
+  const [open, setOpen] = useState(false);
+  const timeParamMap = {
+    "Today": "TODAY",
+    "This Week": "THIS_WEEK",
+    "This Month": "THIS_MONTH",
+    "This Year": "THIS_YEAR",
+  };
+
+  // Fetch data
+  const { data: apiData } = useGetUserSupportTicketsQuery(timeParamMap[selectedTime]);
+
+  // Map API response
+  const totalTickets = apiData?.data?.totalSupport ?? 0;
+  const pendingTickets = apiData?.data?.pendingSupport ?? 0;
+  const totalPercentage = apiData?.data?.totalSupportChange?.percentage ?? 0;
+  const totalTrend = apiData?.data?.totalSupportChange?.isIncrease ? "up" : "down";
+  const pendingPercentage = apiData?.data?.pendingSupportChange?.percentage ?? 0;
+  const pendingTrend = apiData?.data?.pendingSupportChange?.isIncrease ? "up" : "down";
   const TrendIcon = ({ trend, percentage }) => {
     const isUp = trend === "up";
     const IconComponent = isUp ? BsArrowUp : BsArrowDown;
@@ -32,14 +46,29 @@ const UserSupportTickets = ({
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-xl font-semibold  text-darkGray mb-1">
-            Total Earnings
-          </h2>
-          {/* <h2 className="text-xl font-semibold text-darkGray">Tickets</h2> */}
+          <h2 className="text-xl font-semibold  text-darkGray mb-1">{title}</h2>
         </div>
-        <div className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border">
-          This Month{" "}
-          <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+        <div className="relative inline-block text-left">
+          <div
+            onClick={() => setOpen(!open)}
+            className="flex items-center text-xs text-brandGray bg-grayLightBg px-3 py-1.5 rounded-full border cursor-pointer"
+          >
+            {selectedTime}
+            <IoIosArrowDown className="ml-1 text-brandGray" size={12} />
+          </div>
+          {open && (
+            <div className="absolute right-0 z-10 mt-1 w-36 bg-white border rounded-md shadow-lg">
+              {timeOptions.map((opt) => (
+                <div
+                  key={opt}
+                  onClick={() => { setSelectedTime(opt); setOpen(false); }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                >
+                  {opt}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -48,7 +77,7 @@ const UserSupportTickets = ({
         {/* Total Tickets */}
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-sm text-brandGray mb-2">Admins Earnings</p>
+            <p className="text-sm text-brandGray mb-2">Total</p>
             <h3 className="text-3xl font-semibold text-darkGray">
               {totalTickets.toLocaleString()}
             </h3>
@@ -72,9 +101,7 @@ const UserSupportTickets = ({
         {/* Pending Tickets */}
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-sm text-brandGray mb-2">
-              Service Providers Earnings
-            </p>
+            <p className="text-sm text-brandGray mb-2">Pending</p>
             <h3 className="text-3xl font-semibold text-darkGray">
               {pendingTickets.toLocaleString()}
             </h3>

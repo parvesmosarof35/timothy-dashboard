@@ -46,14 +46,14 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
       {/* Right-side controls */}
       <div className="flex items-center gap-2">
         {/* Search box */}
-        {/* <div className="flex items-center md:min-w-[20rem] justify-between min-h-12 gap-2 bg-white rounded-md px-4 py-2 border border-gray-200 shadow-sm">
+        <div className="flex items-center md:min-w-[20rem] justify-between min-h-12 gap-2 bg-white rounded-md px-4 py-2 border border-gray-200 shadow-sm">
           <input
             type="text"
             placeholder="Search"
             className="outline-none text-sm text-[#88755A] bg-transparent placeholder:text-[#88755A] w-full"
           />
           <CiSearch className="text-[#88755A] text-3xl" />
-        </div> */}
+        </div>
 
         {/* Bell Icon with notification */}
         <div className="relative md:block">
