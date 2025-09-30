@@ -127,7 +127,7 @@ const UsersTable = () => {
   ];
 
   return (
-    <div className="md:p-6 p-2 sm:p-6 bg-grayLightBg md:min-h-screen font-sans w-full">
+    <div className="w-full md:min-h-screen font-sans bg-grayLightBg">
       {/* Header + Filters */}
       <div className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center mb-6">
         <h2 className="text-xl sm:text-2xl font-semibold">Manage Users</h2>

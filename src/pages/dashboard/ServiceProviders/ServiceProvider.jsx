@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllPartners } from "../../../redux/features/user/getPartnersSlice";
 import { useDebounce } from "../../../hooks/useDebounce";
 
-const ServiceProvider = () => {
+const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -130,9 +130,9 @@ const ServiceProvider = () => {
   ];
 
   return (
-    <div className="px-0 sm:px-6">
-      <AdminProfile headingText="Manage Partners" />
-      <div className="p-4 sm:p-6 bg-grayLightBg min-h-screen font-sans">
+    <div className={embedded ? "px-0" : "px-0 sm:px-6"}>
+      {!hideHeader && <AdminProfile headingText="Manage Partners" />}
+      <div className={`${embedded ? "p-0" : "p-4 sm:p-6"} bg-grayLightBg font-sans ${embedded ? "" : "min-h-screen"}`}>
         {/* Header + Filters */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
           <h2 className="text-xl sm:text-2xl font-semibold">Our Partners</h2>

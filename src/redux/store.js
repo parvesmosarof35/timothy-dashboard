@@ -12,6 +12,7 @@ import { termsConditionsApi } from './api/termsConditions/termsConditionsApi';
 import { privacyPolicyApi } from './api/privacyPolicy/privacyPolicyApi';
 import { financesApi } from './api/finances/financesApi';
 import { promoCodesApi } from './api/promoCodes/promoCodesApi';
+import { adminApi } from './api/admin/adminApi';
 import { userApi } from './api/userApi';
 import { channelsApi } from './api/chat/getChannelsByIdApi';
 import { messagesApi } from './api/chat/getAllMSGApi';
@@ -24,7 +25,7 @@ import { userSupportTicketsApi } from './api/statistics/userSupportTicketsApi';
 
 export const store = configureStore({
   reducer: {
-     singleUser: singleUserReducer,
+    singleUser: singleUserReducer,
     user: userReducer,
     auth: authReducer,
     admin: adminReducer,
@@ -46,8 +47,9 @@ export const store = configureStore({
     [notificationManageApi.reducerPath]: notificationManageApi.reducer,
     [userDemographicsApi.reducerPath]: userDemographicsApi.reducer,
     [userSupportTicketsApi.reducerPath]: userSupportTicketsApi.reducer,
+    [adminApi.reducerPath]: adminApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => 
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(statisticsApi.middleware)
       .concat(paymentUserAnalysisApi.middleware)
@@ -64,5 +66,6 @@ export const store = configureStore({
       .concat(supportApi.middleware)
       .concat(notificationManageApi.middleware)
       .concat(userDemographicsApi.middleware)
-      .concat(userSupportTicketsApi.middleware),
+      .concat(userSupportTicketsApi.middleware)
+      .concat(adminApi.middleware),
 });

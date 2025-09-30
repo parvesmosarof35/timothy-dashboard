@@ -18,12 +18,9 @@ import {
   HomeOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import {
-  deleteSingleUser,
-  getSingleUser,
-  updateSingleAdmin,
-} from "../../../redux/features/user/getSIngleUserSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useUpdateSuperAdminAccessMutation } from "../../../redux/api/admin/adminApi";
+import { deleteSingleUser, getSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
 
 const RoleDetails = () => {
   const { id } = useParams();
@@ -33,6 +30,7 @@ const RoleDetails = () => {
 
   const { singleUser, loading } = useSelector((state) => state.singleUser);
   const user = singleUser?.data;
+  const [updateSuperAdminAccess, { isLoading: updating }] = useUpdateSuperAdminAccessMutation();
 
   useEffect(() => {
     if (id) {
@@ -84,7 +82,7 @@ const RoleDetails = () => {
         contactNumber: values?.phone,
       };
 
-      const res = await dispatch(updateSingleAdmin({ id, data: payload })).unwrap();
+      const res = await updateSuperAdminAccess({ id, data: payload }).unwrap();
       message.success(res?.message || "Admin details updated successfully!");
       // Refresh user data
       dispatch(getSingleUser(id));

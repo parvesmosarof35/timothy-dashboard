@@ -129,14 +129,6 @@ export default function DashboardLayout() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/service-provider"
-        className={({ isActive }) => linkClass(isActive)}
-      >
-        <TbUserCog className="text-lg" />
-        Partners
-      </NavLink>
-
-      <NavLink
         to="/dashboard/approve-partners"
         className={({ isActive }) => linkClass(isActive)}
       >

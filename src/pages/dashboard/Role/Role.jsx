@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus, Edit, InfoIcon, Trash2 } from "lucide-react";
-import { Table, Input, Button, Pagination, Modal, Spin, Alert, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { getAdmins } from "../../../redux/features/admin/adminSlice";
-import AddAdminModal from "./AddAdminModal";
-import AdminProfile from "../components/AdminProfile";
-import { deleteSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
-import { useDebounce } from "../../../hooks/useDebounce";
+  import { useNavigate } from "react-router-dom";
+  import { Plus, Edit, InfoIcon, Trash2, CheckCircle, Ban } from "lucide-react";
+  import { Table, Input, Button, Pagination, Modal, Spin, Alert, message } from "antd";
+  import { useDispatch, useSelector } from "react-redux";
+  import { getAdmins } from "../../../redux/features/admin/adminSlice";
+  import AddAdminModal from "./AddAdminModal";
+  import AdminProfile from "../components/AdminProfile";
+  import { deleteSingleUser } from "../../../redux/features/user/getSIngleUserSlice";
+  import { useDebounce } from "../../../hooks/useDebounce";
+  import { useUpdateSuperAdminAccessMutation } from "../../../redux/api/admin/adminApi";
 
 const Role = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +19,7 @@ const Role = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [updateAccess, { isLoading: updatingAccess }] = useUpdateSuperAdminAccessMutation();
 
   const { admins, loading, meta, error } = useSelector((state) => ({
     admins: state.admin.admins?.data || [],
@@ -69,6 +71,31 @@ const Role = () => {
           });
 
         // TODO: Add delete logic (e.g., dispatch(deleteAdmin(id)))
+      },
+    });
+  };
+
+  const handleToggleStatus = (admin) => {
+    const targetStatus = admin.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+    Modal.confirm({
+      title: `Confirm to set ${admin.fullName}'s status to ${targetStatus}?`,
+      okText: "Yes",
+      cancelText: "No",
+      onOk: async () => {
+        try {
+          await updateAccess({ id: admin.id, data: { status: targetStatus } }).unwrap();
+          message.success(`Status updated to ${targetStatus}`);
+          dispatch(
+            getAdmins({
+              page: currentPage,
+              limit: 10,
+              status: selectedTime || "",
+              searchTerm: debouncedSearch || "",
+            })
+          );
+        } catch (e) {
+          message.error(e?.data?.message || "Failed to update status");
+        }
       },
     });
   };
@@ -129,7 +156,24 @@ const Role = () => {
       title: "Action",
       key: "action",
       render: (_, admin) => (
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
+          {admin.status === "INACTIVE" ? (
+            <button
+              title="Activate"
+              onClick={() => handleToggleStatus(admin)}
+              disabled={updatingAccess}
+            >
+              <CheckCircle className={` ${updatingAccess ? 'opacity-50' : ''} text-green-600`} />
+            </button>
+          ) : (
+            <button
+              title="Set Inactive"
+              onClick={() => handleToggleStatus(admin)}
+              disabled={updatingAccess}
+            >
+              <Ban className={` ${updatingAccess ? 'opacity-50' : ''} text-yellow-600`} />
+            </button>
+          )}
           <button onClick={() => handleDelete(admin.id)}>
             <Trash2 className="text-red-500" />
           </button>
