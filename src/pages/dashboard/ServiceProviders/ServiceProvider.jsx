@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Info, MoreHorizontal } from "lucide-react";
+import { Info, MoreHorizontal, ArrowUp } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
 import { Table } from "antd";
@@ -47,11 +47,9 @@ const ServiceProvider = () => {
         id: user.id,
         name: user.fullName || "N/A",
         image: user.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png",
+        country: user.country || "-",
         joined: new Date(user.createdAt).toISOString().split("T")[0],
         status: user.status,
-        level: "New Seller",
-        role: user.role,
-        earnings: "$0", // Dummy earnings
       }))
     : [];
 
@@ -72,10 +70,49 @@ const ServiceProvider = () => {
         </div>
       ),
     },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+      render: (country) => country || "-",
+    },
+    {
+      title: "Title",
+      key: "title",
+      render: () => "Not available",
+    },
     { title: "Joined", dataIndex: "joined", key: "joined" },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Level", dataIndex: "level", key: "level" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        const isActive = String(status).toUpperCase() === "ACTIVE";
+        return (
+          <span
+            className={
+              `inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm ` +
+              (isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-700")
+            }
+          >
+            {isActive && <ArrowUp className="w-4 h-4" />}
+            {isActive ? "Active" : (status || "-")}
+          </span>
+        );
+      },
+    },
+    {
+      title: "Level",
+      key: "level",
+      render: () => "New",
+    },
+    {
+      title: "Earnings",
+      key: "earnings",
+      render: () => 0,
+    },
     {
       title: "Actions",
       key: "actions",

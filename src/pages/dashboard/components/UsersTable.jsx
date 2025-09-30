@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Info, MoreHorizontal } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { Table } from "antd";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
-import { useDebounce } from "../../../hooks/useDebounce";
+  import { Info, MoreHorizontal, ArrowUp } from "lucide-react";
+  import { useNavigate } from "react-router-dom";
+  import { useEffect } from "react";
+  import { Table } from "antd";
+  import { useSelector } from "react-redux";
+  import { useDispatch } from "react-redux";
+  import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
+  import { useDebounce } from "../../../hooks/useDebounce";
 
 const UsersTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const { users, loading } = useSelector((state) => state.getAllUsers);
-  const dispatch = useDispatch();
-  const usersPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
+    const { users, loading } = useSelector((state) => state.getAllUsers);
+    const dispatch = useDispatch();
+    const usersPerPage = 10;
 
   const navigate = useNavigate();
 
@@ -64,15 +64,54 @@ const UsersTable = () => {
         </div>
       ),
     },
-    { title: "Email", dataIndex: "email", key: "email" },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+      render: (country) => country || "-",
+    },
+    {
+      title: "Title",
+      key: "title",
+      render: () => "Not available",
+    },
     {
       title: "Joined",
       dataIndex: "createdAt",
       key: "createdAt",
       render: (createdAt) => new Date(createdAt).toISOString().split("T")[0],
     },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        const isActive = String(status).toUpperCase() === "ACTIVE";
+        return (
+          <span
+            className={
+              `inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm ` +
+              (isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-700")
+            }
+          >
+            {isActive && <ArrowUp className="w-4 h-4" />}
+            {isActive ? "Active" : (status || "-")}
+          </span>
+        );
+      },
+    },
+    {
+      title: "Level",
+      key: "level",
+      render: () => "New",
+    },
+    {
+      title: "Earnings",
+      key: "earnings",
+      render: () => 0,
+    },
     {
       title: "Actions",
       key: "actions",
