@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Table, Spin, Alert } from "antd";
 
 const TransactionTable = ({ 
@@ -10,25 +11,37 @@ const TransactionTable = ({
   showTotal = true,
   size = "default"
 }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 480px)");
+    const handler = (e) => setIsMobile(e.matches);
+    handler(mq);
+    mq.addEventListener ? mq.addEventListener("change", handler) : mq.addListener(handler);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener("change", handler) : mq.removeListener(handler);
+    };
+  }, []);
+
   const columns = [
     {
       title: "Date",
       dataIndex: "createdAt",
       key: "createdAt",
       render: (date) => new Date(date).toLocaleDateString(),
-      width: 120,
+      responsive: ["xs", "sm", "md", "lg"],
     },
     {
       title: "Service Type",
       dataIndex: "serviceType",
       key: "serviceType",
-      width: 120,
+      responsive: ["md", "lg"],
     },
     {
       title: "Transaction ID",
       dataIndex: "id",
       key: "id",
-      width: 200,
+      responsive: ["sm", "md", "lg"],
       render: (id) => <span className="font-mono text-sm">{id}</span>,
     },
     {
@@ -40,7 +53,7 @@ const TransactionTable = ({
           {amount.toLocaleString()} {record.currency?.toUpperCase()}
         </span>
       ),
-      width: 120,
+      responsive: ["xs", "sm", "md", "lg"],
     },
     {
       title: "Status",
@@ -59,7 +72,7 @@ const TransactionTable = ({
           {status}
         </span>
       ),
-      width: 100,
+      responsive: ["xs", "sm", "md", "lg"],
     },
   ];
 
@@ -70,20 +83,20 @@ const TransactionTable = ({
       title: "Payment Method",
       dataIndex: "paymentMethod",
       key: "paymentMethod",
-      width: 120,
+      responsive: ["md", "lg"],
     },
     {
       title: "Provider",
       dataIndex: "provider",
       key: "provider",
-      width: 100,
+      responsive: ["md", "lg"],
     },
     {
       title: "Admin Commission",
       dataIndex: "admin_commission",
       key: "admin_commission",
       render: (commission) => commission?.toLocaleString() || 0,
-      width: 130,
+      responsive: ["md", "lg"],
     },
   ];
 
@@ -123,7 +136,7 @@ const TransactionTable = ({
           `${range[0]}-${range[1]} of ${total} transactions` : false,
         size: pageSize <= 5 ? "small" : "default",
       }}
-      scroll={{ x: pageSize > 5 ? 1000 : 700 }}
+      scroll={isMobile ? undefined : { x: pageSize > 5 ? 1000 : 700 }}
       className="border rounded-lg"
       size={size}
     />

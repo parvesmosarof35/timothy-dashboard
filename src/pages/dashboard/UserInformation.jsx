@@ -4,7 +4,7 @@ import UsersTable from "./components/UsersTable";
 import ServiceProvider from "./ServiceProviders/ServiceProvider";
 
 export default function UserInformation() {
-  const [activeTab, setActiveTab] = useState("USERS"); // PARTNER | USERS
+  const [activeTab, setActiveTab] = useState("PARTNER"); // PARTNER | USERS
 
   return (
     <div className=" bg-grayLightBg min-h-screen md:px-6 px-0">

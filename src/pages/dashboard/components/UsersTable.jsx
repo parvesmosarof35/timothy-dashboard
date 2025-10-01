@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-  import { Info, MoreHorizontal, ArrowUp } from "lucide-react";
-  import { useNavigate } from "react-router-dom";
-  import { useEffect } from "react";
-  import { Table } from "antd";
-  import { useSelector } from "react-redux";
-  import { useDispatch } from "react-redux";
-  import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
-  import { useDebounce } from "../../../hooks/useDebounce";
+import { Info, MoreHorizontal, ArrowUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Table } from "antd";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const UsersTable = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState("");
-    const { users, loading } = useSelector((state) => state.getAllUsers);
-    const dispatch = useDispatch();
-    const usersPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { users, loading } = useSelector((state) => state.getAllUsers);
+  const dispatch = useDispatch();
+  const usersPerPage = 10;
 
   const navigate = useNavigate();
 
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
-  
+
   // Debounce search term with 500ms delay
   const debouncedSearchTerms = useDebounce(searchTerms, 500);
 
@@ -97,7 +97,7 @@ const UsersTable = () => {
             }
           >
             {isActive && <ArrowUp className="w-4 h-4" />}
-            {isActive ? "Active" : (status || "-")}
+            {isActive ? "Active" : status || "-"}
           </span>
         );
       },
@@ -152,7 +152,7 @@ const UsersTable = () => {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-              <option value="">All Countries</option>
+            <option value="">All Countries</option>
             <option value="United_States">United States</option>
             <option value="United_Kingdom">United Kingdom</option>
             <option value="United_Arab_Emirates">United Arab Emirates</option>
