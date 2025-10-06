@@ -9,6 +9,7 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
+  CartesianGrid,
 } from "recharts";
 import { useGetPaymentUserAnalysisQuery } from "../../redux/api/statistics/paymentAndUserAnalisys";
 
@@ -53,6 +54,15 @@ const UserAnalytics = ({
 
   // no separate year selector; using time-range only
 
+  // Format large numbers for Y-axis ticks (e.g., 10000 -> 10k)
+  const formatNumberTick = (value) => {
+    if (value >= 1000) {
+      const rounded = Math.round(value / 1000);
+      return `${rounded}k`;
+    }
+    return value;
+  };
+
 
   return (
     <div>
@@ -95,15 +105,22 @@ const UserAnalytics = ({
           {/* Chart Section */}
           <div className="flex-[0.86] h-56 md:h-60">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={transformedData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+              <AreaChart data={transformedData} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#FFA500" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#FFA500" stopOpacity={0} />
                   </linearGradient>
                 </defs>
+                <CartesianGrid vertical horizontal={false} strokeDasharray="3 3" stroke="#F3F4F6" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
-                <YAxis hide />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: '#9CA3AF' }}
+                  tickFormatter={formatNumberTick}
+                  allowDecimals={false}
+                />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="monotone" dataKey="value" stroke="#FFA500" strokeWidth={2} fillOpacity={1} fill="url(#colorGradient)" />
               </AreaChart>

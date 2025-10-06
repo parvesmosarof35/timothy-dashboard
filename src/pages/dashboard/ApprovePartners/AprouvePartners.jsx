@@ -159,7 +159,7 @@ const ApprovePartners = () => {
       key: "role",
       render: (text) => (
         <Tag color="#ffc983" className="border-none text-gray-700 font-medium">
-          {text.replace('_', ' ')}
+          {text === 'BUSINESS_PARTNER' ? 'Partner' : text.replace('_', ' ')}
         </Tag>
       ),
     },
