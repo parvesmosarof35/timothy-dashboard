@@ -105,7 +105,7 @@ const UserAnalytics = ({
           {/* Chart Section */}
           <div className="flex-[0.86] h-56 md:h-60">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={transformedData} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
+              <AreaChart data={transformedData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#FFA500" stopOpacity={0.3} />
@@ -120,6 +120,9 @@ const UserAnalytics = ({
                   tick={{ fontSize: 12, fill: '#9CA3AF' }}
                   tickFormatter={formatNumberTick}
                   allowDecimals={false}
+                  domain={[0, 50000]}
+                  ticks={[10000, 20000, 30000, 40000, 50000]}
+                  width={40}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="monotone" dataKey="value" stroke="#FFA500" strokeWidth={2} fillOpacity={1} fill="url(#colorGradient)" />
