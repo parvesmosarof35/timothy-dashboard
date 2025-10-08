@@ -35,6 +35,45 @@ export default function UserDemographics() {
   const totalUsers = apiData?.data?.totalUsers ?? 0
   const totalPartners = apiData?.data?.totalPartners ?? 0
 
+  // Number formatting: plain numbers < 100k, compact >= 100k
+  const formatNumberTick = (value) => {
+    const abs = Math.abs(value)
+    if (abs < 100_000) return new Intl.NumberFormat('en-US').format(value)
+    return new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
+  }
+
+  // Helpers to compute a "nice" Y-axis upper bound and step
+  const getNiceMax = (n) => {
+    if (!n || n <= 0) return 10
+    const pow = Math.pow(10, Math.floor(Math.log10(n)))
+    const normalized = n / pow
+    let nice
+    if (normalized <= 1) nice = 1
+    else if (normalized <= 2) nice = 2
+    else if (normalized <= 5) nice = 5
+    else nice = 10
+    return nice * pow
+  }
+
+  const getNiceStep = (n) => {
+    const pow = Math.pow(10, Math.floor(Math.log10(n)))
+    const normalized = n / pow
+    let nice
+    if (normalized <= 1) nice = 1
+    else if (normalized <= 2) nice = 2
+    else if (normalized <= 5) nice = 5
+    else nice = 10
+    return nice * pow
+  }
+
+  // Derive Y-axis domain and ticks from both series (users + partners)
+  const yValues = data.flatMap(d => [d.users || 0, d.partners || 0])
+  const maxY = yValues.length ? Math.max(...yValues) : 0
+  const niceMax = Math.max(10, getNiceMax(maxY)) // or getNiceMax(maxY * 1.1) for 10% headroom
+  const approxStep = niceMax / 5
+  const step = Math.max(1, Math.floor(getNiceStep(approxStep)))
+  const yTicks = Array.from({ length: Math.floor(niceMax / step) }, (_, i) => (i + 1) * step).filter(t => t <= niceMax)
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const usersVal = payload.find(p => p.dataKey === 'users')?.value ?? 0
@@ -42,8 +81,8 @@ export default function UserDemographics() {
       return (
         <div className="bg-amber-100 text-gray-900 text-xs font-semibold px-2 py-1 rounded shadow">
           <div>{label}</div>
-          <div>Users: {usersVal}</div>
-          <div>Partners: {partnersVal}</div>
+          <div>Users: {formatNumberTick(usersVal)}</div>
+          <div>Partners: {formatNumberTick(partnersVal)}</div>
         </div>
       )
     }
@@ -51,10 +90,10 @@ export default function UserDemographics() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 md:p-6">
+    <div className="bg-white rounded-lg shadow px-2 md:py-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg md:text-xl font-semibold text-gray-800">User Demographics</h2>
+        <h2 className="text-lg md:text-xl font-semibold text-gray-800 ml-2">User Demographics</h2>
         <div className="relative inline-block text-left">
           <div
             onClick={() => setIsOpen(!isOpen)}
@@ -103,8 +142,10 @@ export default function UserDemographics() {
                   tick={{ fontSize: 12 }}
                   axisLine={false}
                   tickLine={false}
-                  tickFormatter={(v) => `${v / 1000}k`}
-                  domain={[0, 50000]}
+                  tickFormatter={formatNumberTick}
+                  allowDecimals={false}
+                  domain={[0, niceMax]}
+                  ticks={yTicks}
                 />
                 <Tooltip cursor={{ fill: 'transparent' }} content={<CustomTooltip />} />
 

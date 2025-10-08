@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useGetOverviewQuery } from "../redux/api/statistics/getOverviewApi";
 import { Spin } from "antd";
 import OverviewCard from "./dashboard/OverviewCard"
@@ -38,6 +39,8 @@ const Dashboard = () => {
 
   // Match previous data path: overviewData?.data?.Supports
   const supportData = overviewData?.data?.Supports ?? {};
+  const { user } = useSelector((state) => state.auth);
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
 
   return (
     <div className="px-6 bg-gray-50 min-h-screen font-sans">
@@ -68,21 +71,32 @@ const Dashboard = () => {
             />
           </div>
 
-          {/* Payment and verification section */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-6 gap-6 md:gap-10 mb-10">
-            <div className="md:col-span-4">
-              <PaymentChart />
+          {/* Payment and verification section (Payment visible only to SUPER_ADMIN) */}
+          {isSuperAdmin ? (
+            <div className="w-full grid grid-cols-1 md:grid-cols-6 gap-6 md:gap-10 mb-10">
+              <div className="md:col-span-4">
+                <PaymentChart />
+              </div>
+              <div className="md:col-span-2">
+                <PendingVerification isLoading={isLoading} overviewData={overviewData} />
+              </div>
             </div>
-            <div className="md:col-span-2">
-              <PendingVerification isLoading={isLoading} overviewData={overviewData} />
+          ) : (
+            <div className="w-full grid grid-cols-1 md:grid-cols-6 gap-6 md:gap-10 mb-10">
+              <div className="md:col-span-2">
+                <PendingVerification isLoading={isLoading} overviewData={overviewData} />
+              </div>
+              <div className="md:col-span-4">
+                {/* <PaymentChart /> */}
+              </div>
             </div>
-          </div>
+          )}
 
           <UserAnalytics />
 
           <UserDemographics />
 
-          <FinancialDashboard />
+          {isSuperAdmin && <FinancialDashboard />}
 
           <CancellationRefunds />
 

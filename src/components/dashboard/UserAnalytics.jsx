@@ -41,6 +41,38 @@ const UserAnalytics = ({
   const usersCount = apiData?.data?.totalUsers || 0;
   const partnersCount = apiData?.data?.totalPartners || 0;
 
+  // Helpers to compute a "nice" Y-axis upper bound and ticks
+  const getNiceMax = (n) => {
+    if (!n || n <= 0) return 10; // minimum headroom to make small series visible
+    const pow = Math.pow(10, Math.floor(Math.log10(n)));
+    const normalized = n / pow;
+    let nice;
+    if (normalized <= 1) nice = 1;
+    else if (normalized <= 2) nice = 2;
+    else if (normalized <= 5) nice = 5;
+    else nice = 10;
+    return nice * pow;
+  };
+
+  const getNiceStep = (n) => {
+    const pow = Math.pow(10, Math.floor(Math.log10(n)));
+    const normalized = n / pow;
+    let nice;
+    if (normalized <= 1) nice = 1;
+    else if (normalized <= 2) nice = 2;
+    else if (normalized <= 5) nice = 5;
+    else nice = 10;
+    return nice * pow;
+  };
+
+  // Derive Y-axis domain and ticks from data
+  const yValues = transformedData.map(d => d.value || 0);
+  const maxY = yValues.length ? Math.max(...yValues) : 0;
+  const niceMax = Math.max(10, getNiceMax(maxY));
+  const approxStep = niceMax / 5;
+  const step = Math.max(1, Math.floor(getNiceStep(approxStep)));
+  const yTicks = Array.from({ length: Math.floor(niceMax / step) }, (_, i) => (i + 1) * step).filter(t => t <= niceMax);
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -56,11 +88,16 @@ const UserAnalytics = ({
 
   // Format large numbers for Y-axis ticks (e.g., 10000 -> 10k)
   const formatNumberTick = (value) => {
-    if (value >= 1000) {
-      const rounded = Math.round(value / 1000);
-      return `${rounded}k`;
+    const abs = Math.abs(value);
+    // Plain numbers under 100k with locale separators
+    if (abs < 100_000) {
+      return new Intl.NumberFormat('en-US').format(value);
     }
-    return value;
+    // Compact notation (K/M/B) at 100k and above
+    return new Intl.NumberFormat('en', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }).format(value);
   };
 
 
@@ -120,8 +157,8 @@ const UserAnalytics = ({
                   tick={{ fontSize: 12, fill: '#9CA3AF' }}
                   tickFormatter={formatNumberTick}
                   allowDecimals={false}
-                  domain={[0, 50000]}
-                  ticks={[10000, 20000, 30000, 40000, 50000]}
+                  domain={[0, niceMax]}
+                  ticks={yTicks}
                   width={40}
                 />
                 <Tooltip content={<CustomTooltip />} />

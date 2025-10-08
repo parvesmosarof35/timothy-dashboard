@@ -62,15 +62,54 @@ const FinancialDashboard = () => {
   // Fetch data from API with timeRange
   const { data: apiData, isLoading, error } = useGetFinancialMetricsQuery(timeParamMap[selectedTime]);
   
-  // Transform API data for chart
+  // Transform API data for chart (use raw values; format via tick/tooltip)
   const data = apiData?.data?.paymentMonthsData?.map(item => ({
     name: item.month.substring(0, 3), // Convert "January" to "Jan"
-    adminEarnings: item.adminEarnings / 1000, // Convert to thousands for better display
-    serviceEarnings: item.serviceEarnings / 1000
+    adminEarnings: item.adminEarnings,
+    serviceEarnings: item.serviceEarnings
   })) || [];
   
   const adminEarnings = apiData?.data?.adminEarnings || 0;
   const serviceEarnings = apiData?.data?.serviceEarnings || 0;
+
+  // Number formatting: plain numbers < 100k, compact >= 100k
+  const formatNumberTick = (value) => {
+    const abs = Math.abs(value);
+    if (abs < 100_000) return new Intl.NumberFormat('en-US').format(value);
+    return new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
+  };
+
+  // Helpers to compute a "nice" Y-axis upper bound and step
+  const getNiceMax = (n) => {
+    if (!n || n <= 0) return 10;
+    const pow = Math.pow(10, Math.floor(Math.log10(n)));
+    const normalized = n / pow;
+    let nice;
+    if (normalized <= 1) nice = 1;
+    else if (normalized <= 2) nice = 2;
+    else if (normalized <= 5) nice = 5;
+    else nice = 10;
+    return nice * pow;
+  };
+
+  const getNiceStep = (n) => {
+    const pow = Math.pow(10, Math.floor(Math.log10(n)));
+    const normalized = n / pow;
+    let nice;
+    if (normalized <= 1) nice = 1;
+    else if (normalized <= 2) nice = 2;
+    else if (normalized <= 5) nice = 5;
+    else nice = 10;
+    return nice * pow;
+  };
+
+  // Derive Y-axis domain and ticks from both series
+  const yValues = data.flatMap(d => [d.adminEarnings || 0, d.serviceEarnings || 0]);
+  const maxY = yValues.length ? Math.max(...yValues) : 0;
+  const niceMax = Math.max(10, getNiceMax(maxY)); // or getNiceMax(maxY * 1.1) for headroom
+  const approxStep = niceMax / 5;
+  const step = Math.max(1, Math.floor(getNiceStep(approxStep)));
+  const yTicks = Array.from({ length: Math.floor(niceMax / step) }, (_, i) => (i + 1) * step).filter(t => t <= niceMax);
 
   const handleSelect = (option) => {
     setSelectedTime(option);
@@ -85,10 +124,10 @@ const FinancialDashboard = () => {
       </h1>
 
       {/* Chart Section */}
-      <div className="bg-white rounded-2xl p-2 md:p-6 shadow-sm">
+      <div className="bg-white rounded-2xl p-2 md:py-6 px-2 shadow-sm">
         {/* Chart Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-          <h2 className="text-xl font-semibold text-brandGray">
+          <h2 className="text-xl font-semibold text-brandGray ml-2">
             Revenue Overview
           </h2>
           <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
@@ -174,7 +213,10 @@ const FinancialDashboard = () => {
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: "#9ca3af", fontSize: 12 }}
-                tickFormatter={(value) => `${value}k`}
+                tickFormatter={formatNumberTick}
+                allowDecimals={false}
+                domain={[0, niceMax]}
+                ticks={yTicks}
               />
               <Tooltip
                 contentStyle={{
@@ -184,9 +226,10 @@ const FinancialDashboard = () => {
                   boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                 }}
                 labelStyle={{ color: "#374151", fontWeight: "600" }}
+                formatter={(value) => formatNumberTick(value)}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="adminEarnings"
                 stroke="#c3720b"
                 strokeWidth={3}
@@ -199,7 +242,7 @@ const FinancialDashboard = () => {
                 }}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="serviceEarnings"
                 stroke="#FFC983"
                 strokeWidth={3}
