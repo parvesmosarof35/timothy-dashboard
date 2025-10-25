@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { HiDotsVertical } from "react-icons/hi";
 
-const PendingVerification = ( {isLoading, overviewData}) => {
+const PendingVerification = ( {isLoading, overviewData, isnomaladmin}) => {
   const navigate = useNavigate();
   const total = overviewData?.data?.totalPartners || 0;
   const pending = overviewData?.data?.totalPendingPartners || 0;
@@ -28,9 +28,9 @@ const PendingVerification = ( {isLoading, overviewData}) => {
   }
 
   return (
-    <div>
+    <div >
       <h1 className="text-2xl font-semibold mb-6">Pending Verification</h1>
-      <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow w-full max-w-md mx-auto h-full">
+      <div className="bg-white rounded-lg p-6  shadow-sm hover:shadow-md transition-shadow w-full max-w-md mx-auto h-full">
         <div className="flex flex-col items-center w-full h-full justify-between">
           {/* Top row: total and menu */}
           <div className="flex justify-around items-start w-full mb-2">
@@ -78,7 +78,7 @@ const PendingVerification = ( {isLoading, overviewData}) => {
           </div>
 
           {/* Button */}
-          <div className="w-full">
+          <div className={`w-full ${isnomaladmin ? "mt-7" : ""}`}>
             <button
               onClick={() => navigate("/dashboard/approve-partners")}
               className="flex w-full justify-center gap-6 items-center text-white bg-[#ffd49d] py-3 px-8 rounded-lg hover:brightness-95 transition"

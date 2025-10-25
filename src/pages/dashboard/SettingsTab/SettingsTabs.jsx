@@ -380,6 +380,7 @@ const SettingsTab = () => {
                       }`}
                     >
                       {notifLoading ? "Loading..." : "Save Notification Settings"}
+                      asdf
                     </button>
                   </div>
                 </div>

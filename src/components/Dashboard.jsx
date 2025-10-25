@@ -82,12 +82,15 @@ const Dashboard = () => {
               </div>
             </div>
           ) : (
-            <div className="w-full grid grid-cols-1 md:grid-cols-6 gap-6 md:gap-10 mb-10">
-              <div className="md:col-span-2">
-                <PendingVerification isLoading={isLoading} overviewData={overviewData} />
-              </div>
+           <div className="w-full grid grid-cols-1 md:grid-cols-6 gap-6 md:gap-10 mb-10">
               <div className="md:col-span-4">
-                {/* <PaymentChart /> */}
+                <div className="">
+                    <h1 className="text-2xl font-semibold mb-6">User Support Tickets</h1>
+                    <UserSupportTickets />
+                </div>
+              </div>
+              <div className="md:col-span-2">
+                <PendingVerification isnomaladmin={isSuperAdmin ? false : true} isLoading={isLoading} overviewData={overviewData} />
               </div>
             </div>
           )}
@@ -112,7 +115,7 @@ const Dashboard = () => {
             timeOptions={timeOptions}
           />
 
-          <UserSupportTickets />
+          {isSuperAdmin && <UserSupportTickets />}
         </div>
       </div>
 

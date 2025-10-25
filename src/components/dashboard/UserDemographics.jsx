@@ -23,8 +23,23 @@ export default function UserDemographics() {
     'This Year': 'THIS_YEAR',
   }
 
+  const [country, setCountry] = useState('All')
+  const [age, setAge] = useState('')
+  const [gender, setGender] = useState('All')
+  const [profession, setProfession] = useState('')
+
+  const countries = ['All', 'Nigeria', 'US', 'UK', 'UAE', 'Portugal', 'France', 'Spain']
+  const genders = ['All', 'Male', 'Female', 'Other']
+
   // Fetch data
-  const { data: apiData, isLoading, error } = useGetUserDemographicsQuery(timeParamMap[selectedTime])
+  const queryArgs = {
+    timeRange: timeParamMap[selectedTime],
+    ...(country && country !== 'All' ? { country: country.toLowerCase() } : {}),
+    ...(age ? { age: Number(age) } : {}),
+    ...(gender && gender !== 'All' ? { gender: gender.toLowerCase() } : {}),
+    ...(profession ? { profession: profession.toLowerCase() } : {}),
+  }
+  const { data: apiData, isLoading, error } = useGetUserDemographicsQuery(queryArgs)
 
   const data = apiData?.data?.userMonthsData?.map((m) => ({
     name: m.month.substring(0, 3),
@@ -169,16 +184,56 @@ export default function UserDemographics() {
 
         {/* Right-side Tabs */}
         <div className="col-span-12 md:col-span-3 md:border-l md:pl-6 pl-0">
-          <ul className="space-y-3 md:space-y-4 text-sm">
-            {/* <li className="text-orange-500 font-medium">Total Users: {totalUsers}</li>
-            <li className="text-gray-600">Total Partners: {totalPartners}</li> */}
-            <li className="text-gray-400">Country</li>
-            <li className="text-gray-400">Age</li>
-            <li className="text-gray-400">Profession</li>
-            <li className="text-gray-400">Gender</li>
-          </ul>
+          <div className="space-y-3 md:space-y-4 text-sm">
+            <div>
+              <div className="text-gray-500 mb-1">Country</div>
+              <select
+                className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              >
+                {countries.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <div className="text-gray-500 mb-1">Age</div>
+              <input
+                type="number"
+                min="0"
+                className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                placeholder="e.g. 21"
+              />
+            </div>
+            <div>
+              <div className="text-gray-500 mb-1">Profession</div>
+              <input
+                type="text"
+                className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400"
+                value={profession}
+                onChange={(e) => setProfession(e.target.value)}
+                placeholder="e.g. Engineer"
+              />
+            </div>
+            <div>
+              <div className="text-gray-500 mb-1">Gender</div>
+              <select
+                className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                {genders.map(g => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   )
 }
+
