@@ -359,7 +359,7 @@ const SettingsTab = () => {
                     onToggle={() =>
                       handleNotificationToggle("transactionNotifications")
                     }
-                    label="PaymentNotification"
+                    label="Payment Notification"
                   />
                   <div className="border-t border-gray-200 my-1"></div>
 
@@ -368,7 +368,7 @@ const SettingsTab = () => {
                     onToggle={() =>
                       handleNotificationToggle("emailNotifications")
                     }
-                    label="EmailNotification"
+                    label="Email Notification"
                   />
                   <div className="flex justify-start mt-6">
                     <button
@@ -380,7 +380,7 @@ const SettingsTab = () => {
                       }`}
                     >
                       {notifLoading ? "Loading..." : "Save Notification Settings"}
-                      asdf
+                   
                     </button>
                   </div>
                 </div>

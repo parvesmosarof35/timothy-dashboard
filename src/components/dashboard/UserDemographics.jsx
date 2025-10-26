@@ -10,6 +10,7 @@ import {
 } from 'recharts'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useGetUserDemographicsQuery } from '../../redux/api/statistics/getuserDemographics'
+import { countries } from '../../utils/countries'
 
 export default function UserDemographics() {
   // Time filter like previously done
@@ -28,7 +29,6 @@ export default function UserDemographics() {
   const [gender, setGender] = useState('All')
   const [profession, setProfession] = useState('')
 
-  const countries = ['All', 'Nigeria', 'US', 'UK', 'UAE', 'Portugal', 'France', 'Spain']
   const genders = ['All', 'Male', 'Female', 'Other']
 
   // Fetch data
