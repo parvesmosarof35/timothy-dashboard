@@ -29,12 +29,18 @@ import Notification from "../pages/dashboard/Notification/Notification";
 import TermsAndConditions from "../components/TermsAndConditions";
 import PrivacyPolicy from "../components/PrivacyPolicy";
 import PromoCodesManagement from "../components/PromoCodesManagement";
+import SuperAdminRoute from "./SuperAdminRoute";
+import PrivateRoute from "./PrivateRoute";
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       { path: '/', element: <DashboardHome /> },
     ]
@@ -49,7 +55,11 @@ const router = createBrowserRouter([
   // Dashboard routes
 {
   path: '/dashboard',
-  element: <DashboardLayout />,
+  element: (
+    <PrivateRoute>
+      <DashboardLayout />
+    </PrivateRoute>
+  ),
   children: [
     { path: 'statistics', element: <DashboardHome /> },
     { path: 'user-info', element: <UserInformation /> },
@@ -59,16 +69,17 @@ const router = createBrowserRouter([
     { path: 'approve-partners/approve-details/:id', element: <ApprovePartnerDetails></ApprovePartnerDetails> },
     { path: 'service-provider/details/:id', element: <UserDetails></UserDetails> },
     {path: "all-messages", element: <AllMessage></AllMessage>},
+    { path: 'all-messages/:channelName', element: <AllMessage></AllMessage> },
     { path: 'financialpayments', element: <FinancialPayments /> },
     { path: 'financialpayments/details/:id', element: <FinancialPaymentDetails></FinancialPaymentDetails> },
     { path: 'contracts', element: <Contracts /> },
-    { path: `contracts/:id`, element: <NewContractDetails></NewContractDetails> },
+    { path: `contracts/:type/:id`, element: <NewContractDetails></NewContractDetails> },
     // { path: 'userroles', element: <div>user roles</div> },
     { path: 'support', element: <UserSupport></UserSupport> },
     { path: 'support/:id', element: <UserMessage></UserMessage> },
-    { path: 'role', element: <Role></Role> },
-    { path: 'role/details/:id', element: <RoleDetails></RoleDetails> },
-    { path: 'role/view/:id', element: <RoleDetailsReadOnly></RoleDetailsReadOnly> },
+    { path: 'role', element: <SuperAdminRoute><Role /></SuperAdminRoute> },
+    { path: 'role/details/:id', element: <SuperAdminRoute><RoleDetails /></SuperAdminRoute> },
+    { path: 'role/view/:id', element: <SuperAdminRoute><RoleDetailsReadOnly /></SuperAdminRoute> },
     { path: 'settings', element: <SettingsTab></SettingsTab> },
     { path: 'update-profile', element: <ProfileSettings></ProfileSettings> },
     // { path: 'send-report', element: <SendReport></SendReport> },

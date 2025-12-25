@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Info, MoreHorizontal } from "lucide-react";
+import { Info, MoreHorizontal, ArrowUp } from "lucide-react";
 import AdminProfile from "../components/AdminProfile";
 import { useNavigate } from "react-router-dom";
 import { Table } from "antd";
@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllPartners } from "../../../redux/features/user/getPartnersSlice";
 import { useDebounce } from "../../../hooks/useDebounce";
 
-const ServiceProvider = () => {
+const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,11 +47,9 @@ const ServiceProvider = () => {
         id: user.id,
         name: user.fullName || "N/A",
         image: user.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png",
+        country: user.country || "-",
         joined: new Date(user.createdAt).toISOString().split("T")[0],
         status: user.status,
-        level: "New Seller",
-        role: user.role,
-        earnings: "$0", // Dummy earnings
       }))
     : [];
 
@@ -72,10 +70,49 @@ const ServiceProvider = () => {
         </div>
       ),
     },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+      render: (country) => country || "-",
+    },
+    {
+      title: "Title",
+      key: "title",
+      render: () => "Not available",
+    },
     { title: "Joined", dataIndex: "joined", key: "joined" },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Level", dataIndex: "level", key: "level" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        const isActive = String(status).toUpperCase() === "ACTIVE";
+        return (
+          <span
+            className={
+              `inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm ` +
+              (isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-700")
+            }
+          >
+            {isActive && <ArrowUp className="w-4 h-4" />}
+            {isActive ? "Active" : (status || "-")}
+          </span>
+        );
+      },
+    },
+    {
+      title: "Level",
+      key: "level",
+      render: () => "New",
+    },
+    {
+      title: "Earnings",
+      key: "earnings",
+      render: () => 0,
+    },
     {
       title: "Actions",
       key: "actions",
@@ -93,9 +130,9 @@ const ServiceProvider = () => {
   ];
 
   return (
-    <div className="px-0 sm:px-6">
-      <AdminProfile headingText="Manage Partners" />
-      <div className="p-4 sm:p-6 bg-grayLightBg min-h-screen font-sans">
+    <div className={embedded ? "px-0" : "px-0 sm:px-6"}>
+      {!hideHeader && <AdminProfile headingText="Manage Partners" />}
+      <div className={`${embedded ? "p-0" : "p-4 sm:p-6"} bg-grayLightBg font-sans ${embedded ? "" : "min-h-screen"}`}>
         {/* Header + Filters */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
           <h2 className="text-xl sm:text-2xl font-semibold">Our Partners</h2>
@@ -117,12 +154,12 @@ const ServiceProvider = () => {
               className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
             >
               <option value="">All Countries</option>
-              <option value="United States">United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="United Arab Emirates">United Arab Emirates</option>
-              <option value="Portugal">Portugal</option>
-              <option value="France">France</option>
-              <option value="Spain">Spain</option>
+            <option value="United_States">United States</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
             </select>
 
             <input

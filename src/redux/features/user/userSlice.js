@@ -19,6 +19,22 @@ export const createUser = createAsyncThunk(
   }
 );
 
+// Async thunk for creating admin by super admin
+export const createAdminBySuperAdmin = createAsyncThunk(
+  "user/createAdminBySuperAdmin",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await api.post("/users/add-role", userData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -48,6 +64,22 @@ const userSlice = createSlice({
         state.success = true;
       })
       .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      // createAdminBySuperAdmin handlers
+      .addCase(createAdminBySuperAdmin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(createAdminBySuperAdmin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.success = true;
+      })
+      .addCase(createAdminBySuperAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.success = false;

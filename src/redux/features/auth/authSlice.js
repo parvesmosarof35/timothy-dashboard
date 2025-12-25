@@ -4,6 +4,25 @@ import { jwtDecode } from "jwt-decode";
 
 // Safely parse token and extract userId
 let accessToken = localStorage.getItem("accessToken");
+
+// Async Thunk: Update Profile Image (multipart/form-data)
+export const updateProfileImage = createAsyncThunk(
+  "auth/updateProfileImage",
+  async (file, thunkAPI) => {
+    try {
+      const formData = new FormData();
+      formData.append("profileImage", file);
+      const response = await api.patch("/users/profile-img-update", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data?.data || null;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to update profile image";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 let refreshToken = localStorage.getItem("refreshToken");
 let userId = null;
 
@@ -182,6 +201,23 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(getUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Update Profile Image
+      .addCase(updateProfileImage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfileImage.fulfilled, (state, action) => {
+        state.loading = false;
+        // Optionally update user profile image if returned
+        if (state.user && action.payload?.profileImage) {
+          state.user.profileImage = action.payload.profileImage;
+        }
+      })
+      .addCase(updateProfileImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

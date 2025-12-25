@@ -11,8 +11,10 @@ import {
   changePassword,
   getUserProfile,
   updateUserProfile,
+  updateProfileImage,
 } from "../redux/features/auth/authSlice";
 import { useEffect } from "react";
+import { countries } from "../../src/utils/countries";
 
 const ProfileSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -33,24 +35,24 @@ const ProfileSettings = () => {
 
   const token = localStorage.getItem("accessToken");
 
-useEffect(() => {
-  if (token && !user) {
-    dispatch(getUserProfile());
-  }
-}, [token, user, dispatch]);
+  useEffect(() => {
+    if (token && !user) {
+      dispatch(getUserProfile());
+    }
+  }, [token, user, dispatch]);
 
-// Sync profile form state when user data is loaded
-useEffect(() => {
-  if (user) {
-    setProfileData({
-      fullName: user.fullName || "",
-      email: user.email || "",
-      contactNumber: user.contactNumber || "",
-      address: user.address || "",
-      country: user.country || "",
-    });
-  }
-}, [user]);
+  // Sync profile form state when user data is loaded
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        fullName: user.fullName || "",
+        email: user.email || "",
+        contactNumber: user.contactNumber || "",
+        address: user.address || "",
+        country: user.country || "",
+      });
+    }
+  }, [user]);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -98,7 +100,17 @@ useEffect(() => {
           })
           .catch((error) => {
             console.error("Update failed:", error);
-            Swal.fire("Error", error || "Update failed", "error");
+            const errMsg =
+              error?.response?.data?.message ||
+              (Array.isArray(error?.response?.data?.errorMessages) &&
+                error.response.data.errorMessages[0]?.message) ||
+              error?.errorMessages?.[0]?.message ||
+              (typeof error === "string" ? error : error?.message) ||
+              "Update failed";
+            const friendlyMsg = /password is incorrect/i.test(errMsg)
+              ? "Old password is incorrect"
+              : errMsg;
+            Swal.fire("Error", friendlyMsg, "error");
           });
       } else {
         console.log("Profile update cancelled");
@@ -106,81 +118,81 @@ useEffect(() => {
     });
   };
 
-const handleUpdatePassword = async (e) => {
-  e.preventDefault();
-  console.log("Password Data to be updated:", passwordData);
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
+    console.log("Password Data to be updated:", passwordData);
 
-  if (passwordData.newPassword !== passwordData.confirmPassword) {
-    console.log("Password mismatch error");
-    Swal.fire({
-      title: "Error!",
-      text: "New password and confirm password do not match.",
-      icon: "error",
-      confirmButtonColor: "#EF4444",
-    });
-    return;
-  }
-
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "Do you want to update your password?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Yes, update it!",
-    cancelButtonText: "Cancel",
-    confirmButtonColor: "#10B981",
-    cancelButtonColor: "#EF4444",
-  });
-
-  if (result.isConfirmed) {
-    try {
-      await dispatch(
-        changePassword({
-          oldPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword,
-        })
-      ).unwrap();
-
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      console.log("Password mismatch error");
       Swal.fire({
-        title: "Updated!",
-        text: "Your password has been changed.",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-
-      setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      console.error("Password update failed:", error);
-      Swal.fire({
-        title: "Failed!",
-        text: error || "Something went wrong while updating password.",
+        title: "Error!",
+        text: "New password and confirm password do not match.",
         icon: "error",
         confirmButtonColor: "#EF4444",
       });
+      return;
     }
-  } else {
-    Swal.fire({
-      title: "Cancelled!",
-      text: "Password update cancelled",
-      icon: "info",
-      timer: 1500,
-      showConfirmButton: false,
+
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to update your password?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, update it!",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#10B981",
+      cancelButtonColor: "#EF4444",
     });
-  }
-};
 
+    if (result.isConfirmed) {
+      try {
+        await dispatch(
+          changePassword({
+            oldPassword: passwordData.currentPassword,
+            newPassword: passwordData.newPassword,
+          })
+        ).unwrap();
 
-  const handleProfileImageChange = (newImageUrl) => {
-    console.log(newImageUrl);
+        Swal.fire({
+          title: "Updated!",
+          text: "Your password has been changed.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
 
-    dispatch(updateUserProfile({ profileImage: newImageUrl }))
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      } catch (error) {
+        console.error("Password update failed:", error);
+        Swal.fire({
+          title: "Failed!",
+          text: error || "Something went wrong while updating password.",
+          icon: "error",
+          confirmButtonColor: "#EF4444",
+        });
+      }
+    } else {
+      Swal.fire({
+        title: "Cancelled!",
+        text: "Password update cancelled",
+        icon: "info",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
+  };
+
+  const handleProfileImageChange = (file) => {
+    if (!(file instanceof File)) return;
+    dispatch(updateProfileImage(file))
       .unwrap()
       .then(() => {
+        // Refetch profile to sync latest data
+        dispatch(getUserProfile());
         Swal.fire({
           title: "Profile Updated",
           text: "Profile image updated successfully.",
@@ -315,11 +327,11 @@ const handleUpdatePassword = async (e) => {
                     onChange={handleProfileChange}
                     className="w-full px-4 py-2 border text-brandGray rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
-                    <option value="">Select Country</option>
-                    <option value="Australia">Australia</option>
-                    <option value="United States">United States</option>
-                    <option value="Canada">Canada</option>
-                    <option value="United Kingdom">United Kingdom</option>
+                    {countries.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

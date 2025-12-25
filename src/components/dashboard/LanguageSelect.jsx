@@ -23,7 +23,7 @@ const LanguageSelect = () => {
   };
 
   return (
-    <div style={{ }}>
+    <div style={{ display: "none" }}>
       <label className="block text-sm font-medium text-darkGray mb-1">
         Language
       </label>

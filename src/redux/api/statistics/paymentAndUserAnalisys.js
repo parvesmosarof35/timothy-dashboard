@@ -18,7 +18,7 @@ export const paymentUserAnalysisApi = createApi({
   tagTypes: ['PaymentUserAnalysis'],
   endpoints: (builder) => ({
     getPaymentUserAnalysis: builder.query({
-      query: (yearRange = '2025') => `/statistics/payment-user-analysis`,
+      query: (timeRange = 'THIS_YEAR') => `/statistics/payment-user-analysis?timeRange=${timeRange}`,
       providesTags: ['PaymentUserAnalysis'],
     }),
   }),

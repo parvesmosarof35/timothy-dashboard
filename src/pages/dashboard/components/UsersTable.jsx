@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Info, MoreHorizontal } from "lucide-react";
+import { Info, MoreHorizontal, ArrowUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Table } from "antd";
@@ -20,7 +20,7 @@ const UsersTable = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
-  
+
   // Debounce search term with 500ms delay
   const debouncedSearchTerms = useDebounce(searchTerms, 500);
 
@@ -64,15 +64,54 @@ const UsersTable = () => {
         </div>
       ),
     },
-    { title: "Email", dataIndex: "email", key: "email" },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+      render: (country) => country || "-",
+    },
+    {
+      title: "Title",
+      key: "title",
+      render: () => "Not available",
+    },
     {
       title: "Joined",
       dataIndex: "createdAt",
       key: "createdAt",
       render: (createdAt) => new Date(createdAt).toISOString().split("T")[0],
     },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        const isActive = String(status).toUpperCase() === "ACTIVE";
+        return (
+          <span
+            className={
+              `inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm ` +
+              (isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-700")
+            }
+          >
+            {isActive && <ArrowUp className="w-4 h-4" />}
+            {isActive ? "Active" : status || "-"}
+          </span>
+        );
+      },
+    },
+    {
+      title: "Level",
+      key: "level",
+      render: () => "New",
+    },
+    {
+      title: "Earnings",
+      key: "earnings",
+      render: () => 0,
+    },
     {
       title: "Actions",
       key: "actions",
@@ -88,7 +127,7 @@ const UsersTable = () => {
   ];
 
   return (
-    <div className="md:p-6 p-2 sm:p-6 bg-grayLightBg md:min-h-screen font-sans w-full">
+    <div className="w-full md:min-h-screen font-sans bg-grayLightBg">
       {/* Header + Filters */}
       <div className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center mb-6">
         <h2 className="text-xl sm:text-2xl font-semibold">Manage Users</h2>
@@ -114,9 +153,9 @@ const UsersTable = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
             <option value="">All Countries</option>
-            <option value="United States">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="United_States">United States</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
             <option value="Portugal">Portugal</option>
             <option value="France">France</option>
             <option value="Spain">Spain</option>

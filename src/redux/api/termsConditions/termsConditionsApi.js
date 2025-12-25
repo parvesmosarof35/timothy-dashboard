@@ -1,21 +1,10 @@
 // src/redux/api/termsConditions/termsConditionsApi.js
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-const baseURL = import.meta.env.VITE_BASE_URL;
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQuery } from '../baseQuery';
 
 export const termsConditionsApi = createApi({
   reducerPath: 'termsConditionsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: baseURL,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
-        headers.set('Authorization', `${token}`);
-      }
-      headers.set('Content-Type', 'application/json');
-      return headers;
-    },
-  }),
+  baseQuery,
   tagTypes: ['TermsConditions'],
   endpoints: (builder) => ({
     getTermsConditions: builder.query({

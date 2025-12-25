@@ -203,7 +203,7 @@ const ApprovePartnerDetails = () => {
             {partner.country || 'Not specified'}
           </Descriptions.Item>
           <Descriptions.Item label={<><ShopOutlined /> Role</>}>
-            {partner.role === 'BUSINESS_PARTNER' ? 'Business Partner' : partner.role === 'SERVICE_PROVIDER' ? 'Service Provider' : partner.role}
+            {partner.role === 'BUSINESS_PARTNER' ? 'Partner' : partner.role === 'SERVICE_PROVIDER' ? 'Partner' : partner.role}
           </Descriptions.Item>
           <Descriptions.Item label={<><CalendarOutlined /> Applied Date</>}>
             {dayjs(partner.createdAt).format("DD MMM YYYY, hh:mm A")}

@@ -1,16 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import Swal from "sweetalert2";
-
-
-// Mock API function (replace with real API call later)
-const mockResetPassword = async (password) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ success: true });
-    }, 2000);
-  });
-};
+import { jwtDecode } from "jwt-decode";
+import api from "../redux/api";
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -18,6 +11,7 @@ export default function ResetPassword() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   // React Query mutation (commented out for now - ready to use when API is available)
   /*
@@ -71,27 +65,50 @@ export default function ResetPassword() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call with setTimeout
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Read accessToken from storage (set after OTP verify)
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("Session expired. Please verify OTP again.");
+      }
+      // Decode user ID from token
+      let userId = null;
+      try {
+        const decoded = jwtDecode(token);
+        userId = decoded?.id;
+      } catch (err) {
+        throw new Error("Invalid session token. Please verify OTP again.");
+      }
+      if (!userId) {
+        throw new Error("User ID missing in token. Please verify OTP again.");
+      }
 
-      // When ready to use React Query, replace with:
-      // resetPassword(newPassword);
+      // Call backend to reset password
+      await api.post("/auth/reset-password", {
+        id: userId,
+        password: newPassword,
+        confirmPassword: confirmPassword,
+      });
 
-      // Temporary success handling
-      Swal.fire({
+      await Swal.fire({
         icon: "success",
         title: "Password Reset Successful!",
         text: "Your password has been updated successfully.",
         confirmButtonColor: "#3085d6",
-      }).then(() => {
-        setNewPassword("");
-        setConfirmPassword("");
       });
+      // Clear auth tokens, navigate to login
+      try {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      } catch (_) {}
+      navigate("/login");
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Reset Failed",
-        text: error.message || "Failed to reset password. Please try again.",
+        text:
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to reset password. Please try again.",
         confirmButtonColor: "#3085d6",
       });
     } finally {

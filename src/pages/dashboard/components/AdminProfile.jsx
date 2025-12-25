@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getUserProfile } from "../../../redux/features/auth/authSlice";
 import { Skeleton } from "antd";
+import { useGetAllNotificationsQuery } from "../../../redux/api/notifications/notificationManageApi";
 
 const AdminProfile = ({ headingText = "Users Management" }) => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -14,6 +15,16 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  // Load notifications after login
+  const { data: notifData, isLoading: notifLoading, isFetching: notifFetching } =
+    useGetAllNotificationsQuery(
+      { page: 1, limit: 10 },
+      { skip: !token }
+    );
+  const notifications = Array.isArray(notifData?.data?.data)
+    ? notifData.data.data
+    : [];
+  const hasUnread = notifications.some((n) => n?.read === false);
 
   useEffect(() => {
     if (token && !user) {
@@ -51,7 +62,14 @@ const AdminProfile = ({ headingText = "Users Management" }) => {
             className="relative cursor-pointer md:w-[50px] md:h-[50px] w-[40px] h-[40px] rounded-full bg-white flex items-center justify-center shadow-sm border border-lightGrayBorders"
           >
             <PiBell className="text-[#88755A] text-2xl" />
-            <span className="absolute -top-[2px] md:top-[8px] -right-[0px] w-[10px] h-[10px] bg-brandRed rounded-full" />
+            {/* Loading indicator over bell */}
+            {(notifLoading || notifFetching) && (
+              <span className="absolute -top-[2px] md:top-[8px] -right-[0px] w-[10px] h-[10px] bg-gray-300 rounded-full animate-pulse" />
+            )}
+            {/* Unread indicator */}
+            {!notifLoading && !notifFetching && hasUnread && (
+              <span className="absolute -top-[2px] md:top-[8px] -right-[0px] w-[10px] h-[10px] bg-brandRed rounded-full" />
+            )}
           </div>
         </div>
 

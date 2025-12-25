@@ -4,8 +4,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { Loader2 } from "lucide-react";
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
-import { checkOTP } from "../redux/features/auth/authSlice";
+import { checkOTP, forgotPassword } from "../redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 // Simulated dummy request
 const fakeRequest = (success = true, delay = 1000) =>
@@ -117,12 +118,17 @@ function VerificationCodeInput({
 
 export default function Checkemail() {
   const [verificationCode, setVerificationCode] = useState("");
-  const { email } = useContext(AuthContext);
+  const { email: contextEmail } = useContext(AuthContext);
+  const [searchParams] = useSearchParams();
+  const emailFromParam = searchParams.get("email");
+  const effectiveEmail = emailFromParam || contextEmail || "";
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  console.log(email)
+  console.log("Checkemail effectiveEmail:", effectiveEmail)
   useEffect(() => {
     if (resendCooldown > 0) {
       const timer = setTimeout(() => {
@@ -139,11 +145,17 @@ const handleVerification = async (e) => {
   setIsVerifying(true);
 
   try {
-    await dispatch(checkOTP(verificationCode)).unwrap();
+    const data = await dispatch(checkOTP(verificationCode)).unwrap();
+    // data is expected: { accessToken, refreshToken }
+    if (data?.accessToken) {
+      localStorage.setItem("accessToken", data.accessToken);
+    }
+    if (data?.refreshToken) {
+      localStorage.setItem("refreshToken", data.refreshToken);
+    }
     toast.success("OTP verified successfully!");
-
-    // Navigate to reset password page (or wherever appropriate)
-    // Example: navigate("/reset-password");
+    // Navigate to reset password page
+    navigate("/reset-password");
   } catch (error) {
     toast.error(error || "Invalid or expired OTP.");
   } finally {
@@ -154,14 +166,20 @@ const handleVerification = async (e) => {
 
   const handleResend = async () => {
     if (resendCooldown > 0 || isResending) return;
+    if (!effectiveEmail) {
+      toast.error("Email not found. Please go back and enter your email again.");
+      return;
+    }
 
     setIsResending(true);
     try {
-      await fakeRequest(true);
-      toast.success("A new verification code has been sent.");
+      await dispatch(forgotPassword(effectiveEmail)).unwrap();
+      toast.success("A new verification code has been sent to your email.");
       setResendCooldown(30);
-    } catch {
-      toast.error("Failed to resend code. Try again.");
+    } catch (error) {
+      toast.error(
+        typeof error === "string" ? error : error?.message || "Failed to resend code. Try again."
+      );
     } finally {
       setIsResending(false);
     }

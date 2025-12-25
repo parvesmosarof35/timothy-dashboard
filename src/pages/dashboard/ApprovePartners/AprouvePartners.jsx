@@ -24,17 +24,17 @@ import {
   useUpdatePartnerStatusActiveMutation,
   useUpdatePartnerStatusRejectMutation
 } from "../../../redux/api/userApi";
-
-const { Search } = Input;
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const ApprovePartners = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   
   // Filter states
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [searchTerms, setSearchTerms] = useState("");
+  // Debounced search like UsersTable
+  const debouncedSearchTerms = useDebounce(searchTerms, 300);
   
   // Pagination state
   const [pagination, setPagination] = useState({
@@ -47,9 +47,9 @@ const ApprovePartners = () => {
   const { data: partnersData, isLoading, error, refetch } = useGetApprovedPartnersQuery({
     page: pagination.current,
     limit: pagination.pageSize,
-    search: searchTerms,
+    searchTerm: debouncedSearchTerms,
     country: selectedCountry,
-    time: selectedTime,
+    timeRange: selectedTime,
   });
   
   const [updatePartnerStatusActive, { isLoading: isApproving }] = useUpdatePartnerStatusActiveMutation();
@@ -159,7 +159,7 @@ const ApprovePartners = () => {
       key: "role",
       render: (text) => (
         <Tag color="#ffc983" className="border-none text-gray-700 font-medium">
-          {text.replace('_', ' ')}
+          {text === 'BUSINESS_PARTNER' ? 'Partner' : text.replace('_', ' ')}
         </Tag>
       ),
     },
@@ -262,22 +262,14 @@ const ApprovePartners = () => {
     },
   ];
 
-  // Auto filter trigger
+  // Auto filter trigger: reset to page 1 when filters change (like UsersTable)
   useEffect(() => {
-    handleSelect();
-  }, [selectedTime, selectedCountry, searchTerms]);
-
-  const handleSelect = () => {
-    console.log("Filter Applied:", {
-      time: selectedTime,
-      country: selectedCountry,
-      search: searchTerms,
-    });
-  };
+    setPagination((prev) => ({ ...prev, current: 1 }));
+  }, [selectedTime, selectedCountry, debouncedSearchTerms]);
 
   const handleTableChange = (paginationInfo) => {
     setPagination({
-      current: paginationInfo.current,
+      current: paginationInfo.current, 
       pageSize: paginationInfo.pageSize,
       total: pagination.total,
     });
@@ -302,10 +294,9 @@ const ApprovePartners = () => {
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
             <option value="">All Time</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
+            <option value="THIS_WEEK">This Week</option>
+            <option value="THIS_MONTH">This Month</option>
+            <option value="THIS_YEAR">This Year</option>
           </select>
 
           {/* Country Filter */}
@@ -314,11 +305,10 @@ const ApprovePartners = () => {
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
           >
-            <option value="">All Countries</option>
-            <option value="Bangladesh">Bangladesh</option>
-            <option value="United States">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="United Arab Emirates">United Arab Emirates</option>
+              <option value="">All Countries</option>
+            <option value="United_States">United States</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
             <option value="Portugal">Portugal</option>
             <option value="France">France</option>
             <option value="Spain">Spain</option>

@@ -9,6 +9,7 @@ import { getUserProfile, loginUser } from "../../redux/features/auth/authSlice";
 import { useEffect } from "react";
 import { Alert, message } from "antd";
 import { Spin } from "antd";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const { signIn, signInGoogle, signInFacebook, ForgotPassword } =
@@ -18,6 +19,7 @@ const Login = () => {
   const emailRef = useRef();
   const [errorShow, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const { token, loading, success, userId, error, user } = useSelector(
@@ -136,12 +138,22 @@ const Login = () => {
               <label className="block text-sm font-medium text-darkGray">
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Your password"
-                className="mt-1 w-full px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Your password"
+                  className="mt-1 w-full pr-12 px-4 py-4 border text-brandGray rounded-3xl focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword((p) => !p)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
               <div className="flex justify-between items-center mt-5  text-sm text-[#ff9000] hover:text-blue-600">
                 {/* Toggle Switch */}
                 {/* <label className="flex items-center cursor-pointer">
