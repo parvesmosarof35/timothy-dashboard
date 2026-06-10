@@ -12,15 +12,9 @@ export const privacyPolicyApi = createApi({
       providesTags: ['PrivacyPolicy'],
     }),
     updatePrivacyPolicy: builder.mutation({
-<<<<<<< HEAD
       query: (data) => ({
         url: `/policy`,
         method: 'POST',
-=======
-      query: ({ id, data }) => ({
-        url: `/policy/update/${id}`,
-        method: 'PATCH',
->>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
         body: data,
       }),
       invalidatesTags: ['PrivacyPolicy'],
