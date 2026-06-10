@@ -24,5 +24,6 @@ jobs:
             cd ~/timothy-dashboard
             git pull
             pnpm install
+            rm -rf dist/* 
             pnpm build
             sudo systemctl restart nginx
