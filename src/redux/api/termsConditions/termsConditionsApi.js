@@ -12,9 +12,15 @@ export const termsConditionsApi = createApi({
       providesTags: ['TermsConditions'],
     }),
     updateTermsConditions: builder.mutation({
+<<<<<<< HEAD
       query: (data) => ({
         url: `/terms-conditions`,
         method: 'POST',
+=======
+      query: ({ id, data }) => ({
+        url: `/terms-conditions/update/${id}`,
+        method: 'PATCH',
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
         body: data,
       }),
       invalidatesTags: ['TermsConditions'],

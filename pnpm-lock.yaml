@@ -83,6 +83,12 @@ importers:
       react-responsive-carousel:
         specifier: ^3.2.23
         version: 3.2.23
+<<<<<<< HEAD
+=======
+      react-router:
+        specifier: ^7.13.1
+        version: 7.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
       react-router-dom:
         specifier: ^6.16.0
         version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1253,6 +1259,13 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+<<<<<<< HEAD
+=======
+  cookie@1.1.1:
+    resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
+    engines: {node: '>=18'}
+
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
   copy-to-clipboard@3.3.3:
     resolution: {integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==}
 
@@ -2523,6 +2536,19 @@ packages:
     peerDependencies:
       react: '>=16.8'
 
+<<<<<<< HEAD
+=======
+  react-router@7.13.1:
+    resolution: {integrity: sha512-td+xP4X2/6BJvZoX6xw++A2DdEi++YypA69bJUV5oVvqf6/9/9nNlD70YO1e9d3MyamJEBQFEzk6mbfDYbqrSA==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
   react-scroll-to-top@3.1.0:
     resolution: {integrity: sha512-hD3bJQgCblywG2gcI515BcxP43MZkBidsYEVt9ak5pu1UOoQDJzIJp89zwccbpFuqeHZ29Lxs00T9DSxQr4cmw==}
     peerDependencies:
@@ -2655,6 +2681,12 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
+<<<<<<< HEAD
+=======
+  set-cookie-parser@2.7.2:
+    resolution: {integrity: sha512-oeM1lpU/UvhTxw+g3cIfxXHyJRc/uidd3yK1P242gzHds0udQBYzs3y8j4gCCW+ZJ7ad0yctld8RYO+bdurlvw==}
+
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
     engines: {node: '>= 0.4'}
@@ -4267,6 +4299,11 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
+<<<<<<< HEAD
+=======
+  cookie@1.1.1: {}
+
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
   copy-to-clipboard@3.3.3:
     dependencies:
       toggle-selection: 1.0.6
@@ -5772,6 +5809,17 @@ snapshots:
       '@remix-run/router': 1.23.0
       react: 18.3.1
 
+<<<<<<< HEAD
+=======
+  react-router@7.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      cookie: 1.1.1
+      react: 18.3.1
+      set-cookie-parser: 2.7.2
+    optionalDependencies:
+      react-dom: 18.3.1(react@18.3.1)
+
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
   react-scroll-to-top@3.1.0(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -5945,6 +5993,11 @@ snapshots:
 
   semver@6.3.1: {}
 
+<<<<<<< HEAD
+=======
+  set-cookie-parser@2.7.2: {}
+
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
   set-function-length@1.2.2:
     dependencies:
       define-data-property: 1.1.4

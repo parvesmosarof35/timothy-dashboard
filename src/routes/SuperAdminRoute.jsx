@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { Navigate } from "react-router";
+=======
+import { Navigate } from "react-router-dom";
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";

@@ -1,5 +1,9 @@
 // Get base URL from environment variable
+<<<<<<< HEAD
 export const url = import.meta.env.VITE_BASE_URL || "https://api.fasifys.com/api/v1";
+=======
+export const url = import.meta.env.VITE_BASE_URL || "https://timothy-backend.onrender.com/api/v1";
+>>>>>>> a4043d08e86469869d7f8014a2fda4f07ebde0d0
 
 // Extract the base domain from the API URL for images and WebSocket
 const baseUrlObj = new URL(url.replace('/api/v1', ''));
