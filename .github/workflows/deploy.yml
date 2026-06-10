@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - main
-    # Only trigger if changes are made within the dashboard folder
-    paths:
-      - 'timothy-dashboard/**'
+
 
 jobs:
   deploy:
