@@ -1,4 +1,4 @@
-<h1> Admin Dashboard for Temothy </h1>
+<h1> Admin Dashboard for Temothys </h1>
 
 // set your fire base and npm i and npm run dev
 VITE_FIREBASE_API_KEY=
