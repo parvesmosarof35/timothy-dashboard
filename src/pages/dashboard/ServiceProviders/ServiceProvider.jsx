@@ -7,17 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllPartners } from "../../../redux/features/user/getPartnersSlice";
 import { useDebounce } from "../../../hooks/useDebounce";
 
-const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
+const ServiceProvider = ({ hideHeader = false, embedded = false, searchTerm = "" }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [searchTerms, setSearchTerms] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   // Debounce search term with 500ms delay
-  const debouncedSearchTerms = useDebounce(searchTerms, 500);
+  const debouncedSearchTerms = useDebounce(searchTerm, 500);
 
   const { users, total, loading } = useSelector((state) => state.getAllPartners);
 
@@ -46,6 +45,7 @@ const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
     ? users.data.map((user) => ({
         id: user.id,
         name: user.fullName || "N/A",
+        email: user.email || "-",
         image: user.profileImage || "https://i.ibb.co/Ps9gZ8DD/Profile-image.png",
         country: user.country || "-",
         joined: new Date(user.createdAt).toISOString().split("T")[0],
@@ -54,7 +54,6 @@ const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
     : [];
 
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
     {
       title: "Name",
       dataIndex: "name",
@@ -69,6 +68,11 @@ const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
           <span>{text}</span>
         </div>
       ),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Country",
@@ -162,13 +166,7 @@ const ServiceProvider = ({ hideHeader = false, embedded = false }) => {
             <option value="Spain">Spain</option>
             </select>
 
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchTerms}
-              onChange={(e) => setSearchTerms(e.target.value)}
-              className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-            />
+            {/* Search Input is now managed in AdminProfile */}
           </div>
         </div>
 

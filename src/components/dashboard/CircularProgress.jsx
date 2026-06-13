@@ -155,7 +155,10 @@ const ContractCard = ({
 const ContractManagement = () => {
   // Time range filter options
   const timeOptions = ["Today", "This Week", "This Month", "This Year"];
-  const [selectedTime, setSelectedTime] = useState("This Month");
+  const [timeActive, setTimeActive] = useState("This Month");
+  const [timeCompleted, setTimeCompleted] = useState("This Month");
+  const [timePending, setTimePending] = useState("This Month");
+
   const timeParamMap = {
     "Today": "TODAY",
     "This Week": "THIS_WEEK",
@@ -163,25 +166,21 @@ const ContractManagement = () => {
     "This Year": "THIS_YEAR",
   };
 
-  // Fetch data from API
-  const { data: apiData, isLoading, error } = useGetCancelRefundStatsQuery(timeParamMap[selectedTime]);
+  // Fetch data from API independently for each status card
+  const { data: dataActive } = useGetCancelRefundStatsQuery(timeParamMap[timeActive]);
+  const { data: dataCompleted } = useGetCancelRefundStatsQuery(timeParamMap[timeCompleted]);
+  const { data: dataPending } = useGetCancelRefundStatsQuery(timeParamMap[timePending]);
   
-  const totalContracts = apiData?.data?.totalContracts || 0;
-  const totalPending = apiData?.data?.totalPending || 0;
-  const totalConfirmed = apiData?.data?.totalConfirmed || 0;
-  const pendingRate = apiData?.data?.pendingRate || 0;
-  const confirmedRate = apiData?.data?.confirmedRate || 0;
-  const cancelRate = apiData?.data?.cancelRate || 0;
-  // Growth values from API
-  const totalContractsGrowth = apiData?.data?.totalContractsGrowth ?? 0;
-  const totalPendingGrowth = apiData?.data?.totalPendingGrowth ?? 0;
-  const totalConfirmedGrowth = apiData?.data?.totalConfirmedGrowth ?? 0;
-  const pendingRateGrowth = apiData?.data?.pendingRateGrowth ?? 0;
-  const confirmedRateGrowth = apiData?.data?.confirmedRateGrowth ?? 0;
+  const totalContracts = dataActive?.data?.totalContracts || 0;
+  const totalContractsGrowth = dataActive?.data?.totalContractsGrowth ?? 0;
 
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
+  const totalConfirmed = dataCompleted?.data?.totalConfirmed || 0;
+  const confirmedRate = dataCompleted?.data?.confirmedRate || 0;
+  const confirmedRateGrowth = dataCompleted?.data?.confirmedRateGrowth ?? 0;
+
+  const totalPending = dataPending?.data?.totalPending || 0;
+  const pendingRate = dataPending?.data?.pendingRate || 0;
+  const pendingRateGrowth = dataPending?.data?.pendingRateGrowth ?? 0;
 
   return (
     <div className="bg-grayLightBg">
@@ -198,8 +197,8 @@ const ContractManagement = () => {
             percentage={100}
             value={totalContracts}
             growth={`${Number(totalContractsGrowth).toFixed(1)}%`}
-            selectedTime={selectedTime}
-            onTimeChange={handleTimeChange}
+            selectedTime={timeActive}
+            onTimeChange={setTimeActive}
             timeOptions={timeOptions}
           />
           <ContractCard
@@ -207,8 +206,8 @@ const ContractManagement = () => {
             percentage={Math.round(confirmedRate)}
             value={totalConfirmed}
             growth={`${Number(confirmedRateGrowth).toFixed(1)}%`}
-            selectedTime={selectedTime}
-            onTimeChange={handleTimeChange}
+            selectedTime={timeCompleted}
+            onTimeChange={setTimeCompleted}
             timeOptions={timeOptions}
           />
           <ContractCard
@@ -216,8 +215,8 @@ const ContractManagement = () => {
             percentage={Math.round(pendingRate)}
             value={totalPending}
             growth={`${Number(pendingRateGrowth).toFixed(1)}%`}
-            selectedTime={selectedTime}
-            onTimeChange={handleTimeChange}
+            selectedTime={timePending}
+            onTimeChange={setTimePending}
             timeOptions={timeOptions}
           />
         </div>

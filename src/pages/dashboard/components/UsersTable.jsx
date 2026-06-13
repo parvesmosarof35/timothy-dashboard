@@ -8,9 +8,8 @@ import { useDispatch } from "react-redux";
 import { getAllUsers } from "../../../redux/features/user/getAllUsersSlice";
 import { useDebounce } from "../../../hooks/useDebounce";
 
-const UsersTable = () => {
+const UsersTable = ({ searchTerm = "" }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
   const { users, loading } = useSelector((state) => state.getAllUsers);
   const dispatch = useDispatch();
   const usersPerPage = 10;
@@ -19,10 +18,9 @@ const UsersTable = () => {
 
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [searchTerms, setSearchTerms] = useState("");
 
   // Debounce search term with 500ms delay
-  const debouncedSearchTerms = useDebounce(searchTerms, 500);
+  const debouncedSearchTerms = useDebounce(searchTerm, 500);
 
   // Auto filter trigger
   useEffect(() => {
@@ -48,7 +46,6 @@ const UsersTable = () => {
   };
 
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
     {
       title: "Name",
       dataIndex: "fullName",
@@ -63,6 +60,11 @@ const UsersTable = () => {
           {text}
         </div>
       ),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Country",
@@ -161,14 +163,7 @@ const UsersTable = () => {
             <option value="Spain">Spain</option>
           </select>
 
-          {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchTerms}
-            onChange={(e) => setSearchTerms(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-          />
+          {/* Search Input is now managed in AdminProfile */}
         </div>
       </div>
 

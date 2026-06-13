@@ -3,6 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { LuTicket } from "react-icons/lu";
 import { BsArrowUp, BsArrowDown } from "react-icons/bs";
 import { useGetUserSupportTicketsQuery } from "../../redux/api/statistics/userSupportTicketsApi";
+import { Spin } from "antd";
 
 const UserSupportTickets = ({ title = "User Support Tickets" }) => {
   // Time filter (same options)
@@ -17,7 +18,7 @@ const UserSupportTickets = ({ title = "User Support Tickets" }) => {
   };
 
   // Fetch data
-  const { data: apiData } = useGetUserSupportTicketsQuery(timeParamMap[selectedTime]);
+  const { data: apiData, isLoading } = useGetUserSupportTicketsQuery(timeParamMap[selectedTime]);
 
   // Map API response
   const totalTickets = apiData?.data?.totalSupport ?? 0;
@@ -73,51 +74,57 @@ const UserSupportTickets = ({ title = "User Support Tickets" }) => {
       </div>
 
       {/* Content */}
-      <div className="space-y-6">
-        {/* Total Tickets */}
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-sm text-brandGray mb-2">Total</p>
-            <h3 className="text-3xl font-semibold text-darkGray">
-              {totalTickets.toLocaleString()}
-            </h3>
-          </div>
-
-          <div className="flex flex-col items-center space-y-2">
-            {/* Orange Ticket Icon */}
-            <div className="w-12 h-12 bg-orangeLightBg rounded-lg flex items-center justify-center">
-              <LuTicket className="w-6 h-6 text-orange-500" />
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {/* Total Tickets */}
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-brandGray mb-2">Total</p>
+              <h3 className="text-3xl font-semibold text-darkGray">
+                {totalTickets.toLocaleString()}
+              </h3>
             </div>
 
-            {/* Trend Arrow */}
+            <div className="flex flex-col items-center space-y-2">
+              {/* Orange Ticket Icon */}
+              <div className="w-12 h-12 bg-orangeLightBg rounded-lg flex items-center justify-center">
+                <LuTicket className="w-6 h-6 text-orange-500" />
+              </div>
 
-            <TrendIcon trend={totalTrend} percentage={totalPercentage} />
-          </div>
-        </div>
+              {/* Trend Arrow */}
 
-        {/* Divider */}
-        <hr className="border-gray-100" />
-
-        {/* Pending Tickets */}
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-sm text-brandGray mb-2">Pending</p>
-            <h3 className="text-3xl font-semibold text-darkGray">
-              {pendingTickets.toLocaleString()}
-            </h3>
+              <TrendIcon trend={totalTrend} percentage={totalPercentage} />
+            </div>
           </div>
 
-          <div className="flex flex-col items-center space-y-2">
-            {/* Red/Pink Ticket Icon */}
-            <div className="w-12 h-12 bg-redMutedBg rounded-lg flex items-center justify-center">
-              <LuTicket className="w-6 h-6 text-brandRed" />
+          {/* Divider */}
+          <hr className="border-gray-100" />
+
+          {/* Pending Tickets */}
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-brandGray mb-2">Pending</p>
+              <h3 className="text-3xl font-semibold text-darkGray">
+                {pendingTickets.toLocaleString()}
+              </h3>
             </div>
 
-            {/* Trend Arrow */}
-            <TrendIcon trend={pendingTrend} percentage={pendingPercentage} />
+            <div className="flex flex-col items-center space-y-2">
+              {/* Red/Pink Ticket Icon */}
+              <div className="w-12 h-12 bg-redMutedBg rounded-lg flex items-center justify-center">
+                <LuTicket className="w-6 h-6 text-brandRed" />
+              </div>
+
+              {/* Trend Arrow */}
+              <TrendIcon trend={pendingTrend} percentage={pendingPercentage} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

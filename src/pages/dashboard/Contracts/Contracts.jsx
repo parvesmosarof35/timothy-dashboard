@@ -222,9 +222,25 @@ const Contracts = () => {
 
   const pageSize = 10;
 
+  const contractSuggestions = React.useMemo(() => {
+    return contracts.map((c) => ({
+      id: c.id,
+      title: `${getServiceTypeDisplay(c.type)} - ${c.category}`,
+      subtitle: `Price: $${c.totalPrice.toLocaleString()} | Status: ${c.bookingStatus}`,
+      avatar: null,
+      link: `/dashboard/contracts/${c.type}/${c.id}`,
+    }));
+  }, [contracts]);
+
   return (
     <div className="md:px-6 px-0 bg-grayLightBg min-h-screen font-sans">
-      <AdminProfile headingText={`Contracts`}></AdminProfile>
+      <AdminProfile 
+        headingText="Contracts" 
+        searchValue={searchTerms} 
+        onSearchChange={setSearchTerms} 
+        showSearch={true} 
+        suggestions={contractSuggestions}
+      />
       <div className="min-h-screen bg-grayLightBg p-6 font-sans">
         <div className=" mx-auto">
           {/* Header */}
@@ -265,14 +281,7 @@ const Contracts = () => {
             <option value="Spain">Spain</option>
               </select> */}
 
-              {/* Search Input */}
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerms}
-                onChange={(e) => setSearchTerms(e.target.value)}
-                className="border px-3 py-2 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-              />
+              {/* Search Input is now managed in AdminProfile */}
             </div>
           </div>
 

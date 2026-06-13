@@ -125,7 +125,10 @@ const MetricCard = ({
 const CancellationRefunds = () => {
   // Time range filter options
   const timeOptions = ["Today", "This Week", "This Month", "This Year"];
-  const [selectedTime, setSelectedTime] = useState("This Month");
+  const [timeCancelled, setTimeCancelled] = useState("This Month");
+  const [timeRefunded, setTimeRefunded] = useState("This Month");
+  const [timeRate, setTimeRate] = useState("This Month");
+
   const timeParamMap = {
     "Today": "TODAY",
     "This Week": "THIS_WEEK",
@@ -133,24 +136,19 @@ const CancellationRefunds = () => {
     "This Year": "THIS_YEAR",
   };
 
-  // Fetch data from API
-  const {
-    data: apiData,
-    isLoading,
-    error,
-  } = useGetCancelRefundStatsQuery(timeParamMap[selectedTime]);
+  // Fetch data from API independently for each card filter
+  const { data: dataCancelled } = useGetCancelRefundStatsQuery(timeParamMap[timeCancelled]);
+  const { data: dataRefunded } = useGetCancelRefundStatsQuery(timeParamMap[timeRefunded]);
+  const { data: dataRate } = useGetCancelRefundStatsQuery(timeParamMap[timeRate]);
 
-  const canceledCount = apiData?.data?.canceledCount || 0;
-  const refundAmount = apiData?.data?.refundAmount || 0;
-  const cancelRate = apiData?.data?.cancelRate || 0;
-  // Growth values from API
-  const canceledCountGrowth = apiData?.data?.canceledCountGrowth ?? 0;
-  const refundAmountGrowth = apiData?.data?.refundAmountGrowth ?? 0;
-  const cancelRateGrowth = apiData?.data?.cancelRateGrowth ?? 0;
+  const canceledCount = dataCancelled?.data?.canceledCount || 0;
+  const canceledCountGrowth = dataCancelled?.data?.canceledCountGrowth ?? 0;
 
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
+  const refundAmount = dataRefunded?.data?.refundAmount || 0;
+  const refundAmountGrowth = dataRefunded?.data?.refundAmountGrowth ?? 0;
+
+  const cancelRate = dataRate?.data?.cancelRate || 0;
+  const cancelRateGrowth = dataRate?.data?.cancelRateGrowth ?? 0;
 
   return (
     <div className="bg-grayLightBg">
@@ -162,25 +160,25 @@ const CancellationRefunds = () => {
         <MetricCard 
           title="Cancelled Jobs" 
           value={canceledCount} 
-          percentage={`${Number(apiData?.data?.canceledCountGrowth).toFixed(1)}%`}
-          selectedTime={selectedTime}
-          onTimeChange={handleTimeChange}
+          percentage={`${Number(canceledCountGrowth).toFixed(1)}%`}
+          selectedTime={timeCancelled}
+          onTimeChange={setTimeCancelled}
           timeOptions={timeOptions}
         />
         <MetricCard 
           title="Refunded Amount" 
           value={refundAmount} 
-          percentage={`${Number(apiData?.data?.refundAmountGrowth).toFixed(1)}%`}
-          selectedTime={selectedTime}
-          onTimeChange={handleTimeChange}
+          percentage={`${Number(refundAmountGrowth).toFixed(1)}%`}
+          selectedTime={timeRefunded}
+          onTimeChange={setTimeRefunded}
           timeOptions={timeOptions}
         />
         <MetricCard 
           title="Cancel Rate" 
           value={`${cancelRate.toFixed(1)}%`} 
-          percentage={`${Number(apiData?.data?.cancelRateGrowth).toFixed(1)}%`}
-          selectedTime={selectedTime}
-          onTimeChange={handleTimeChange}
+          percentage={`${Number(cancelRateGrowth).toFixed(1)}%`}
+          selectedTime={timeRate}
+          onTimeChange={setTimeRate}
           timeOptions={timeOptions}
         />
       </div>

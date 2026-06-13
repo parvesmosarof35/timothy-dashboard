@@ -1,14 +1,50 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import AdminProfile from "./components/AdminProfile";
 import UsersTable from "./components/UsersTable";
 import ServiceProvider from "./ServiceProviders/ServiceProvider";
 
 export default function UserInformation() {
   const [activeTab, setActiveTab] = useState("PARTNER"); // PARTNER | USERS
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const { users } = useSelector((state) => state.getAllUsers);
+  const { users: partners } = useSelector((state) => state.getAllPartners);
+
+  const partnerSuggestions = Array.isArray(partners?.data)
+    ? partners.data.map((p) => ({
+        id: p.id,
+        title: p.fullName || "N/A",
+        subtitle: p.email || "-",
+        avatar: p.profileImage,
+        link: `/dashboard/service-provider/details/${p.id}`,
+      }))
+    : [];
+
+  const userSuggestions = Array.isArray(users?.data)
+    ? users.data.map((u) => ({
+        id: u.id,
+        title: u.fullName || "N/A",
+        subtitle: u.email || "-",
+        avatar: u.profileImage,
+        link: `/dashboard/user-info/details/${u.id}`,
+      }))
+    : [];
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSearchTerm("");
+  };
 
   return (
     <div className=" bg-grayLightBg min-h-screen md:px-6 px-0">
-      <AdminProfile headingText="Users Management" />
+      <AdminProfile 
+        headingText="Users Management" 
+        searchValue={searchTerm} 
+        onSearchChange={setSearchTerm} 
+        showSearch={true} 
+        suggestions={activeTab === "PARTNER" ? partnerSuggestions : userSuggestions}
+      />
 
       {/* Tabs */}
       <div className="rounded-t-md ">
@@ -17,7 +53,7 @@ export default function UserInformation() {
             className={`text-lg font-semibold ${
               activeTab === "PARTNER" ? "text-orangePrimary" : "text-brandGray"
             }`}
-            onClick={() => setActiveTab("PARTNER")}
+            onClick={() => handleTabChange("PARTNER")}
           >
             Partner
           </button>
@@ -25,7 +61,7 @@ export default function UserInformation() {
             className={`text-lg font-semibold ${
               activeTab === "USERS" ? "text-orangePrimary" : "text-brandGray"
             }`}
-            onClick={() => setActiveTab("USERS")}
+            onClick={() => handleTabChange("USERS")}
           >
             Users
           </button>
@@ -44,9 +80,9 @@ export default function UserInformation() {
       {/* Tab content */}
       <div className="mt-4">
         {activeTab === "PARTNER" ? (
-          <ServiceProvider hideHeader embedded />
+          <ServiceProvider hideHeader embedded searchTerm={searchTerm} />
         ) : (
-          <UsersTable />
+          <UsersTable searchTerm={searchTerm} />
         )}
       </div>
     </div>

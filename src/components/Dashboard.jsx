@@ -14,9 +14,11 @@ import UserSupportTickets from "./dashboard/UserSupportTickets";
 import UserDemographics from "./dashboard/UserDemographics";
 
 const Dashboard = () => {
-  // Shared time filter for overview cards
   const timeOptions = ["Today", "This Week", "This Month", "This Year"];
-  const [selectedTime, setSelectedTime] = useState("This Month");
+  const [timeUsers, setTimeUsers] = useState("This Month");
+  const [timeContracts, setTimeContracts] = useState("This Month");
+  const [timeSupport, setTimeSupport] = useState("This Month");
+
   const timeParamMap = {
     "Today": "TODAY",
     "This Week": "THIS_WEEK",
@@ -24,21 +26,28 @@ const Dashboard = () => {
     "This Year": "THIS_YEAR",
   };
 
-  const { data: overviewData, error, isLoading } = useGetOverviewQuery(
-    timeParamMap[selectedTime],
+  const { data: dataUsers, isLoading: loadingUsers, error: errorUsers } = useGetOverviewQuery(
+    timeParamMap[timeUsers],
+    { refetchOnMountOrArgChange: true }
+  );
+
+  const { data: dataContracts, isLoading: loadingContracts, error: errorContracts } = useGetOverviewQuery(
+    timeParamMap[timeContracts],
+    { refetchOnMountOrArgChange: true }
+  );
+
+  const { data: dataSupport, error: errorSupport } = useGetOverviewQuery(
+    timeParamMap[timeSupport],
     { refetchOnMountOrArgChange: true }
   );
 
   useEffect(() => {
-    if (overviewData) {
-    }
-    if (error) {
-      console.error('Error fetching statistics:', error);
-    }
-  }, [overviewData, error]);
+    if (errorUsers) console.error('Error fetching statistics (users):', errorUsers);
+    if (errorContracts) console.error('Error fetching statistics (contracts):', errorContracts);
+    if (errorSupport) console.error('Error fetching statistics (support):', errorSupport);
+  }, [errorUsers, errorContracts, errorSupport]);
 
-  // Match previous data path: overviewData?.data?.Supports
-  const supportData = overviewData?.data?.Supports ?? {};
+  const supportData = dataSupport?.data?.Supports ?? {};
   const { user } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
 
@@ -53,20 +62,20 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <OverviewCard 
               title="Total Users" 
-              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalUsers?.count} 
-              growth={overviewData?.data?.totalUsers?.growth}
+              value={loadingUsers ? <Spin size="small" /> : dataUsers?.data?.totalUsers?.count} 
+              growth={dataUsers?.data?.totalUsers?.growth}
               showDropdown
-              selectedTime={selectedTime}
-              onTimeChange={setSelectedTime}
+              selectedTime={timeUsers}
+              onTimeChange={setTimeUsers}
               timeOptions={timeOptions}
             />
             <OverviewCard 
               title="Active Contracts" 
-              value={isLoading ? <Spin size="small" /> : overviewData?.data?.totalContracts?.count} 
-              growth={overviewData?.data?.totalContracts?.growth}
+              value={loadingContracts ? <Spin size="small" /> : dataContracts?.data?.totalContracts?.count} 
+              growth={dataContracts?.data?.totalContracts?.growth}
               showDropdown
-              selectedTime={selectedTime}
-              onTimeChange={setSelectedTime}
+              selectedTime={timeContracts}
+              onTimeChange={setTimeContracts}
               timeOptions={timeOptions}
             />
           </div>
@@ -78,7 +87,7 @@ const Dashboard = () => {
                 <PaymentChart />
               </div>
               <div className="md:col-span-2">
-                <PendingVerification isLoading={isLoading} overviewData={overviewData} />
+                <PendingVerification isLoading={loadingUsers} overviewData={dataUsers} />
               </div>
             </div>
           ) : (
@@ -90,7 +99,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="md:col-span-2">
-                <PendingVerification isnomaladmin={isSuperAdmin ? false : true} isLoading={isLoading} overviewData={overviewData} />
+                <PendingVerification isnomaladmin={isSuperAdmin ? false : true} isLoading={loadingUsers} overviewData={dataUsers} />
               </div>
             </div>
           )}
@@ -110,8 +119,8 @@ const Dashboard = () => {
         <div className="col-span-1 md:col-span-4 bg-white rounded-lg p-4 shadow-sm space-y-6 md:sticky md:top-24 md:h-fit min-h-fit md:min-h-0 self-start max-h-[calc(100vh-2rem)] overflow-auto">
           <CommunicationSupport 
             supportData={supportData}
-            selectedTime={selectedTime}
-            onTimeChange={setSelectedTime}
+            selectedTime={timeSupport}
+            onTimeChange={setTimeSupport}
             timeOptions={timeOptions}
           />
 

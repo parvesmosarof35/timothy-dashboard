@@ -11,6 +11,7 @@ import {
 import { IoIosArrowDown } from 'react-icons/io'
 import { useGetUserDemographicsQuery } from '../../redux/api/statistics/getuserDemographics'
 import { countries } from '../../utils/countries'
+import { useDebounce } from '../../hooks/useDebounce'
 
 export default function UserDemographics() {
   // Time filter like previously done
@@ -31,13 +32,17 @@ export default function UserDemographics() {
 
   const genders = ['All', 'Male', 'Female', 'Other']
 
+  // Debounce age and profession input to reduce API load
+  const debouncedAge = useDebounce(age, 500)
+  const debouncedProfession = useDebounce(profession, 500)
+
   // Fetch data
   const queryArgs = {
     timeRange: timeParamMap[selectedTime],
     ...(country && country !== 'All' ? { country: country.toLowerCase() } : {}),
-    ...(age ? { age: Number(age) } : {}),
+    ...(debouncedAge && !isNaN(Number(debouncedAge)) ? { age: Number(debouncedAge) } : {}),
     ...(gender && gender !== 'All' ? { gender: gender.toLowerCase() } : {}),
-    ...(profession ? { profession: profession.toLowerCase() } : {}),
+    ...(debouncedProfession ? { profession: debouncedProfession.toLowerCase() } : {}),
   }
   const { data: apiData, isLoading, error } = useGetUserDemographicsQuery(queryArgs)
 
