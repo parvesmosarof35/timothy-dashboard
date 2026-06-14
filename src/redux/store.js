@@ -10,6 +10,7 @@ import { paymentUserAnalysisApi } from './api/statistics/paymentAndUserAnalisys'
 import { cancelRefundApi } from './api/statistics/cancelRefundApi';
 import { termsConditionsApi } from './api/termsConditions/termsConditionsApi';
 import { privacyPolicyApi } from './api/privacyPolicy/privacyPolicyApi';
+import { aboutUsApi } from './api/aboutUs/aboutUsApi';
 import { financesApi } from './api/finances/financesApi';
 import { promoCodesApi } from './api/promoCodes/promoCodesApi';
 import { adminApi } from './api/admin/adminApi';
@@ -36,6 +37,7 @@ export const store = configureStore({
     [cancelRefundApi.reducerPath]: cancelRefundApi.reducer,
     [termsConditionsApi.reducerPath]: termsConditionsApi.reducer,
     [privacyPolicyApi.reducerPath]: privacyPolicyApi.reducer,
+    [aboutUsApi.reducerPath]: aboutUsApi.reducer,
     [financesApi.reducerPath]: financesApi.reducer,
     [promoCodesApi.reducerPath]: promoCodesApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
@@ -56,6 +58,7 @@ export const store = configureStore({
       .concat(cancelRefundApi.middleware)
       .concat(termsConditionsApi.middleware)
       .concat(privacyPolicyApi.middleware)
+      .concat(aboutUsApi.middleware)
       .concat(financesApi.middleware)
       .concat(promoCodesApi.middleware)
       .concat(userApi.middleware)

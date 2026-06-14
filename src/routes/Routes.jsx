@@ -28,6 +28,7 @@ import AllMessage from "../pages/dashboard/AllMessage/AllMessage";
 import Notification from "../pages/dashboard/Notification/Notification";
 import TermsAndConditions from "../components/TermsAndConditions";
 import PrivacyPolicy from "../components/PrivacyPolicy";
+import AboutUs from "../components/AboutUs";
 import PromoCodesManagement from "../components/PromoCodesManagement";
 import SuperAdminRoute from "./SuperAdminRoute";
 import PrivateRoute from "./PrivateRoute";
@@ -87,6 +88,7 @@ const router = createBrowserRouter([
     { path: 'notification', element: <Notification></Notification> },
     { path: 'terms-conditions', element: <TermsAndConditions></TermsAndConditions> },
     { path: 'privacy-policy', element: <PrivacyPolicy></PrivacyPolicy> },
+    { path: 'about-us', element: <AboutUs></AboutUs> },
     { path: 'promo-codes', element: <PromoCodesManagement></PromoCodesManagement> },
   //   { path: 'settings/privacy', element: <Privacypage /> },
    ]

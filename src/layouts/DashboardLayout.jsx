@@ -196,6 +196,14 @@ export default function DashboardLayout() {
       </NavLink>
 
       <NavLink
+        to="/dashboard/about-us"
+        className={({ isActive }) => linkClass(isActive)}
+      >
+        <FiFileText className="text-lg" />
+        About Us
+      </NavLink>
+
+      <NavLink
         to="/dashboard/promo-codes"
         className={({ isActive }) => linkClass(isActive)}
       >
