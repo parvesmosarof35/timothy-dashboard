@@ -154,6 +154,22 @@ const ApprovePartners = () => {
       ),
     },
     {
+      title: "Services",
+      key: "services",
+      render: (_, record) => {
+        const tags = [];
+        if (record.isHotel) tags.push(<Tag color="blue" key="hotel" className="border-none font-medium">Hotel</Tag>);
+        if (record.isCar) tags.push(<Tag color="green" key="car" className="border-none font-medium">Car Rental</Tag>);
+        if (record.isSecurity) tags.push(<Tag color="red" key="security" className="border-none font-medium">Security</Tag>);
+        if (record.isAttraction) tags.push(<Tag color="purple" key="attraction" className="border-none font-medium">Attraction</Tag>);
+        return tags.length > 0 ? (
+          <div className="flex flex-wrap gap-1 max-w-[150px]">{tags}</div>
+        ) : (
+          <span className="text-gray-400 text-sm">None</span>
+        );
+      },
+    },
+    {
       title: "Role",
       dataIndex: "role",
       key: "role",

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Descriptions, Button, message, Row, Col, Avatar, Modal, Spin, Alert } from "antd";
+import { Card, Descriptions, Button, message, Row, Col, Avatar, Modal, Spin, Alert, Tag } from "antd";
 import {
   CheckOutlined,
   CloseOutlined,
@@ -201,6 +201,20 @@ const ApprovePartnerDetails = () => {
           </Descriptions.Item>
           <Descriptions.Item label={<><EnvironmentOutlined /> Country</>}>
             {partner.country || 'Not specified'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Applied Services">
+            {(() => {
+              const tags = [];
+              if (partner.isHotel) tags.push(<Tag color="blue" key="hotel" style={{ border: 'none' }}>Hotel</Tag>);
+              if (partner.isCar) tags.push(<Tag color="green" key="car" style={{ border: 'none' }}>Car Rental</Tag>);
+              if (partner.isSecurity) tags.push(<Tag color="red" key="security" style={{ border: 'none' }}>Security</Tag>);
+              if (partner.isAttraction) tags.push(<Tag color="purple" key="attraction" style={{ border: 'none' }}>Attraction</Tag>);
+              return tags.length > 0 ? (
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>{tags}</div>
+              ) : (
+                <span style={{ color: '#bfbfbf' }}>None</span>
+              );
+            })()}
           </Descriptions.Item>
           <Descriptions.Item label={<><ShopOutlined /> Role</>}>
             {partner.role === 'BUSINESS_PARTNER' ? 'Partner' : partner.role === 'SERVICE_PROVIDER' ? 'Partner' : partner.role}
